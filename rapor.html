@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>ISS Depo - Canlı Tüketim Raporu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f4f6f9; }
+        .main-container { max-width: 1100px; margin: 30px auto; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+<script>
+    if (!localStorage.getItem('aktifKullanici')) { window.location.href = "login.html"; }
+</script>
+
+<div class="container main-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark"><i class="bi bi-file-earmark-bar-graph text-success me-2"></i>Depo Hareket Analiz Raporu</h2>
+            <p class="text-muted mb-0">Depolara ait anlık işlem yoğunluk grafikleri</p>
+        </div>
+        <a href="depo_listesi.html" class="btn btn-outline-secondary fw-bold"><i class="bi bi-arrow-left me-2"></i>Ana Depoya Dön</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-5">
+            <div class="card p-4 text-center bg-white h-100">
+                <h5 class="fw-bold mb-3 text-secondary"><i class="bi bi-pie-chart me-1"></i> Depo İşlem Yoğunluğu</h5>
+                <div style="max-width: 280px; margin: 0 auto;">
+                    <canvas id="islemGrafik"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="card p-4 bg-white h-100">
+                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-clock-history me-2 text-secondary"></i>Depo Hareket Geçmişi</h5>
+                <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th>Tarih / Saat</th>
+                                <th>İşlemi Yapan</th>
+                                <th>İlgili Depo</th>
+                                <th>Malzeme</th>
+                                <th class="text-center">Miktar</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logTabloGövde"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const gecmis = JSON.parse(localStorage.getItem('islemGecmisi')) || [];
+    const logGövde = document.getElementById('logTabloGövde');
+    const depoGrafikVerisi = {
+        "Şarküteri": 0, "Et +4": 0, "Kuru Gıda": 0, "Pastane": 0, "Pastane -18": 0, "Sebze +4": 0
+    };
+
+    if (gecmis.length === 0) {
+        logGövde.innerHTML = `<tr><td colspan="6" class="text-center text-muted p-4">Henüz bir işlem gerçekleştirilmedi.</td></tr>`;
+    } else {
+        gecmis.forEach(islem => {
+            const rozet = islem.tip === 'ekle'
+                ? `<span class="badge bg-success-subtle text-success">Stok Girişi</span>`
+                : `<span class="badge bg-danger-subtle text-danger">Stok Çıkışı</span>`;
+
+            const depoAdi = islem.depoAdi || "Kuru Gıda";
+            const personelAdi = islem.personel || "Bilinmeyen Yetkili";
+
+            logGövde.innerHTML += `
+                <tr>
+                    <td><small class="text-muted">${islem.tarih}</small></td>
+                    <td class="fw-semibold">${personelAdi}</td>
+                    <td><span class="badge bg-secondary-subtle text-dark">${depoAdi}</span></td>
+                    <td class="fw-semibold text-dark">${islem.malzeme}</td>
+                    <td class="text-center fw-bold">${islem.miktar}</td>
+                    <td>${rozet}</td>
+                </tr>`;
+
+            if (depoGrafikVerisi[depoAdi] !== undefined) {
+                depoGrafikVerisi[depoAdi] += islem.miktar;
+            }
+        });
+    }
+
+    const etiketler = Object.keys(depoGrafikVerisi);
+    const rakamlar = Object.values(depoGrafikVerisi);
+
+    new Chart(document.getElementById('islemGrafik'), {
+        type: 'pie',
+        data: {
+            labels: etiketler,
+            datasets: [{
+                data: rakamlar,
+                backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14']
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+</script>
+</body>
+</html>

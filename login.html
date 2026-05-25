@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISS Akıllı Depo - Güvenli Giriş</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; }
+        .login-card { max-width: 400px; margin: 100px auto; border: none; border-radius: 15px; }
+        .input-group-text { cursor: pointer; background-color: #fff; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card login-card p-4 shadow">
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-primary"><i class="bi bi-shield-lock-fill"></i> ISS Depo Giriş</h3>
+            <p class="text-muted small">Lütfen adınızı seçin ve size özel şifrenizi giriniz</p>
+        </div>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Personel Seçin:</label>
+                <select class="form-select" id="loginPersonel" required>
+                    <option value="" selected disabled>İsminizi seçin...</option>
+                    <option value="Emre Duman">Emre Duman (KURUCU)</option>
+                                    </select>
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label fw-bold">Giriş Şifresi:</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                    <input type="password" class="form-control text-center fw-bold" id="loginSifre" placeholder="Şifrenizi giriniz" required>
+                    <button class="btn btn-outline-secondary" type="button" id="btnSifreGoster" onclick="sifreGosterGizle()">
+                        <i class="bi bi-eye-fill" id="gozIkonu"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Sisteme Giriş Yap</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Her personelin kendine ait özel şifre tanımlaması
+    const personelSifreleri = {
+        "Emre Duman": "1907",
+      
+    };
+
+    // Şifreyi Göster / Gizle Fonksiyonu
+    function sifreGosterGizle() {
+        const sifreInput = document.getElementById('loginSifre');
+        const gozIkonu = document.getElementById('gozIkonu');
+        
+        if (sifreInput.type === "password") {
+            sifreInput.type = "text";
+            gozIkonu.className = "bi bi-eye-slash-fill";
+        } else {
+            sifreInput.type = "password";
+            gozIkonu.className = "bi bi-eye-fill";
+        }
+    }
+
+    // Giriş Doğrulama Kontrolü
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const secilenPersonel = document.getElementById('loginPersonel').value;
+        const girilenSifre = document.getElementById('loginSifre').value;
+
+        // Seçilen personelin doğru şifresiyle eşleşiyor mu kontrolü
+        if (personelSifreleri[secilenPersonel] === girilenSifre) {
+            localStorage.setItem('aktifKullanici', secilenPersonel);
+            alert(`Hoş geldiniz, ${secilenPersonel}`);
+            window.location.href = "depo_listesi.html";
+        } else {
+            alert("Hatalı Şifre! Lütfen size ait şifreyi girdiğinizden emin olun.");
+        }
+    });
+</script>
+</body>
+</html>

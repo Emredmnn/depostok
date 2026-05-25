@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISS Akıllı Depo - İşlem Paneli</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<script>
+    if (!localStorage.getItem('aktifKullanici')) { window.location.href = "login.html"; }
+</script>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-sm-12">
+            <div class="card p-4 shadow border-0" style="border-radius:15px;">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="badge bg-secondary" id="lblKategori">Depo: -</span>
+                    <span class="badge bg-primary" id="lblMevcutStok">Mevcut: -</span>
+                </div>
+                <h3 class="fw-bold text-center" id="lblMalzemeAdi">Yükleniyor...</h3>
+                <p class="text-center text-muted small mb-3" id="lblUrunId">#</p>
+                <hr>
+                <form id="formDepoIslem">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">İşlem Yapan Yetkili:</label>
+                        <input type="text" class="form-control bg-light fw-bold" id="txtAktifUser" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" id="lblMiktarAlan">Miktar:</label>
+                        <input type="number" class="form-control form-control-lg text-center" id="miktar" min="1" placeholder="Miktar giriniz" required>
+                    </div>
+                    <button type="submit" class="btn btn-lg w-100 fw-bold text-white" id="btnOnay">Onayla</button>
+                </form>
+                <a href="depo_listesi.html" class="btn btn-link text-center mt-3 text-decoration-none">← İptal Et ve Dön</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const aktifUser = localStorage.getItem('aktifKullanici');
+    document.getElementById('txtAktifUser').value = aktifUser;
+
+    const depoVeritabani = JSON.parse(localStorage.getItem('depoVerisi'));
+    const islemGecmisi = JSON.parse(localStorage.getItem('islemGecmisi')) || [];
+    
+    // URL parametrelerini tam ve kararlı okuma yöntemi
+    const urlParametreleri = new URLSearchParams(window.location.search);
+    const urunId = urlParametreleri.get('id'); 
+    const islemTipi = urlParametreleri.get('tip');
+
+    const secilenUrun = depoVeritabani[urunId];
+
+    if (secilenUrun) {
+        document.getElementById('lblMalzemeAdi').innerText = secilenUrun.adi;
+        document.getElementById('lblKategori').innerText = "Depo: " + secilenUrun.kategori;
+        document.getElementById('lblMevcutStok').innerText = `Depoda Var: ${secilenUrun.stok}`;
+        document.getElementById('lblUrunId').innerText = "Ürün ID: #" + urunId;
+
+        const btn = document.getElementById('btnOnay');
+        if (islemTipi === 'ekle') {
+            document.getElementById('lblMiktarAlan').innerText = "Eklenecek Miktar:";
+            btn.innerText = "Stok Girişini Onayla"; btn.classList.add('btn-success');
+        } else {
+            document.getElementById('lblMiktarAlan').innerText = "Düşülecek Miktar:";
+            btn.innerText = "Stoktan Düşmeyi Onayla"; btn.classList.add('btn-danger');
+        }
+    } else {
+        alert("Ürün bulunamadı veya geçersiz ID!");
+        window.location.href = "depo_listesi.html";
+    }
+
+    document.getElementById('formDepoIslem').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const miktar = parseInt(document.getElementById('miktar').value);
+
+        if (islemTipi === 'dus' && miktar > secilenUrun.stok) {
+            alert(`Hata: Depoda sadece ${secilenUrun.stok} adet var! ${miktar} adet düşemezsiniz.`); 
+            return;
+        }
+
+        if (islemTipi === 'dus') { 
+            secilenUrun.stok -= miktar; 
+        } else { 
+            secilenUrun.stok += miktar; 
+        }
+        
+        // Veritabanını kaydet
+        localStorage.setItem('depoVerisi', JSON.stringify(depoVeritabani));
+        
+        // Log geçmişini kaydet
+        islemGecmisi.unshift({
+            tarih: new Date().toLocaleString('tr-TR'),
+            personel: aktifUser,
+            depoAdi: secilenUrun.kategori,
+            malzeme: secilenUrun.adi,
+            miktar: miktar,
+            tip: islemTipi
+        });
+        localStorage.setItem('islemGecmisi', JSON.stringify(islemGecmisi));
+        
+        alert("İşlem Başarıyla Kaydedildi!");
+        window.location.href = "depo_listesi.html";
+    });
+</script>
+</body>
+</html>
