@@ -3,231 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISS Depo - Canlı Envanter Listesi</title>
+    <title>Operasyon Yönetim Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f6f9; }
-        .main-container { max-width: 1200px; margin: 30px auto; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .table-responsive { border-radius: 8px; overflow: hidden; }
-        .nav-pills .nav-link { cursor: pointer; color: #495057; }
-        .nav-pills .nav-link.active { background-color: #0d6efd; font-weight: bold; color: #fff; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        .navbar { background-color: #0f172a; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
-<script>
-    if (!localStorage.getItem('aktifKullanici')) { window.location.href = "login.html"; }
-</script>
 
-<div class="container main-container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold text-dark"><i class="bi bi-box-seam text-primary me-2"></i>Depo Envanter Yönetimi</h2>
-            <p class="text-muted mb-0">Aktif Kullanıcı: <strong class="text-dark" id="userGosterge">-</strong></p>
-        </div>
-        <div>
-            <a href="rapor.html" class="btn btn-success fw-bold me-2"><i class="bi bi-file-earmark-bar-graph"></i> Raporlar</a>
-            <button class="btn btn-outline-danger btn-sm fw-bold me-2" onclick="oturumuKapat()"><i class="bi bi-box-arrow-right"></i> Çıkış Yap</button>
-            <button class="btn btn-danger btn-sm fw-bold" id="btnSifirla"><i class="bi bi-arrow-counterclockwise"></i> Stokları Sıfırla</button>
+<nav class="navbar navbar-dark shadow-sm py-3">
+    <div class="container">
+        <span class="navbar-brand fw-bold mb-0 h1">
+            <i class="bi bi-grid-1x2-fill me-2 text-info"></i>Otomasyon Paneli
+        </span>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-light small fw-semibold">Oturum: <span id="lblAktifUser" class="badge bg-secondary">...</span></span>
+            <button id="btnCikis" class="btn btn-outline-light btn-sm fw-bold"><i class="bi bi-box-arrow-right me-1"></i>Çıkış</button>
         </div>
     </div>
+</nav>
 
-    <div class="card p-4 mb-4">
-        <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-plus-circle-fill text-primary me-2"></i>Sisteme Yeni Malzeme Tanımla</h5>
-        <form id="yeniUrunForm" class="row g-3">
-            <div class="col-md-3">
-                <input type="text" id="yeniUrunAdi" class="form-control" placeholder="Malzeme Adı (Örn: Hasta Çorbası)" required autocomplete="off">
-            </div>
-            <div class="col-md-3">
-                <select id="yeniUrunDepo" class="form-select" required>
-                    <option value="" selected disabled>Depo Seçiniz...</option>
-                    <option value="Şarküteri">Şarküteri</option>
-                    <option value="Et +4">Et +4</option>
-                    <option value="Kuru Gıda">Kuru Gıda</option>
-                    <option value="Pastane">Pastane</option>
-                    <option value="Pastane -18">Pastane -18</option>
-                    <option value="Sebze +4">Sebze +4</option>
-                    <option value="Sebze -18">Sebze -18</option>
+<div class="container my-5">
+    
+    <div id="yoneticiFiltreAlani" class="card p-4 bg-white shadow-sm mb-4 d-none">
+        <h5 class="fw-bold text-dark mb-2"><i class="bi bi-shield-lock-fill text-warning me-2"></i>Yönetici İzleme Paneli</h5>
+        <p class="text-muted small">Canlı takibini yapmak istediğiniz personelin/birimin bağımsız ekran verisini seçiniz:</p>
+        <div class="row">
+            <div class="col-md-4">
+                <select id="yoneticiBirimSecimi" class="form-select form-select-lg fw-semibold border-warning">
+                    <option value="depo">Depo Kullanıcısının Verileri</option>
+                    <option value="uretim">Üretim Kullanıcısının Verileri</option>
+                    <option value="garson">Garson Kullanıcısının Verileri</option>
                 </select>
             </div>
-            <div class="col-md-2">
-                <input type="number" id="yeniUrunStok" class="form-control" placeholder="Başlangıç Stoğu" min="0" required>
-            </div>
-            <div class="col-md-2">
-                <input type="number" id="yeniUrunKritik" class="form-control" placeholder="Kritik Seviye" min="0" required>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="bi bi-check-lg"></i> Depoya Ekle</button>
-            </div>
-        </form>
+        </div>
     </div>
 
-    <div class="card p-3 mb-4">
-        <h6 class="fw-bold text-muted mb-2"><i class="bi bi-filter-square me-1"></i> Depo Alanı Seçimi:</h6>
-        <ul class="nav nav-pills" id="depoFiltreleri">
-            <li class="nav-link active" id="f-Tümü">Tüm Depolar</li>
-            <li class="nav-link" id="f-Şarküteri">Şarküteri</li>
-            <li class="nav-link" id="f-Et4">Et +4</li>
-            <li class="nav-link" id="f-Kuru">Kuru Gıda</li>
-            <li class="nav-link" id="f-Pastane">Pastane</li>
-            <li class="nav-link" id="f-Pastane18">Pastane -18</li>
-            <li class="nav-link" id="f-Sebze">Sebze +4</li>
-            <li class="nav-link" id="f-Sebze18">Sebze -18</li>
-        </ul>
-    </div>
+    <div class="row g-4">
+        
+        <div class="col-md-4">
+            <div class="card p-4 bg-white shadow-sm" id="formKarti">
+                <h4 class="fw-bold text-dark mb-3">Ürün Kayıt Formu</h4>
+                <hr>
+                <form id="urunForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Ürün / Kalem Adı</label>
+                        <input type="text" id="urunAdi" class="form-control form-control-lg" placeholder="Ürün adı yazın" required autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Miktar / Adet</label>
+                        <input type="number" id="urunMiktar" class="form-control form-control-lg" placeholder="0" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Bölüm / Detay Notu</label>
+                        <input type="text" id="urunDetay" class="form-control form-control-lg" placeholder="Örn: 3. Kat, Ana Depo vb." autocomplete="off">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 mt-2"><i class="bi bi-plus-circle me-2"></i>Veritabanına Kaydet</button>
+                </form>
+            </div>
+            <button onclick="window.location.href='rapor.html'" class="btn btn-outline-dark w-100 fw-bold py-3 mt-3 shadow-sm">
+                <i class="bi bi-file-earmark-bar-graph me-2"></i>Merkezi Rapor Ekranını Aç
+            </button>
+        </div>
 
-    <div class="card p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold mb-0" id="tabloBaslik">Tüm Depolar Envanter Listesi</h5>
-            <span class="badge bg-dark p-2" id="toplamKalemOzet">0 Çeşit Malzeme</span>
+        <div class="col-md-8">
+            <div class="card p-4 bg-white shadow-sm">
+                <h4 class="fw-bold text-dark mb-3"><i class="bi bi-list-ul me-2 text-primary"></i>Sistemde Kayıtlı Ürünleriniz</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Ürün Adı</th>
+                                <th>Miktar</th>
+                                <th>Bölüm / Detay</th>
+                                <th class="text-end">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="urunTabloGövde"></tbody>
+                    </table>
+                </div>
+                <div id="bosVeriUyarisi" class="text-center text-muted py-4 d-none">
+                    <i class="bi bi-inbox fs-2 d-block mb-2"></i>Bu hesaba ait henüz hiçbir ürün verisi girilmemiş.
+                </div>
+            </div>
         </div>
-        <div class="table-responsive">
-            <table class="table table-hover align-middle bg-white mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th><th>Malzeme Adı</th><th>Bulunduğu Depo</th><th class="text-center">Mevcut Stok</th><th class="text-center">Kritik Seviye</th><th>Durum</th><th class="text-center" style="width: 250px;">Stok İşlemleri</th>
-                    </tr>
-                </thead>
-                <tbody id="stokTabloGövde"></tbody>
-            </table>
-        </div>
+
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+    import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
         authDomain: "depo-stok-f6389.firebaseapp.com",
         databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "depo-stok-f6389",
-        storageBucket: "depo-stok-f6389.firebasestorage.app",
-        messagingSenderId: "884521404368",
-        appId: "1:884521404368:web:ea7392975933c5a2415bd5"
+        projectId: "depo-stok-f6389"
     };
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    document.getElementById('userGosterge').innerText = localStorage.getItem('aktifKullanici');
-    let seciliDepoFiltresi = "Tümü";
-    let depo = {};
-    const varsayilanDepo = {}; 
+    const aktifKullanici = localStorage.getItem('aktifKullanici');
+    const kullaniciRolu = localStorage.getItem('kullaniciRolu');
 
-    onValue(ref(database, 'depoVerisi'), (snapshot) => {
-        const data = snapshot.val();
-        depo = data ? data : varsayilanDepo;
-        tabloyuGuncelle();
+    if (!aktifKullanici || !kullaniciRolu) {
+        window.location.replace("login.html");
+    }
+
+    document.getElementById('lblAktifUser').innerText = aktifKullanici;
+
+    document.getElementById('btnCikis').addEventListener('click', () => {
+        localStorage.clear();
+        window.location.replace("login.html");
     });
 
-    function tabloyuGuncelle() {
-        const gövde = document.getElementById('stokTabloGövde');
-        gövde.innerHTML = "";
-        let gosterilenKalemSayisi = 0;
-        const depoIdleri = Object.keys(depo);
+    let veriYolu = kullaniciRolu; 
 
-        if (depoIdleri.length === 0 || (seciliDepoFiltresi !== "Tümü" && !depoIdleri.some(id => depo[id].kategori === seciliDepoFiltresi))) {
-            gövde.innerHTML = `<tr><td colspan="7" class="text-center text-muted p-4">Bu depoda henüz tanımlanmış malzeme bulunmamaktadır. Yukarıdaki formdan ekleyebilirsiniz.</td></tr>`;
-            document.getElementById('toplamKalemOzet').innerText = "0 Çeşit Malzeme";
-            return;
-        }
+    if (kullaniciRolu === "yonetici") {
+        document.getElementById('yoneticiFiltreAlani').classList.remove('d-none');
+        document.getElementById('formKarti').innerHTML = `
+            <div class="alert alert-warning border-0 shadow-sm text-center">
+                <i class="bi bi-info-circle-fill fs-3 d-block mb-2 text-warning"></i>
+                <h5 class="fw-bold">Yönetici Denetim Modu</h5>
+                <p class="small mb-0">Yönetici hesabı doğrudan veri girişi yapamaz. Üst menüden seçtiğiniz personelin girdiği verileri sağ taraftan canlı izleyebilir ve silebilirsiniz.</p>
+            </div>
+        `;
+        veriYolu = document.getElementById('yoneticiBirimSecimi').value;
 
-        for (let id in depo) {
-            const urun = depo[id];
-            if (seciliDepoFiltresi !== "Tümü" && urun.kategori !== seciliDepoFiltresi) continue;
-            
-            gosterilenKalemSayisi++;
-            const currentStok = parseInt(urun.stok) || 0;
-            const currentKritik = parseInt(urun.kritik) || 0;
-            const isKritik = currentStok <= currentKritik;
-            const durumRozet = isKritik ? `<span class="badge bg-danger-subtle text-danger p-2">KRİTİK !!!</span>` : `<span class="badge bg-success-subtle text-success p-2">Yeterli</span>`;
-
-            gövde.innerHTML += `
-                <tr>
-                    <td>#${id}</td>
-                    <td class="fw-semibold">${urun.adi}</td>
-                    <td><span class="badge bg-secondary-subtle text-dark">${urun.kategori}</span></td>
-                    <td class="text-center fw-bold ${isKritik ? 'text-danger':'text-primary'}">${currentStok}</td>
-                    <td class="text-center">${currentKritik}</td>
-                    <td>${durumRozet}</td>
-                    <td class="text-center">
-                        <a href="index.html?id=${id}&tip=dus" class="btn btn-sm btn-outline-danger fw-bold me-1"><i class="bi bi-dash-lg"></i> Düş</a>
-                        <a href="index.html?id=${id}&tip=ekle" class="btn btn-sm btn-outline-success fw-bold me-2"><i class="bi bi-plus-lg"></i> Ekle</a>
-                        <button class="btn btn-sm btn-danger btn-sil-trigger" data-id="${id}"><i class="bi bi-trash3"></i> Sil</button>
-                    </td>
-                </tr>`;
-        }
-        document.getElementById('toplamKalemOzet').innerText = gosterilenKalemSayisi + " Çeşit Malzeme";
-
-        document.querySelectorAll('.btn-sil-trigger').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                if(confirm(`${depo[id].adi} silinsin mi?`)) {
-                    delete depo[id];
-                    set(ref(database, 'depoVerisi'), depo);
-                }
-            });
+        document.getElementById('yoneticiBirimSecimi').addEventListener('change', (e) => {
+            veriYolu = e.target.value;
+            verileriCanliDinle();
         });
     }
 
-    const filtreEşleşme = {
-        "f-Tümü":"Tümü", 
-        "f-Şarküteri":"Şarküteri", 
-        "f-Et4":"Et +4", 
-        "f-Kuru":"Kuru Gıda", 
-        "f-Pastane":"Pastane", 
-        "f-Pastane18":"Pastane -18", 
-        "f-Sebze":"Sebze +4",
-        "f-Sebze18":"Sebze -18"
-    };
+    const urunForm = document.getElementById('urunForm');
+    if (urunForm) {
+        urunForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const ad = document.getElementById('urunAdi').value.trim();
+            const miktar = document.getElementById('urunMiktar').value;
+            const detay = document.getElementById('urunDetay').value.trim() || "Belirtilmedi";
 
-    Object.keys(filtreEşleşme).forEach(key => {
-        const el = document.getElementById(key);
-        if(el) {
-            el.addEventListener('click', function() {
-                seciliDepoFiltresi = filtreEşleşme[key];
-                document.getElementById('tabloBaslik').innerText = seciliDepoFiltresi === 'Tümü' ? "Tüm Depolar Envanter Listesi" : `${seciliDepoFiltresi} Deposu Envanter Listesi`;
-                document.querySelectorAll('#depoFiltreleri .nav-link').forEach(s => s.classList.remove('active'));
-                this.classList.add('active');
-                tabloyuGuncelle();
-            });
-        }
-    });
-
-    document.getElementById('yeniUrunForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const ad = document.getElementById('yeniUrunAdi').value.trim();
-        const depoKategori = document.getElementById('yeniUrunDepo').value;
-        const stokMiktar = parseInt(document.getElementById('yeniUrunStok').value);
-        const kritikMiktar = parseInt(document.getElementById('yeniUrunKritik').value);
-
-        const mevcutIdler = Object.keys(depo).map(Number);
-        const yeniId = mevcutIdler.length > 0 ? Math.max(...mevcutIdler) + 1 : 1;
-
-        depo[yeniId] = { adi: ad, kategori: depoKategori, stok: stokMiktar, kritik: kritikMiktar };
-        set(ref(database, 'depoVerisi'), depo).then(() => {
-            document.getElementById('yeniUrunForm').reset();
+            const yeniUrunRef = push(ref(database, 'birimUrunleri/' + veriYolu));
+            set(yeniUrunRef, {
+                urunAdi: ad,
+                urunMiktar: miktar,
+                urunDetay: detay
+            }).then(() => {
+                alert("Ürün başarıyla kendi ekranınıza eklendi.");
+                urunForm.reset();
+            }).catch(err => alert("Hata: " + err.message));
         });
-    });
+    }
 
-    document.getElementById('btnSifirla').addEventListener('click', function() {
-        const guvenlikSifresi = prompt("Stokları sıfırlamak için yetkili şifresini giriniz:");
-        if (guvenlikSifresi === "2605") {
-            if(confirm("Tüm ortak bulut envanterini ve işlem geçmişini tamamen sıfırlamak istediğinize emin misiniz?")) {
-                set(ref(database, 'depoVerisi'), varsayilanDepo);
-                set(ref(database, 'islemGecmisi'), null);
-                alert("Tüm veri tabanı başarıyla sıfırlandı!");
+    function verileriCanliDinle() {
+        const urunlerRef = ref(database, 'birimUrunleri/' + veriYolu);
+        onValue(urunlerRef, (snapshot) => {
+            const tbody = document.getElementById('urunTabloGövde');
+            const bosUyari = document.getElementById('bosVeriUyarisi');
+            tbody.innerHTML = "";
+
+            if (snapshot.exists()) {
+                bosUyari.classList.add('d-none');
+                const veriler = snapshot.val();
+                for (let key in veriler) {
+                    const satir = document.createElement('tr');
+                    satir.innerHTML = `
+                        <td class="fw-semibold text-dark">${veriler[key].urunAdi}</td>
+                        <td><span class="badge bg-primary fs-6">${veriler[key].urunMiktar}</span></td>
+                        <td class="text-muted">${veriler[key].urunDetay}</td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-danger" onclick="urunSil('${key}')">
+                                <i class="bi bi-trash"></i> Sil
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(satir);
+                }
+            } else {
+                bosUyari.classList.remove('d-none');
             }
-        } else if (guvenlikSifresi !== null) {
-            alert("Hatalı Yetkili Şifresi! Sıfırlama işlemi iptal edildi.");
+        });
+    }
+
+    window.urunSil = function(urunId) {
+        if (confirm("Bu veriyi silmek istediğinize emin misiniz?")) {
+            remove(ref(database, `birimUrunleri/${veriYolu}/${urunId}`))
+                .then(() => alert("Kayıt veritabanından silindi."))
+                .catch(err => alert("Hata: " + err.message));
         }
-    });
-</script>
-<script>
-    function oturumuKapat() { localStorage.removeItem('aktifKullanici'); window.location.href = "login.html"; }
+    }
+
+    verileriCanliDinle();
 </script>
 </body>
 </html>
