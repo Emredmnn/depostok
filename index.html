@@ -214,7 +214,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // BELİRTTİĞİN YENİ ŞİFRELER VE GÜNCELLENEN BELİRGİN ROLLER
+    // KESİN GİRİŞ BİLGİLERİ VERİ YAPISI
     const KULLANICILAR = {
         "yonetici": { sifre: "010", unvan: "Yönetici", rol: "YÖNETİCİ" },
         "depo": { sifre: "111", unvan: "Depo", rol: "DEPO" },
@@ -227,34 +227,40 @@
     let reports = [];
     let activeDepotFilter = 'HEPSİ';
 
-    // TÜRKÇE KARAKTER DUYARLI HARF DÖNÜŞTÜRÜCÜ (Büyük-Küçük Harf Hatalarını Engeller)
-    function temizleVeKucult(text) {
-        return text.trim()
+    // GELİŞMİŞ TÜRKÇE KARAKTER TEMİZLEME VE GÜVENLİ FORMAT MOTORU
+    function guvenliFormat(text) {
+        if (!text) return "";
+        return text.toString().trim()
             .replace(/İ/g, "i")
             .replace(/I/g, "ı")
             .replace(/Ğ/g, "ğ")
+            .replace(/ğ/g, "ğ")
             .replace(/Ü/g, "ü")
+            .replace(/ü/g, "ü")
             .replace(/Ş/g, "ş")
+            .replace(/ş/g, "ş")
             .replace(/Ö/g, "ö")
+            .replace(/ö/g, "ö")
             .replace(/Ç/g, "ç")
+            .replace(/ç/g, "ç")
             .toLowerCase();
     }
 
-    // GİRİŞ MOTORU
+    // GİRİŞ MOTORU (YENİLENDİ)
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const inputUser = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
+        const inputPass = document.getElementById('password').value.toString().trim();
 
-        // Kullanıcı girdisini güvenli formata çeviriyoruz
-        const u = temizleVeKucult(inputUser);
+        // Kullanıcı girdisi harf ve karakter filtresinden geçiriliyor
+        const u = guvenliFormat(inputUser);
 
-        if (KULLANICILAR[u] && KULLANICILAR[u].sifre === p) {
+        if (KULLANICILAR[u] && KULLANICILAR[u].sifre === inputPass) {
             currentUser = KULLANICILAR[u];
             document.getElementById('loginWrapper').style.display = 'none';
             initSystem();
         } else {
-            alert("Hatalı kullanıcı adı veya şifre! Lütfen kontrol edin.");
+            alert("Giriş Başarısız! Kullanıcı adı veya şifre hatalı.\n\nLütfen girdiğiniz bilgileri kontrol edin.");
         }
     });
 
@@ -305,7 +311,6 @@
 
             let actionButtonsHtml = '';
 
-            // BUTONLAR ROLLERİN YETKİLERİNE GÖRE FİLTRELENİR
             if (currentUser.rol === 'YÖNETİCİ') {
                 actionButtonsHtml = `
                     <button class="action-btn btn-depo-in" onclick="executeAction('${item.name}', 'IN', 'Yönetici Girişi')">+ Ekle</button>
@@ -348,7 +353,6 @@
         renderUi();
     };
 
-    // YENİ ÜRÜN EKLEME
     document.getElementById('addForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('newProdName').value.trim();
@@ -378,7 +382,6 @@
         document.getElementById('newProdLimit').value = "0";
     });
 
-    // CANLI STOK DEĞİŞİM MOTORU
     window.executeAction = function(prodName, type, actionLabel) {
         const item = inventory.find(i => i.name === prodName);
         if(!item) return;
@@ -409,7 +412,6 @@
         });
     };
 
-    // HAVUZDAN SİLME
     window.deleteProduct = function(prodName) {
         if(confirm(`"${prodName}" ürününü ortak havuzdan tamamen silmek istiyor musunuz?`)) {
             const cleanKey = prodName.replace(/[.#$\[\]]/g, "");
@@ -430,7 +432,6 @@
 
     document.getElementById('searchInput').addEventListener('input', renderUi);
 
-    // CANLI RAPORLAMA PANELİ
     const modal = document.getElementById('reportModal');
     document.getElementById('openReportBtn').addEventListener('click', () => {
         db.ref('depo_rapor').once('value', (snapshot) => {
