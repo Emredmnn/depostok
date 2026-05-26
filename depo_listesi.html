@@ -11,6 +11,8 @@
         body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
         .navbar { background-color: #0f172a; }
         .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .filter-btn { transition: all 0.2s ease; font-weight: 600; }
+        .filter-btn:hover { transform: translateY(-2px); }
     </style>
 </head>
 <body>
@@ -72,22 +74,34 @@
 
         <div class="col-md-8">
             <div class="card p-4 bg-white shadow-sm">
-                <h4 class="fw-bold text-dark mb-3"><i class="bi bi-list-ul me-2 text-primary"></i>Sistemde Kayıtlı Ürünleriniz</h4>
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <h4 class="fw-bold text-dark mb-0"><i class="bi bi-list-ul me-2 text-primary"></i>Sistemde Kayıtlı Ürünleriniz</h4>
+                    
+                    <div class="btn-group shadow-sm" role="group">
+                        <button type="button" class="btn btn-sm btn-outline-secondary filter-btn active" id="btnFiltreHepsi">Hepsini Gör</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger filter-btn" id="btnFiltreKritik">🔴 Kritik</button>
+                        <button type="button" class="btn btn-sm btn-outline-warning filter-btn" id="btnFiltreDusuk">🟡 Düşük</button>
+                        <button type="button" class="btn btn-sm btn-outline-success filter-btn" id="btnFiltreGuvenli">🟢 Güvenli</button>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th>Ürün Adı</th>
                                 <th>Miktar</th>
+                                <th>Stok Durumu</th>
                                 <th>Bölüm / Detay</th>
                                 <th class="text-end">İşlem</th>
                             </tr>
                         </thead>
-                        <tbody id="urunTabloGövde"></tbody>
+                        <tbody id="urunTabloGövde">
+                            </tbody>
                     </table>
                 </div>
                 <div id="bosVeriUyarisi" class="text-center text-muted py-4 d-none">
-                    <i class="bi bi-inbox fs-2 d-block mb-2"></i>Bu hesaba ait henüz hiçbir ürün verisi girilmemiş.
+                    <i class="bi bi-inbox fs-2 d-block mb-2"></i>Bu filtreye veya hesaba ait ürün verisi bulunamadı.
                 </div>
             </div>
         </div>
@@ -99,6 +113,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
+    // 💻 Merkezi Firebase Veritabanı Altyapısı
     const firebaseConfig = {
         apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
         authDomain: "depo-stok-f6389.firebaseapp.com",
@@ -109,22 +124,29 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
+    // Oturum verilerini localStorage hafızasından alıyoruz
     const aktifKullanici = localStorage.getItem('aktifKullanici');
     const kullaniciRolu = localStorage.getItem('kullaniciRolu');
 
+    // Güvenlik duvarı kontrolü
     if (!aktifKullanici || !kullaniciRolu) {
         window.location.replace("login.html");
     }
 
     document.getElementById('lblAktifUser').innerText = aktifKullanici;
 
+    // Oturum Kapatma İşlemi
     document.getElementById('btnCikis').addEventListener('click', () => {
         localStorage.clear();
         window.location.replace("login.html");
     });
 
+    // Verilerin ayrışacağı ana kanal adresi (depo, uretim, garson)
     let veriYolu = kullaniciRolu; 
+    let mevcutUrunlerHafiza = {}; // Canlı filtrelemelerin hızlı çalışması için yerel hafıza dizisi
+    let aktifFiltre = "hepsi";
 
+    // --- 👑 YÖNETİCİ GİRİŞ KONTROLÜ VE EKRAN AYARI ---
     if (kullaniciRolu === "yonetici") {
         document.getElementById('yoneticiFiltreAlani').classList.remove('d-none');
         document.getElementById('formKarti').innerHTML = `
@@ -136,20 +158,23 @@
         `;
         veriYolu = document.getElementById('yoneticiBirimSecimi').value;
 
+        // Yönetici izlemek istediği birimi değiştirdiğinde verileri anlık güncelle
         document.getElementById('yoneticiBirimSecimi').addEventListener('change', (e) => {
             veriYolu = e.target.value;
             verileriCanliDinle();
         });
     }
 
+    // --- 📥 VERİTABANINA VERİ EKLEME MOTORU ---
     const urunForm = document.getElementById('urunForm');
     if (urunForm) {
         urunForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const ad = document.getElementById('urunAdi').value.trim();
-            const miktar = document.getElementById('urunMiktar').value;
+            const miktar = parseInt(document.getElementById('urunMiktar').value);
             const detay = document.getElementById('urunDetay').value.trim() || "Belirtilmedi";
 
+            // Veriyi giren kullanıcının kendi klasörünün altına izole şekilde kaydeder
             const yeniUrunRef = push(ref(database, 'birimUrunleri/' + veriYolu));
             set(yeniUrunRef, {
                 urunAdi: ad,
@@ -162,45 +187,66 @@
         });
     }
 
-    function verileriCanliDinle() {
-        const urunlerRef = ref(database, 'birimUrunleri/' + veriYolu);
-        onValue(urunlerRef, (snapshot) => {
-            const tbody = document.getElementById('urunTabloGövde');
-            const bosUyari = document.getElementById('bosVeriUyarisi');
-            tbody.innerHTML = "";
+    // --- 📊 VERİLERİ SÜZÜP EKRANA BASAN ANA TABLO MOTORU ---
+    function tabloyuGuncelle() {
+        const tbody = document.getElementById('urunTabloGövde');
+        const bosUyari = document.getElementById('bosVeriUyarisi');
+        tbody.innerHTML = "";
+        
+        let kayitVarMi = false;
 
-            if (snapshot.exists()) {
-                bosUyari.classList.add('d-none');
-                const veriler = snapshot.val();
-                for (let key in veriler) {
-                    const satir = document.createElement('tr');
-                    satir.innerHTML = `
-                        <td class="fw-semibold text-dark">${veriler[key].urunAdi}</td>
-                        <td><span class="badge bg-primary fs-6">${veriler[key].urunMiktar}</span></td>
-                        <td class="text-muted">${veriler[key].urunDetay}</td>
-                        <td class="text-end">
-                            <button class="btn btn-sm btn-outline-danger" onclick="urunSil('${key}')">
-                                <i class="bi bi-trash"></i> Sil
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(satir);
-                }
+        for (let key in mevcutUrunlerHafiza) {
+            const urun = mevcutUrunlerHafiza[key];
+            const miktar = parseInt(urun.urunMiktar);
+            
+            // 🚨 İstediğin Kritik, Düşük, Güvenli Limit Ayarları ve Renkli Badgeler
+            let durumBadge = "";
+            let durumTipi = "";
+
+            if (miktar <= 10) {
+                durumBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i>Kritik Stok</span>`;
+                durumTipi = "kritik";
+            } else if (miktar > 10 && miktar <= 40) {
+                durumBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-circle-fill me-1"></i>Düşük Stok</span>`;
+                durumTipi = "dusuk";
             } else {
-                bosUyari.classList.remove('d-none');
+                durumBadge = `<span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Güvenli Stok</span>`;
+                durumTipi = "guvenli";
             }
-        });
-    }
 
-    window.urunSil = function(urunId) {
-        if (confirm("Bu veriyi silmek istediğinize emin misiniz?")) {
-            remove(ref(database, `birimUrunleri/${veriYolu}/${urunId}`))
-                .then(() => alert("Kayıt veritabanından silindi."))
-                .catch(err => alert("Hata: " + err.message));
+            // Üstteki buton filtre kontrolü
+            if (aktifFiltre !== "hepsi" && aktifFiltre !== durumTipi) {
+                continue; 
+            }
+
+            kayitVarMi = true;
+            const satir = document.createElement('tr');
+            satir.innerHTML = `
+                <td class="fw-semibold text-dark">${urun.urunAdi}</td>
+                <td><span class="badge bg-primary fs-6">${miktar}</span></td>
+                <td>${durumBadge}</td>
+                <td class="text-muted">${urun.urunDetay}</td>
+                <td class="text-end">
+                    <button class="btn btn-sm btn-outline-danger" onclick="urunSil('${key}')">
+                        <i class="bi bi-trash"></i> Sil
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(satir);
+        }
+
+        if (kayitVarMi) {
+            bosUyari.classList.add('d-none');
+        } else {
+            bosUyari.classList.remove('d-none');
         }
     }
 
-    verileriCanliDinle();
-</script>
-</body>
-</html>
+    // Firebase'den verileri çeken canlı dinleyici
+    function verileriCanliDinle() {
+        const urunlerRef = ref(database, 'birimUrunleri/' + veriYolu);
+        onValue(urunlerRef, (snapshot) => {
+            if (snapshot.exists()) {
+                mevcutUrunlerHafiza = snapshot.val();
+            } else {
+                mevcutU
