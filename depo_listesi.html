@@ -29,7 +29,7 @@
         <div>
             <a href="rapor.html" class="btn btn-success fw-bold me-2"><i class="bi bi-file-earmark-bar-graph"></i> Raporlar</a>
             <button class="btn btn-outline-danger btn-sm fw-bold me-2" onclick="oturumuKapat()"><i class="bi bi-box-arrow-right"></i> Çıkış Yap</button>
-            <button class="btn btn-danger btn-sm fw-bold" onclick="sistemiSifirla()"><i class="bi bi-arrow-counterclockwise"></i> Stokları Sıfırla</button>
+            <button class="btn btn-danger btn-sm fw-bold" id="btnSifirla"><i class="bi bi-arrow-counterclockwise"></i> Stokları Sıfırla</button>
         </div>
     </div>
 
@@ -37,7 +37,7 @@
         <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-plus-circle-fill text-primary me-2"></i>Sisteme Yeni Malzeme Tanımla</h5>
         <form id="yeniUrunForm" class="row g-3">
             <div class="col-md-3">
-                <input type="text" id="yeniUrunAdi" class="form-control" placeholder="Malzeme Adı (Örn: Çilekli Pasta)" required autocomplete="off">
+                <input type="text" id="yeniUrunAdi" class="form-control" placeholder="Malzeme Adı" required autocomplete="off">
             </div>
             <div class="col-md-3">
                 <select id="yeniUrunDepo" class="form-select" required>
@@ -65,13 +65,13 @@
     <div class="card p-3 mb-4">
         <h6 class="fw-bold text-muted mb-2"><i class="bi bi-filter-square me-1"></i> Depo Alanı Seçimi:</h6>
         <ul class="nav nav-pills" id="depoFiltreleri">
-            <li class="nav-link active" onclick="filtreleDepo('Tümü')">Tüm Depolar</li>
-            <li class="nav-link" onclick="filtreleDepo('Şarküteri')">Şarküteri</li>
-            <li class="nav-link" onclick="filtreleDepo('Et +4')">Et +4</li>
-            <li class="nav-link" onclick="filtreleDepo('Kuru Gıda')">Kuru Gıda</li>
-            <li class="nav-link" onclick="filtreleDepo('Pastane')">Pastane</li>
-            <li class="nav-link" onclick="filtreleDepo('Pastane -18')">Pastane -18</li>
-            <li class="nav-link" onclick="filtreleDepo('Sebze +4')">Sebze +4</li>
+            <li class="nav-link active" id="f-Tümü">Tüm Depolar</li>
+            <li class="nav-link" id="f-Şarküteri">Şarküteri</li>
+            <li class="nav-link" id="f-Et4">Et +4</li>
+            <li class="nav-link" id="f-Kuru">Kuru Gıda</li>
+            <li class="nav-link" id="f-Pastane">Pastane</li>
+            <li class="nav-link" id="f-Pastane18">Pastane -18</li>
+            <li class="nav-link" id="f-Sebze">Sebze +4</li>
         </ul>
     </div>
 
@@ -93,35 +93,39 @@
     </div>
 </div>
 
-<script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+    // 🌟 DATABASEURL SATIRI BURAYA EKLENDİ (Eşitlemeyi sağlayan yer)
+    const firebaseConfig = {
+        apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
+        authDomain: "depo-stok-f6389.firebaseapp.com",
+        databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "depo-stok-f6389",
+        storageBucket: "depo-stok-f6389.firebasestorage.app",
+        messagingSenderId: "884521404368",
+        appId: "1:884521404368:web:ea7392975933c5a2415bd5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
     document.getElementById('userGosterge').innerText = localStorage.getItem('aktifKullanici');
     let seciliDepoFiltresi = "Tümü";
+    let depo = {};
 
     const varsayilanDepo = {
         "1": { adi: "Ayçiçek Yağı", kategori: "Kuru Gıda", stok: 450, kritik: 72 },
         "2": { adi: "Toz Şeker", kategori: "Kuru Gıda", stok: 180, kritik: 50 },
-        "3": { adi: "Un", kategori: "Kuru Gıda", stok: 25, kritik: 25 },
-        "4": { adi: "Kaşar Peyniri 2 kg", kategori: "Şarküteri", stok: 36, kritik: 12 },
-        "5": { adi: "Ayran", kategori: "Şarküteri", stok: 240, kritik: 40 },
-        "6": { adi: "Dana antrikot", kategori: "Et +4", stok: 35, kritik: 10 }
+        "3": { adi: "Un", kategori: "Kuru Gıda", stok: 25, kritik: 25 }
     };
 
-    if (!localStorage.getItem('depoVerisi')) { localStorage.setItem('depoVerisi', JSON.stringify(varsayilanDepo)); }
-    if (!localStorage.getItem('islemGecmisi')) { localStorage.setItem('islemGecmisi', JSON.stringify([])); }
-
-    let depo = JSON.parse(localStorage.getItem('depoVerisi'));
-
-    function filtreleDepo(depoAdi) {
-        seciliDepoFiltresi = depoAdi;
-        document.getElementById('tabloBaslik').innerText = depoAdi === 'Tümü' ? "Tüm Depolar Envanter Listesi" : `${depoAdi} Deposu Envanter Listesi`;
-        
-        const sekmeler = document.querySelectorAll('#depoFiltreleri .nav-link');
-        sekmeler.forEach(s => {
-            if(s.innerText === depoAdi || (depoAdi === 'Tümü' && s.innerText === 'Tüm Depolar')) s.classList.add('active');
-            else s.classList.remove('active');
-        });
+    onValue(ref(database, 'depoVerisi'), (snapshot) => {
+        const data = snapshot.val();
+        if (data) { depo = data; } else { depo = varsayilanDepo; set(ref(database, 'depoVerisi'), varsayilanDepo); }
         tabloyuGuncelle();
-    }
+    });
 
     function tabloyuGuncelle() {
         const gövde = document.getElementById('stokTabloGövde');
@@ -130,7 +134,6 @@
 
         for (let id in depo) {
             const urun = depo[id];
-            
             if (seciliDepoFiltresi !== "Tümü" && urun.kategori !== seciliDepoFiltresi) continue;
             
             gosterilenKalemSayisi++;
@@ -148,21 +151,33 @@
                     <td class="text-center">
                         <a href="index.html?id=${id}&tip=dus" class="btn btn-sm btn-outline-danger fw-bold me-1"><i class="bi bi-dash-lg"></i> Düş</a>
                         <a href="index.html?id=${id}&tip=ekle" class="btn btn-sm btn-outline-success fw-bold me-2"><i class="bi bi-plus-lg"></i> Ekle</a>
-                        <button onclick="malzemeSil('${id}')" class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i> Sil</button>
+                        <button class="btn btn-sm btn-danger btn-sil-trigger" data-id="${id}"><i class="bi bi-trash3"></i> Sil</button>
                     </td>
                 </tr>`;
         }
         document.getElementById('toplamKalemOzet').innerText = gosterilenKalemSayisi + " Çeşit Malzeme";
+
+        document.querySelectorAll('.btn-sil-trigger').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                if(confirm(`${depo[id].adi} silinsin mi?`)) {
+                    delete depo[id];
+                    set(ref(database, 'depoVerisi'), depo);
+                }
+            });
+        });
     }
 
-    // YENİ FONKSİYON: Listeden Malzeme Silme
-    function malzemeSil(id) {
-        if(confirm(`${depo[id].adi} malzemesini sistemden tamamen silmek istediğinize emin misiniz?`)) {
-            delete depo[id];
-            localStorage.setItem('depoVerisi', JSON.stringify(depo));
+    const filtreEşleşme = {"f-Tümü":"Tümü", "f-Şarküteri":"Şarküteri", "f-Et4":"Et +4", "f-Kuru":"Kuru Gıda", "f-Pastane":"Pastane", "f-Pastane18":"Pastane -18", "f-Sebze":"Sebze +4"};
+    Object.keys(filtreEşleşme).forEach(key => {
+        document.getElementById(key).addEventListener('click', function() {
+            seciliDepoFiltresi = filtreEşleşme[key];
+            document.getElementById('tabloBaslik').innerText = seciliDepoFiltresi === 'Tümü' ? "Tüm Depolar Envanter Listesi" : `${seciliDepoFiltresi} Deposu Envanter Listesi`;
+            document.querySelectorAll('#depoFiltreleri .nav-link').forEach(s => s.classList.remove('active'));
+            this.classList.add('active');
             tabloyuGuncelle();
-        }
-    }
+        });
+    });
 
     document.getElementById('yeniUrunForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -175,25 +190,20 @@
         const yeniId = mevcutIdler.length > 0 ? Math.max(...mevcutIdler) + 1 : 1;
 
         depo[yeniId] = { adi: ad, kategori: depoKategori, stok: stokMiktar, kritik: kritikMiktar };
-        localStorage.setItem('depoVerisi', JSON.stringify(depo));
-        
-        document.getElementById('yeniUrunForm').reset();
-        alert(`${ad} başarıyla ${depoKategori} deposuna eklendi!`);
-        tabloyuGuncelle();
+        set(ref(database, 'depoVerisi'), depo).then(() => {
+            document.getElementById('yeniUrunForm').reset();
+        });
     });
 
-    function sistemiSifirla() {
-        if(confirm("Stoklar ve işlem geçmişi sıfırlansın mı?")) {
-            localStorage.setItem('depoVerisi', JSON.stringify(varsayilanDepo));
-            localStorage.setItem('islemGecmisi', JSON.stringify([]));
-            depo = JSON.parse(localStorage.getItem('depoVerisi'));
-            filtreleDepo('Tümü');
+    document.getElementById('btnSifirla').addEventListener('click', function() {
+        if(confirm("Tüm ortak bulut envanteri sıfırlansın mı?")) {
+            set(ref(database, 'depoVerisi'), varsayilanDepo);
+            set(ref(database, 'islemGecmisi'), null);
         }
-    }
-
+    });
+</script>
+<script>
     function oturumuKapat() { localStorage.removeItem('aktifKullanici'); window.location.href = "login.html"; }
-    tabloyuGuncelle();
 </script>
 </body>
 </html>
-        
