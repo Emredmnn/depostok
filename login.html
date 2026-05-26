@@ -31,9 +31,7 @@
 </div>
 
 <script>
-    // Dinleyiciyi doğrudan forma ve 'submit' olayına bağlıyoruz
     document.getElementById('loginForm').addEventListener('submit', function(e) {
-        // Sayfanın form gönderildiğinde yenilenmesini engelliyoruz
         e.preventDefault(); 
 
         const user = document.getElementById('username').value.trim();
@@ -46,7 +44,6 @@
 
         if(sifre === "1234") {
             localStorage.setItem('aktifKullanici', user);
-            // ÖNEMLİ: Aynı klasörde 'depo_listesi.html' dosyası mevcut olmalıdır.
             window.location.replace("depo_listesi.html");
         } else {
             alert("Hatalı Giriş Şifresi! Lütfen tekrar deneyiniz.");
