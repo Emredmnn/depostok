@@ -48,7 +48,7 @@
                     <option value="Pastane">Pastane</option>
                     <option value="Pastane -18">Pastane -18</option>
                     <option value="Sebze +4">Sebze +4</option>
-                    <option value="Sebze +4">Sebze -18</option>
+                    <option value="Sebze -18">Sebze -18</option>
                 </select>
             </div>
             <div class="col-md-2">
@@ -73,6 +73,7 @@
             <li class="nav-link" id="f-Pastane">Pastane</li>
             <li class="nav-link" id="f-Pastane18">Pastane -18</li>
             <li class="nav-link" id="f-Sebze">Sebze +4</li>
+            <li class="nav-link" id="f-Sebze18">Sebze -18</li>
         </ul>
     </div>
 
@@ -114,17 +115,11 @@
     document.getElementById('userGosterge').innerText = localStorage.getItem('aktifKullanici');
     let seciliDepoFiltresi = "Tümü";
     let depo = {};
-
-    // 🌟 3 Ürün Kaldırıldı: Sistem artık bulutta veri yoksa tamamen boş başlayacak.
     const varsayilanDepo = {}; 
 
     onValue(ref(database, 'depoVerisi'), (snapshot) => {
         const data = snapshot.val();
-        if (data) { 
-            depo = data; 
-        } else { 
-            depo = varsayilanDepo; 
-        }
+        depo = data ? data : varsayilanDepo;
         tabloyuGuncelle();
     });
 
@@ -132,7 +127,6 @@
         const gövde = document.getElementById('stokTabloGövde');
         gövde.innerHTML = "";
         let gosterilenKalemSayisi = 0;
-
         const depoIdleri = Object.keys(depo);
 
         if (depoIdleri.length === 0 || (seciliDepoFiltresi !== "Tümü" && !depoIdleri.some(id => depo[id].kategori === seciliDepoFiltresi))) {
@@ -146,7 +140,9 @@
             if (seciliDepoFiltresi !== "Tümü" && urun.kategori !== seciliDepoFiltresi) continue;
             
             gosterilenKalemSayisi++;
-            const isKritik = urun.stok <= urun.kritik;
+            const currentStok = parseInt(urun.stok) || 0;
+            const currentKritik = parseInt(urun.kritik) || 0;
+            const isKritik = currentStok <= currentKritik;
             const durumRozet = isKritik ? `<span class="badge bg-danger-subtle text-danger p-2">KRİTİK !!!</span>` : `<span class="badge bg-success-subtle text-success p-2">Yeterli</span>`;
 
             gövde.innerHTML += `
@@ -154,8 +150,8 @@
                     <td>#${id}</td>
                     <td class="fw-semibold">${urun.adi}</td>
                     <td><span class="badge bg-secondary-subtle text-dark">${urun.kategori}</span></td>
-                    <td class="text-center fw-bold ${isKritik ? 'text-danger':'text-primary'}">${urun.stok}</td>
-                    <td class="text-center">${urun.kritik}</td>
+                    <td class="text-center fw-bold ${isKritik ? 'text-danger':'text-primary'}">${currentStok}</td>
+                    <td class="text-center">${currentKritik}</td>
                     <td>${durumRozet}</td>
                     <td class="text-center">
                         <a href="index.html?id=${id}&tip=dus" class="btn btn-sm btn-outline-danger fw-bold me-1"><i class="bi bi-dash-lg"></i> Düş</a>
@@ -177,15 +173,28 @@
         });
     }
 
-    const filtreEşleşme = {"f-Tümü":"Tümü", "f-Şarküteri":"Şarküteri", "f-Et4":"Et +4", "f-Kuru":"Kuru Gıda", "f-Pastane":"Pastane", "f-Pastane18":"Pastane -18", "f-Sebze":"Sebze +4"};
+    const filtreEşleşme = {
+        "f-Tümü":"Tümü", 
+        "f-Şarküteri":"Şarküteri", 
+        "f-Et4":"Et +4", 
+        "f-Kuru":"Kuru Gıda", 
+        "f-Pastane":"Pastane", 
+        "f-Pastane18":"Pastane -18", 
+        "f-Sebze":"Sebze +4",
+        "f-Sebze18":"Sebze -18"
+    };
+
     Object.keys(filtreEşleşme).forEach(key => {
-        document.getElementById(key).addEventListener('click', function() {
-            seciliDepoFiltresi = filtreEşleşme[key];
-            document.getElementById('tabloBaslik').innerText = seciliDepoFiltresi === 'Tümü' ? "Tüm Depolar Envanter Listesi" : `${seciliDepoFiltresi} Deposu Envanter Listesi`;
-            document.querySelectorAll('#depoFiltreleri .nav-link').forEach(s => s.classList.remove('active'));
-            this.classList.add('active');
-            tabloyuGuncelle();
-        });
+        const el = document.getElementById(key);
+        if(el) {
+            el.addEventListener('click', function() {
+                seciliDepoFiltresi = filtreEşleşme[key];
+                document.getElementById('tabloBaslik').innerText = seciliDepoFiltresi === 'Tümü' ? "Tüm Depolar Envanter Listesi" : `${seciliDepoFiltresi} Deposu Envanter Listesi`;
+                document.querySelectorAll('#depoFiltreleri .nav-link').forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                tabloyuGuncelle();
+            });
+        }
     });
 
     document.getElementById('yeniUrunForm').addEventListener('submit', function(e) {
@@ -204,10 +213,8 @@
         });
     });
 
-    // 🌟 ÖZEL SIFIRLAMA ŞİFRESİ (2605 KONTROLÜ)
     document.getElementById('btnSifirla').addEventListener('click', function() {
         const guvenlikSifresi = prompt("Stokları sıfırlamak için yetkili şifresini giriniz:");
-        
         if (guvenlikSifresi === "2605") {
             if(confirm("Tüm ortak bulut envanterini ve işlem geçmişini tamamen sıfırlamak istediğinize emin misiniz?")) {
                 set(ref(database, 'depoVerisi'), varsayilanDepo);
