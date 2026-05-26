@@ -2,59 +2,56 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>ISS Depo - Canlı Tüketim Raporu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canlı Operasyon Raporu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { background-color: #f4f6f9; }
-        .main-container { max-width: 1100px; margin: 30px auto; }
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
+        .navbar { background-color: #0f172a; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
-<script>
-    if (!localStorage.getItem('aktifKullanici')) { window.location.href = "login.html"; }
-</script>
 
-<div class="container main-container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold text-dark"><i class="bi bi-file-earmark-bar-graph text-success me-2"></i>Depo Hareket Analiz Raporu</h2>
-            <p class="text-muted mb-0">Canlı bulut işlem yoğunluk grafikleri</p>
-        </div>
-        <div>
-            <!-- Excel İndirme Butonu Buraya Eklendi -->
-            <button id="btnExcelIndir" class="btn btn-success fw-bold me-2">
-                <i class="bi bi-file-earmark-excel me-2"></i>Excel Raporu Al
-            </button>
-            <a href="depo_listesi.html" class="btn btn-outline-secondary fw-bold"><i class="bi bi-arrow-left me-2"></i>Ana Depoya Dön</a>
-        </div>
+<nav class="navbar navbar-dark shadow-sm py-3">
+    <div class="container">
+        <span class="navbar-brand fw-bold mb-0 h1">
+            <i class="bi bi-file-earmark-bar-graph me-2 text-warning"></i>Merkezi İşlem Log Raporu
+        </span>
+        <button onclick="window.history.back()" class="btn btn-outline-light btn-sm fw-bold">
+            <i class="bi bi-arrow-left me-1"></i>Geri Dön
+        </button>
     </div>
+</nav>
 
-    <div class="row g-4">
-        <div class="col-md-5">
-            <div class="card p-4 text-center bg-white h-100">
-                <h5 class="fw-bold mb-3 text-secondary"><i class="bi bi-pie-chart me-1"></i> Depo İşlem Yoğunluğu</h5>
-                <div style="max-width: 280px; margin: 0 auto;">
-                    <canvas id="islemGrafik"></canvas>
-                </div>
+<div class="container my-5">
+    <div class="card p-4 bg-white shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold text-dark mb-1">Tüm Birimlerin Canlı Hareketleri</h4>
+                <p class="text-muted small mb-0">Sistem üzerinde yapılan ekleme ve çıkarma işlemleri veritabanından anlık akar.</p>
             </div>
+            <button id="btnYenile" class="btn btn-light border btn-sm text-dark fw-semibold"><i class="bi bi-arrow-clockwise me-1"></i>Listeyi Güncelle</button>
         </div>
-        <div class="col-md-7">
-            <div class="card p-4 bg-white h-100">
-                <h5 class="fw-bold text-dark mb-3"><i class="bi bi-clock-history me-2 text-secondary"></i>Depo Hareket Geçmişi</h5>
-                <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light sticky-top">
-                            <tr>
-                                <th>Tarih / Saat</th><th>İşlemi Yapan</th><th>İlgili Depo</th><th>Malzeme</th><th class="text-center">Miktar</th><th>İşlem</th>
-                            </tr>
-                        </thead>
-                        <tbody id="logTabloGövde"></tbody>
-                    </table>
-                </div>
-            </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Tarih / Saat</th>
+                        <th>İşlemi Yapan Birim</th>
+                        <th>Veri Kaynağı (Klasör)</th>
+                        <th>Kayıt Detayı</th>
+                    </tr>
+                </thead>
+                <tbody id="raporTabloGövde"></tbody>
+            </table>
+        </div>
+
+        <div id="raporBosUyari" class="text-center text-muted py-5 d-none">
+            <i class="bi bi-clipboard-x fs-1 d-block mb-2"></i>Henüz kaydedilmiş bir operasyonel hareket bulunamadı.
         </div>
     </div>
 </div>
@@ -67,97 +64,52 @@
         apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
         authDomain: "depo-stok-f6389.firebaseapp.com",
         databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "depo-stok-f6389",
-        storageBucket: "depo-stok-f6389.firebasestorage.app",
-        messagingSenderId: "884521404368",
-        appId: "1:884521404368:web:ea7392975933c5a2415bd5"
+        projectId: "depo-stok-f6389"
     };
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    const logGövde = document.getElementById('logTabloGövde');
-    let grafikNesnesi = null;
-    let mevcutGecmisData = []; // Excel indirme fonksiyonu için veriyi hafızada tutuyoruz
+    function raporuYukle() {
+        const anaRef = ref(database, 'birimUrunleri');
+        onValue(anaRef, (snapshot) => {
+            const tbody = document.getElementById('raporTabloGövde');
+            const bosUyari = document.getElementById('raporBosUyari');
+            tbody.innerHTML = "";
 
-    onValue(ref(database, 'islemGecmisi'), (snapshot) => {
-        const gecmis = snapshot.val() || [];
-        mevcutGecmisData = gecmis; // Veriyi güncelledik
-        logGövde.innerHTML = "";
-        
-        const depoGrafikVerisi = { 
-            "Şarküteri": 0, 
-            "Et +4": 0, 
-            "Kuru Gıda": 0, 
-            "Pastane": 0, 
-            "Pastane -18": 0, 
-            "Sebze +4": 0,
-            "Sebze -18": 0
-        };
+            if (snapshot.exists()) {
+                bosUyari.classList.add('d-none');
+                const anaDugum = snapshot.val();
 
-        if (gecmis.length === 0) {
-            logGövde.innerHTML = `<tr><td colspan="6" class="text-center text-muted p-4">Henüz bir işlem gerçekleştirilmedi.</td></tr>`;
-        } else {
-            gecmis.forEach(islem => {
-                const rozet = islem.tip === 'ekle' ? `<span class="badge bg-success-subtle text-success">Stok Girişi</span>` : `<span class="badge bg-danger-subtle text-danger">Stok Çıkışı</span>`;
-                const depoAdi = islem.depoAdi || "Kuru Gıda";
-                logGövde.innerHTML += `<tr><td><small class="text-muted">${islem.tarih}</small></td><td class="fw-semibold">${islem.personel}</td><td><span class="badge bg-secondary-subtle text-dark">${depoAdi}</span></td><td class="fw-semibold text-dark">${islem.malzeme}</td><td class="text-center fw-bold">${islem.miktar}</td><td>${rozet}</td></tr>`;
-                if (depoGrafikVerisi[depoAdi] !== undefined) { depoGrafikVerisi[depoAdi] += parseInt(islem.miktar) || 0; }
-            });
-        }
+                for (let birimKey in anaDugum) {
+                    const birimUrunleri = anaDugum[birimKey];
+                    for (let urunKey in birimUrunleri) {
+                        const veri = birimUrunleri[urunKey];
+                        const satir = document.createElement('tr');
+                        const simdi = new Date();
+                        const anlikZaman = `${simdi.getDate().toString().padStart(2,'0')}.${(simdi.getMonth()+1).toString().padStart(2,'0')}.${simdi.getFullYear()}`;
 
-        const etiketler = Object.keys(depoGrafikVerisi);
-        const rakamlar = Object.values(depoGrafikVerisi);
-        if(grafikNesnesi) { grafikNesnesi.destroy(); }
-        grafikNesnesi = new Chart(document.getElementById('islemGrafik'), {
-            type: 'pie',
-            data: { labels: etiketler, datasets: [{ data: rakamlar, backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14', '#20b2aa'] }] },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+                        satir.innerHTML = `
+                            <td><span class="text-secondary small fw-bold"><i class="bi bi-clock me-1"></i>${anlikZaman} (Canlı)</span></td>
+                            <td><span class="badge bg-dark px-3 py-2">${birimKey.toUpperCase()}</span></td>
+                            <td><code class="text-danger">birimUrunleri/${birimKey}</code></td>
+                            <td>
+                                <strong>${veri.urunAdi}</strong> kaleminden 
+                                <span class="badge bg-primary mx-1">${veri.urunMiktar} adet</span> 
+                                [Bölüm: ${veri.urunDetay || 'Belirtilmedi'}] aktif durumda.
+                            </td>
+                        `;
+                        tbody.prepend(satir);
+                    }
+                }
+            } else {
+                bosUyari.classList.remove('d-none');
+            }
         });
-    });
+    }
 
-    // 📊 Zaman Damgalı Excel (CSV) İndirme Fonksiyonu
-    document.getElementById('btnExcelIndir').addEventListener('click', function() {
-        if (mevcutGecmisData.length === 0) {
-            alert("İndirilecek herhangi bir işlem geçmişi bulunamadı.");
-            return;
-        }
-
-        // CSV Başlıkları (Sütunlar)
-        let csvContent = "Tarih / Saat;İşlemi Yapan;İlgili Depo;Malzeme;Miktar;İşlem Tipi\n";
-
-        // Verileri satır satır ekleme (Excel'in Türkçe yapılandırmasında sorun çıkarmaması için ayraç olarak ";" seçildi)
-        mevcutGecmisData.forEach(islem => {
-            const islemTuru = islem.tip === 'ekle' ? "Stok Girişi" : "Stok Çıkışı";
-            const depo = islem.depoAdi || "Kuru Gıda";
-            csvContent += `${islem.tarih};${islem.personel};${depo};${islem.malzeme};${islem.miktar};${islemTuru}\n`;
-        });
-
-        // Türkçe karakterlerin Excel'de düzgün görünmesi için BOM (Byte Order Mark) ekliyoruz
-        const blob = new Blob([new Uint8Array([0xEF, 0xBB, 0xBF]), csvContent], { type: "text/csv;charset=utf-8;" });
-        
-        // Dinamik dosya adı oluşturma: depo_raporu_GG_AA_YYYY_SS_DD.csv
-        const simdi = new Date();
-        const gun = String(simdi.getDate()).padStart(2, '0');
-        const ay = String(simdi.getMonth() + 1).padStart(2, '0');
-        const yil = simdi.getFullYear();
-        const saat = String(simdi.getHours()).padStart(2, '0');
-        const dakika = String(simdi.getMinutes()).padStart(2, '0');
-        
-        const dosyaAdi = `depo_raporu_${gun}_${ay}_${yil}_${saat}_${dakika}.csv`;
-
-        // Tarayıcı indirme tetikleme
-        const link = document.createElement("a");
-        if (link.download !== undefined) {
-            const url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", dosyaAdi);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    });
+    document.getElementById('btnYenile').addEventListener('click', () => raporuYukle());
+    raporuYukle();
 </script>
 </body>
 </html>
