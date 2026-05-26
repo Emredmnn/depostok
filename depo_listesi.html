@@ -37,7 +37,7 @@
         <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-plus-circle-fill text-primary me-2"></i>Sisteme Yeni Malzeme Tanımla</h5>
         <form id="yeniUrunForm" class="row g-3">
             <div class="col-md-3">
-                <input type="text" id="yeniUrunAdi" class="form-control" placeholder="Malzeme Adı" required autocomplete="off">
+                <input type="text" id="yeniUrunAdi" class="form-control" placeholder="Malzeme Adı (Örn: Hasta Çorbası)" required autocomplete="off">
             </div>
             <div class="col-md-3">
                 <select id="yeniUrunDepo" class="form-select" required>
@@ -97,7 +97,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-    // 🌟 DATABASEURL SATIRI BURAYA EKLENDİ (Eşitlemeyi sağlayan yer)
     const firebaseConfig = {
         apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
         authDomain: "depo-stok-f6389.firebaseapp.com",
@@ -115,15 +114,16 @@
     let seciliDepoFiltresi = "Tümü";
     let depo = {};
 
-    const varsayilanDepo = {
-        "1": { adi: "Ayçiçek Yağı", kategori: "Kuru Gıda", stok: 450, kritik: 72 },
-        "2": { adi: "Toz Şeker", kategori: "Kuru Gıda", stok: 180, kritik: 50 },
-        "3": { adi: "Un", kategori: "Kuru Gıda", stok: 25, kritik: 25 }
-    };
+    // 🌟 3 Ürün Kaldırıldı: Sistem artık bulutta veri yoksa tamamen boş başlayacak.
+    const varsayilanDepo = {}; 
 
     onValue(ref(database, 'depoVerisi'), (snapshot) => {
         const data = snapshot.val();
-        if (data) { depo = data; } else { depo = varsayilanDepo; set(ref(database, 'depoVerisi'), varsayilanDepo); }
+        if (data) { 
+            depo = data; 
+        } else { 
+            depo = varsayilanDepo; 
+        }
         tabloyuGuncelle();
     });
 
@@ -131,6 +131,14 @@
         const gövde = document.getElementById('stokTabloGövde');
         gövde.innerHTML = "";
         let gosterilenKalemSayisi = 0;
+
+        const depoIdleri = Object.keys(depo);
+
+        if (depoIdleri.length === 0 || (seciliDepoFiltresi !== "Tümü" && !depoIdleri.some(id => depo[id].kategori === seciliDepoFiltresi))) {
+            gövde.innerHTML = `<tr><td colspan="7" class="text-center text-muted p-4">Bu depoda henüz tanımlanmış malzeme bulunmamaktadır. Yukarıdaki formdan ekleyebilirsiniz.</td></tr>`;
+            document.getElementById('toplamKalemOzet').innerText = "0 Çeşit Malzeme";
+            return;
+        }
 
         for (let id in depo) {
             const urun = depo[id];
@@ -195,10 +203,18 @@
         });
     });
 
+    // 🌟 ÖZEL SIFIRLAMA ŞİFRESİ (2605 KONTROLÜ)
     document.getElementById('btnSifirla').addEventListener('click', function() {
-        if(confirm("Tüm ortak bulut envanteri sıfırlansın mı?")) {
-            set(ref(database, 'depoVerisi'), varsayilanDepo);
-            set(ref(database, 'islemGecmisi'), null);
+        const guvenlikSifresi = prompt("Stokları sıfırlamak için yetkili şifresini giriniz:");
+        
+        if (guvenlikSifresi === "2605") {
+            if(confirm("Tüm ortak bulut envanterini ve işlem geçmişini tamamen sıfırlamak istediğinize emin misiniz?")) {
+                set(ref(database, 'depoVerisi'), varsayilanDepo);
+                set(ref(database, 'islemGecmisi'), null);
+                alert("Tüm veri tabanı başarıyla sıfırlandı!");
+            }
+        } else if (guvenlikSifresi !== null) {
+            alert("Hatalı Yetkili Şifresi! Sıfırlama işlemi iptal edildi.");
         }
     });
 </script>
