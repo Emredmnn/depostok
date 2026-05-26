@@ -84,11 +84,11 @@
         <form id="loginForm">
             <div class="form-group">
                 <label>Kullanıcı Rolü / Adı</label>
-                <input type="text" id="username" placeholder="Örn: Yönetici, Depo, Üretim, Garson" required autocomplete="username">
+                <input type="text" id="username" placeholder="Örn: Yönetici, Depo, Üretim, Garson" required autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Şifre</label>
-                <input type="password" id="password" placeholder="••••••" required autocomplete="current-password">
+                <input type="password" id="password" placeholder="••••••" required autocomplete="off">
             </div>
             <button type="submit" class="submit-btn" style="background:#0d6efd;">Sisteme Giriş Yap</button>
         </form>
@@ -214,64 +214,51 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // TEK VE KESİN GİRİŞ HESAPLARI MATRİSİ
-    const KULLANICILAR = {
-        "yonetici": { sifre: "010", unvan: "Yönetici", rol: "YÖNETİCİ" },
-        "depo": { sifre: "111", unvan: "Depo", rol: "DEPO" },
-        "garson": { sifre: "222", unvan: "Garson", rol: "GARSON" },
-        "uretim": { sifre: "333", unvan: "Üretim", rol: "ÜRETİM" }
-    };
-
     let currentUser = null;
     let inventory = [];
     let reports = [];
     let activeDepotFilter = 'HEPSİ';
 
-    // TÜRKÇE VE AKILLI INPUT TEMİZLEME MOTORU
-    function guvenliFormat(text) {
-        if (!text) return "";
-        return text.toString().trim()
-            .replace(/İ/g, "i")
-            .replace(/I/g, "ı")
-            .replace(/Ğ/g, "ğ")
-            .replace(/ğ/g, "ğ")
-            .replace(/Ü/g, "ü")
-            .replace(/ü/g, "ü")
-            .replace(/Ş/g, "ş")
-            .replace(/ş/g, "ş")
-            .replace(/Ö/g, "ö")
-            .replace(/ö/g, "ö")
-            .replace(/Ç/g, "ç")
-            .replace(/ç/g, "ç")
-            .toLowerCase();
-    }
-
-    // İLK GİRİŞ YAPILAN FORM TETİKLEYİCİSİ
+    // EN GARANTİ GİRİŞ KONTROL MOTORU (Kusursuz Yalın Hali)
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const inputUser = document.getElementById('username').value;
-        const inputPass = document.getElementById('password').value.toString().trim();
+        
+        // Kullanıcının yazdığı metni alıp tamamen küçük harfe çeviriyoruz ve boşlukları siliyoruz
+        let userVal = document.getElementById('username').value.trim().toLowerCase();
+        let passVal = document.getElementById('password').value.trim();
 
-        const u = guvenliFormat(inputUser);
+        // Türkçe karakterli klavyelerdeki uyumsuzluğu engellemek için filtre
+        userVal = userVal.replace(/ı/g, 'i').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g');
 
-        if (KULLANICILAR[u] && KULLANICILAR[u].sifre === inputPass) {
-            currentUser = KULLANICILAR[u];
-            // Giriş paneli gizlenir ve veritabanı ancak şimdi dinlemeye başlar (Sıfır Çakışma)
+        // DOĞRUDAN EŞLEŞTİRME BLOKLARI
+        if ((userVal === "yonetici" || userVal === "yönetici") && passVal === "010") {
+            currentUser = { unvan: "Yönetici", rol: "YÖNETİCİ" };
+        } 
+        else if ((userVal === "depo") && passVal === "111") {
+            currentUser = { unvan: "Depo", rol: "DEPO" };
+        } 
+        else if ((userVal === "garson") && passVal === "222") {
+            currentUser = { unvan: "Garson", rol: "GARSON" };
+        } 
+        else if ((userVal === "uretim" || userVal === "üretim") && passVal === "333") {
+            currentUser = { unvan: "Üretim", rol: "ÜRETİM" };
+        }
+
+        // Karar ve Sisteme Giriş Yapısı
+        if (currentUser !== null) {
             document.getElementById('loginWrapper').style.display = 'none';
             baglanVeSistemiYukle();
         } else {
-            alert("Giriş Başarısız! Kullanıcı adı veya şifre hatalı.");
+            alert("Hatalı Giriş!\nKullanıcı adı veya şifre eşleşmedi.\n\nLütfen elle (010, 111, 222 veya 333) yazarak tekrar deneyin.");
         }
     });
 
-    // BAŞARILI GİRİŞ SONRASI FİREBASE BAĞLANTISININ ENTEGRE EDİLMESİ
     function baglanVeSistemiYukle() {
         document.getElementById('roleBadge').textContent = `👤 Birim: ${currentUser.unvan}`;
         
         const container = document.getElementById('mainContainer');
         const adminAddCard = document.getElementById('adminAddCard');
         
-        // Rol yetki görünüm ayarı
         if (currentUser.rol === 'YÖNETİCİ' || currentUser.rol === 'DEPO') {
             container.classList.add('admin-layout');
             adminAddCard.style.display = 'block';
@@ -280,13 +267,11 @@
             adminAddCard.style.display = 'none';
         }
 
-        // Stok havuzunu canlı dinlemeye başla
         db.ref('depo_stok').on('value', (snapshot) => {
             inventory = snapshot.val() ? Object.values(snapshot.val()) : [];
             renderUi();
         });
 
-        // Rapor havuzunu arka planda senkron tut
         db.ref('depo_rapor').on('value', (snapshot) => {
             reports = snapshot.val() ? Object.values(snapshot.val()) : [];
         });
