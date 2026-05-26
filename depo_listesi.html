@@ -5,89 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Depo Stok Listesi</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #f4f6f9; color: #333; padding-bottom: 50px; }
-        
-        /* Kırmızı ve Mavi Geçişli Üst Bar */
-        nav { 
-            background: linear-gradient(135deg, #dc3545 0%, #0d6efd 100%);
-            padding: 15px 30px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
+        nav { background: linear-gradient(135deg, #dc3545 0%, #0d6efd 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         nav h2 { font-size: 22px; font-weight: 700; }
-        .nav-right { display: flex; align-items: center; gap: 15px; }
-        
-        nav a { 
-            color: #fff; 
-            text-decoration: none; 
-            background: #212529; 
-            padding: 10px 18px; 
-            border-radius: 6px; 
-            font-size: 14px; 
-            font-weight: 600;
-            transition: background 0.2s;
-        }
-        nav a:hover { background: #343a40; }
-
-        /* Ana Konteyner */
+        nav a { color: #fff; text-decoration: none; background: #212529; padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: 600; }
         .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        
         .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid #0d6efd; }
         h3 { margin-bottom: 20px; color: #495057; padding-bottom: 12px; font-size: 20px; }
-        
-        /* Üst Kontrol Alanı (Arama Kutusu) */
         .controls { display: flex; gap: 15px; margin-bottom: 25px; }
         .search-input { flex: 1; padding: 12px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 15px; outline: none; }
-        .search-input:focus { border-color: #0d6efd; }
-
-        /* Geniş Envanter Tablosu */
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 14px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 15px; }
         th { background-color: #f8f9fa; color: #495057; font-weight: 600; }
-        
-        /* Durum Rozetleri (Yeşil ve Kırmızı) */
         .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; display: inline-block; }
         .status-safe { background-color: #d1e7dd; color: #0f5132; }
-        .status-critical { background-color: #f8d7da; color: #842029; animation: pulse 2s infinite; }
-
-        /* Limit Belirleme Girdisi */
+        .status-critical { background-color: #f8d7da; color: #842029; }
         .limit-input { width: 80px; padding: 6px; border: 1px solid #ced4da; border-radius: 4px; text-align: center; font-size: 14px; }
-        
-        /* Silme ve Kaydet Butonları */
         .btn { padding: 6px 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px; color: white; }
         .btn-delete { background-color: #dc3545; }
-        .btn-delete:hover { background-color: #bd2130; }
         .btn-save { background-color: #198754; margin-left: 5px; }
-        .btn-save:hover { background-color: #157347; }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
     </style>
 </head>
 <body>
 
 <nav>
     <h2>Catering Depo Yönetimi</h2>
-    <div class="nav-right">
-        <a href="index.html">🏠 Ana Panel (Giriş/Çıkış)</a>
-    </div>
+    <div class="nav-right"><a href="index.html">🏠 Ana Panel (Giriş/Çıkış)</a></div>
 </nav>
 
 <div class="container">
     <div class="card">
         <h3>📦 Detaylı Depo Envanter ve Kritik Stok Listesi</h3>
-        
         <div class="controls">
             <input type="text" id="searchInput" class="search-input" placeholder="🔍 Malzeme adına göre depoda arayın...">
         </div>
-
         <table>
             <thead>
                 <tr>
@@ -98,114 +50,67 @@
                     <th>İşlemler</th>
                 </tr>
             </thead>
-            <tbody id="inventoryTableBody">
-                </tbody>
+            <tbody id="inventoryTableBody"></tbody>
         </table>
     </div>
 </div>
 
 <script>
-    // Güvenlik Kontrolü
-    if(localStorage.getItem('isLoggedIn') !== 'true') {
-        window.location.href = 'login.html';
-    }
-
+    if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
     const currentRole = localStorage.getItem('userRole');
-
-    // Ortak veri tabanından verileri çekiyoruz
     let inventory = JSON.parse(localStorage.getItem('depo_stok')) || [];
 
-    // LİSTEYİ EKRENA ÇİZEN ANA FONKSİYON
     function renderInventory(filterText = '') {
         const tbody = document.getElementById('inventoryTableBody');
         tbody.innerHTML = '';
-
-        // Eğer depoda hiç mal yoksa
         if(inventory.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888; padding:20px;">Depoda kayıtlı malzeme bulunamadı.</td></tr>';
             return;
         }
 
         inventory.forEach((item, index) => {
-            // Arama filtresi kontrolü
-            if(filterText && !item.name.toLowerCase().includes(filterText.toLowerCase())) {
-                return; 
-            }
+            if(filterText && !item.name.toLowerCase().includes(filterText.toLowerCase())) return;
+            if(item.criticalLimit === undefined) item.criticalLimit = 0;
 
-            // Eğer ürüne daha önce kritik limit tanımlanmadıysa varsayılan olarak 0 yap
-            if(item.criticalLimit === undefined) {
-                item.criticalLimit = 0;
-            }
+            let statusHtml = item.quantity > item.criticalLimit ? 
+                `<span class="status-badge status-safe">🟢 Güvenli</span>` : 
+                `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
 
-            // Durum Algoritması: Miktar limitten büyükse GÜVENLİ (Yeşil), küçük veya eşitse KRİTİK (Kırmızı)
-            let statusHtml = '';
-            if(item.quantity > item.criticalLimit) {
-                statusHtml = `<span class="status-badge status-safe">🟢 Güvenli</span>`;
-            } else {
-                statusHtml = `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
-            }
-
-            // Garson ve Üretim rolleri kritik sınırı değiştiremesin ve silemesin diye kısıtlama kontrolü
             let actionsHtml = '';
-            let limitInputHtml = `<input type="number" class="limit-input" id="limit-${index}" value="${item.criticalLimit}" min="0" step="0.01">
-                                  <button class="btn btn-save" onclick="updateLimit(${index})">Kaydet</button>`;
+            let limitInputHtml = `<input type="number" class="limit-input" id="limit-${index}" value="${item.criticalLimit}" min="0" step="0.01"><button class="btn btn-save" onclick="updateLimit(${index})">Kaydet</button>`;
             
             if(currentRole === 'YÖNETİCİ' || currentRole === 'DEPO') {
                 actionsHtml = `<button class="btn btn-delete" onclick="deleteProduct(${index})">Sil</button>`;
             } else {
-                // Garson veya üretim ise limit kutusunu kilitle ve silme butonunu gizle
                 limitInputHtml = `<input type="number" class="limit-input" value="${item.criticalLimit}" disabled>`;
                 actionsHtml = `<span style="color:#aaa; font-size:13px;">Yetki Yok</span>`;
             }
 
             const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><strong>${item.name}</strong></td>
-                <td><strong>${item.quantity} ${item.unit}</strong></td>
-                <td>${limitInputHtml}</td>
-                <td>${statusHtml}</td>
-                <td>${actionsHtml}</td>
-            `;
+            tr.innerHTML = `<td><strong>${item.name}</strong></td><td><strong>${item.quantity} ${item.unit}</strong></td><td>${limitInputHtml}</td><td>${statusHtml}</td><td>${actionsHtml}</td>`;
             tbody.appendChild(tr);
         });
     }
 
-    // 1. KRİTİK EŞİK SINIRINI GÜNCELLEME FONKSİYONU
     window.updateLimit = function(index) {
-        const inputField = document.getElementById(`limit-${index}`);
-        const newLimit = parseFloat(inputField.value);
-
-        if(isNaN(newLimit) || newLimit < 0) {
-            alert("Lütfen geçerli bir sınır sayısı giriniz!");
-            return;
-        }
-
-        // Yeni limiti kaydet ve hafızayı güncelle
-        inventory[index].criticalLimit = newLimit;
+        const nLimit = parseFloat(document.getElementById(`limit-${index}`).value);
+        if(isNaN(nLimit) || nLimit < 0) { alert("Lütfen geçerli bir sınır sayısı giriniz!"); return; }
+        inventory[index].criticalLimit = nLimit;
         localStorage.setItem('depo_stok', JSON.stringify(inventory));
-        
-        alert(`${inventory[index].name} için kritik stok sınırı ${newLimit} olarak güncellendi.`);
-        renderInventory(document.getElementById('searchInput').value); // Ekranı yenile
-    }
+        alert(`${inventory[index].name} için kritik sınır güncellendi.`);
+        renderInventory(document.getElementById('searchInput').value);
+    };
 
-    // 2. ÜRÜNÜ DEPODAN TAMAMEN SİLME FONKSİYONU
     window.deleteProduct = function(index) {
-        const confirmDelete = confirm(`"${inventory[index].name}" isimli malzemeyi depodan tamamen silmek istediğinize emin misiniz?`);
-        if(confirmDelete) {
+        if(confirm(`"${inventory[index].name}" ürününü silmek istediğinize emin misiniz?`)) {
             inventory.splice(index, 1);
             localStorage.setItem('depo_stok', JSON.stringify(inventory));
-            renderInventory(document.getElementById('searchInput').value); // Ekranı yenile
+            renderInventory(document.getElementById('searchInput').value);
         }
-    }
+    };
 
-    // 3. CANLI ARAMA KUTUSU KONTROLÜ
-    document.getElementById('searchInput').addEventListener('input', function(e) {
-        renderInventory(e.target.value);
-    });
-
-    // Sayfa ilk açıldığında listeyi yükle
+    document.getElementById('searchInput').addEventListener('input', (e) => renderInventory(e.target.value));
     renderInventory();
 </script>
-
 </body>
 </html>
