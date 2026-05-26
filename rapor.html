@@ -21,7 +21,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold text-dark"><i class="bi bi-file-earmark-bar-graph text-success me-2"></i>Depo Hareket Analiz Raporu</h2>
-            <p class="text-muted mb-0">Depolara ait anlık işlem yoğunluk grafikleri</p>
+            <p class="text-muted mb-0">Canlı bulut işlem yoğunluk grafikleri</p>
         </div>
         <a href="depo_listesi.html" class="btn btn-outline-secondary fw-bold"><i class="bi bi-arrow-left me-2"></i>Ana Depoya Dön</a>
     </div>
@@ -42,12 +42,7 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light sticky-top">
                             <tr>
-                                <th>Tarih / Saat</th>
-                                <th>İşlemi Yapan</th>
-                                <th>İlgili Depo</th>
-                                <th>Malzeme</th>
-                                <th class="text-center">Miktar</th>
-                                <th>İşlem</th>
+                                <th>Tarih / Saat</th><th>İşlemi Yapan</th><th>İlgili Depo</th><th>Malzeme</th><th class="text-center">Miktar</th><th>İşlem</th>
                             </tr>
                         </thead>
                         <tbody id="logTabloGövde"></tbody>
@@ -58,53 +53,52 @@
     </div>
 </div>
 
-<script>
-    const gecmis = JSON.parse(localStorage.getItem('islemGecmisi')) || [];
-    const logGövde = document.getElementById('logTabloGövde');
-    const depoGrafikVerisi = {
-        "Şarküteri": 0, "Et +4": 0, "Kuru Gıda": 0, "Pastane": 0, "Pastane -18": 0, "Sebze +4": 0
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+    // 🌟 DATABASEURL SATIRI BURAYA DA EKLENDİ
+    const firebaseConfig = {
+        apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
+        authDomain: "depo-stok-f6389.firebaseapp.com",
+        databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "depo-stok-f6389",
+        storageBucket: "depo-stok-f6389.firebasestorage.app",
+        messagingSenderId: "884521404368",
+        appId: "1:884521404368:web:ea7392975933c5a2415bd5"
     };
 
-    if (gecmis.length === 0) {
-        logGövde.innerHTML = `<tr><td colspan="6" class="text-center text-muted p-4">Henüz bir işlem gerçekleştirilmedi.</td></tr>`;
-    } else {
-        gecmis.forEach(islem => {
-            const rozet = islem.tip === 'ekle'
-                ? `<span class="badge bg-success-subtle text-success">Stok Girişi</span>`
-                : `<span class="badge bg-danger-subtle text-danger">Stok Çıkışı</span>`;
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
 
-            const depoAdi = islem.depoAdi || "Kuru Gıda";
-            const personelAdi = islem.personel || "Bilinmeyen Yetkili";
+    const logGövde = document.getElementById('logTabloGövde');
+    let grafikNesnesi = null;
 
-            logGövde.innerHTML += `
-                <tr>
-                    <td><small class="text-muted">${islem.tarih}</small></td>
-                    <td class="fw-semibold">${personelAdi}</td>
-                    <td><span class="badge bg-secondary-subtle text-dark">${depoAdi}</span></td>
-                    <td class="fw-semibold text-dark">${islem.malzeme}</td>
-                    <td class="text-center fw-bold">${islem.miktar}</td>
-                    <td>${rozet}</td>
-                </tr>`;
+    onValue(ref(database, 'islemGecmisi'), (snapshot) => {
+        const gecmis = snapshot.val() || [];
+        logGövde.innerHTML = "";
+        
+        const depoGrafikVerisi = { "Şarküteri": 0, "Et +4": 0, "Kuru Gıda": 0, "Pastane": 0, "Pastane -18": 0, "Sebze +4": 0 };
 
-            if (depoGrafikVerisi[depoAdi] !== undefined) {
-                depoGrafikVerisi[depoAdi] += islem.miktar;
-            }
+        if (gecmis.length === 0) {
+            logGövde.innerHTML = `<tr><td colspan="6" class="text-center text-muted p-4">Henüz bir işlem gerçekleştirilmedi.</td></tr>`;
+        } else {
+            gecmis.forEach(islem => {
+                const rozet = islem.tip === 'ekle' ? `<span class="badge bg-success-subtle text-success">Stok Girişi</span>` : `<span class="badge bg-danger-subtle text-danger">Stok Çıkışı</span>`;
+                const depoAdi = islem.depoAdi || "Kuru Gıda";
+                logGövde.innerHTML += `<tr><td><small class="text-muted">${islem.tarih}</small></td><td class="fw-semibold">${islem.personel}</td><td><span class="badge bg-secondary-subtle text-dark">${depoAdi}</span></td><td class="fw-semibold text-dark">${islem.malzeme}</td><td class="text-center fw-bold">${islem.miktar}</td><td>${rozet}</td></tr>`;
+                if (depoGrafikVerisi[depoAdi] !== undefined) { depoGrafikVerisi[depoAdi] += islem.miktar; }
+            });
+        }
+
+        const etiketler = Object.keys(depoGrafikVerisi);
+        const rakamlar = Object.values(depoGrafikVerisi);
+        if(grafikNesnesi) { grafikNesnesi.destroy(); }
+        grafikNesnesi = new Chart(document.getElementById('islemGrafik'), {
+            type: 'pie',
+            data: { labels: etiketler, datasets: [{ data: rakamlar, backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14'] }] },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
-    }
-
-    const etiketler = Object.keys(depoGrafikVerisi);
-    const rakamlar = Object.values(depoGrafikVerisi);
-
-    new Chart(document.getElementById('islemGrafik'), {
-        type: 'pie',
-        data: {
-            labels: etiketler,
-            datasets: [{
-                data: rakamlar,
-                backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14']
-            }]
-        },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
     });
 </script>
 </body>
