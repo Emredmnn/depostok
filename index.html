@@ -67,6 +67,10 @@
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f3f5; padding-bottom: 10px; }
         .close-modal { font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
         
+        .modal-actions-bar { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+        .btn-clear-all-reports { background-color: #dc3545; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: none; }
+        .btn-clear-all-reports:hover { background-color: #bb2d3b; }
+
         table.report-table { width: 100%; border-collapse: collapse; }
         table.report-table th, table.report-table td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 14px; }
         table.report-table th { background: #f8f9fa; }
@@ -102,6 +106,7 @@
                 <select id="newProdDepot">
                     <option value="KURU GIDA">KURU GIDA</option>
                     <option value="ŞARKÜTERİ">ŞARKÜTERİ</option>
+                    <option value="ET +4">ET +4</option>
                     <option value="SEBZE +4">SEBZE +4</option>
                     <option value="SEBZE -18">SEBZE -18</option>
                     <option value="TATLI +4">TATLI +4</option>
@@ -140,6 +145,7 @@
             <button class="btn-depot-filter active" onclick="filterByDepot('HEPSİ')">HEPSİ</button>
             <button class="btn-depot-filter" onclick="filterByDepot('KURU GIDA')">KURU GIDA</button>
             <button class="btn-depot-filter" onclick="filterByDepot('ŞARKÜTERİ')">ŞARKÜTERİ</button>
+            <button class="btn-depot-filter" onclick="filterByDepot('ET +4')">ET +4</button>
             <button class="btn-depot-filter" onclick="filterByDepot('SEBZE +4')">SEBZE +4</button>
             <button class="btn-depot-filter" onclick="filterByDepot('SEBZE -18')">SEBZE -18</button>
             <button class="btn-depot-filter" onclick="filterByDepot('TATLI +4')">TATLI +4</button>
@@ -168,6 +174,11 @@
             <h2>📋 Tarih ve Saatli Depo İşlem Rapor Geçmişi</h2>
             <span class="close-modal" id="closeReportBtn">&times;</span>
         </div>
+        
+        <div class="modal-actions-bar">
+            <button id="clearAllReportsBtn" class="btn-clear-all-reports" onclick="clearAllReports()">🗑️ Tüm Geçmişi Temizle (Toplu Sil)</button>
+        </div>
+
         <table class="report-table">
             <thead>
                 <tr>
@@ -191,15 +202,13 @@
 
     let inventory = JSON.parse(localStorage.getItem('depo_stok')) || [];
     let reports = JSON.parse(localStorage.getItem('depo_rapor')) || [];
-    let activeDepotFilter = 'HEPSİ'; // Aktif filtre takibi
+    let activeDepotFilter = 'HEPSİ';
 
-    // Gelişmiş Filtreli ve Ayrıştırılmış Tablo Motoru
     function renderUi() {
         const tbody = document.getElementById('liveMaterialsBody');
         const filterText = document.getElementById('searchInput').value.toLowerCase();
         tbody.innerHTML = '';
         
-        // Aktif depoya ve arama metnine göre filtreleme yapıyoruz
         let filteredInventory = inventory.filter(item => {
             let matchesSearch = item.name.toLowerCase().includes(filterText);
             let matchesDepot = (activeDepotFilter === 'HEPSİ' || item.depot === activeDepotFilter);
@@ -212,7 +221,6 @@
         }
 
         filteredInventory.forEach((item) => {
-            // Esneklik ve geçmiş veri koruması
             if(item.criticalLimit === undefined) item.criticalLimit = 0;
             if(!item.depot) item.depot = 'KURU GIDA'; 
 
@@ -220,7 +228,6 @@
                 `<span class="status-badge status-safe">🟢 Güvenli</span>` : 
                 `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
 
-            // Gerçek envanter dizisindeki tam konum indeksini buluyoruz (İşlemlerin karışmaması için önemli)
             let realIndex = inventory.findIndex(i => i.name === item.name);
 
             let buttonsHtml = `
@@ -242,21 +249,16 @@
         });
     }
 
-    // Depo Ayrıştırma Buton Tetikleyicisi
     window.filterByDepot = function(depotName) {
         activeDepotFilter = depotName;
-        
-        // Butonların görsel aktifliğini değiştirme
         const buttons = document.querySelectorAll('.btn-depot-filter');
         buttons.forEach(btn => {
             if(btn.textContent === depotName) btn.classList.add('active');
             else btn.classList.remove('active');
         });
-        
         renderUi();
     };
 
-    // Yeni Malzeme Tanımlama (Depolu ve Kritik Eşikli)
     document.getElementById('addForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('newProdName').value.trim();
@@ -279,7 +281,6 @@
         renderUi();
     });
 
-    // Stok Ekle / Düş Dünyası
     window.manageStock = function(index, action) {
         const item = inventory[index];
         const actionText = action === 'in' ? 'eklemek' : 'düşmek';
@@ -305,7 +306,6 @@
         renderUi();
     };
 
-    // Ürün Silme Dünyası
     window.deleteProductDirect = function(index) {
         const name = inventory[index].name;
         const depot = inventory[index].depot;
@@ -318,7 +318,6 @@
         }
     };
 
-    // Arama İzleyici
     document.getElementById('searchInput').addEventListener('input', renderUi);
 
     // Rapor Modalı Motoru
@@ -326,12 +325,16 @@
     document.getElementById('openReportBtn').addEventListener('click', () => {
         const tbody = document.getElementById('reportTableBody');
         const headerAction = document.getElementById('reportActionHeader');
+        const clearAllBtn = document.getElementById('clearAllReportsBtn');
         tbody.innerHTML = '';
         
+        // Sadece YÖNETİCİ rolündeyse toplu silme butonunu ve sütun başlığını göster
         if(currentRole === 'YÖNETİCİ') {
             headerAction.style.display = 'table-cell';
+            clearAllBtn.style.display = 'block';
         } else {
             headerAction.style.display = 'none';
+            clearAllBtn.style.display = 'none';
         }
 
         if(reports.length === 0) {
@@ -365,6 +368,15 @@
     window.deleteReportRow = function(rIndex) {
         if(confirm("Bu işlem geçmişi kaydını kalıcı olarak silmek istediğinize emin misiniz?")) {
             reports.splice(rIndex, 1);
+            localStorage.setItem('depo_rapor', JSON.stringify(reports));
+            document.getElementById('openReportBtn').click();
+        }
+    };
+
+    // YÖNETİCİYE ÖZEL TOPLU SİLME FONKSİYONU
+    window.clearAllReports = function() {
+        if(confirm("DİKKAT! Tüm işlem geçmişi raporunu kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz!")) {
+            reports = [];
             localStorage.setItem('depo_rapor', JSON.stringify(reports));
             document.getElementById('openReportBtn').click();
         }
