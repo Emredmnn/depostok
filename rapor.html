@@ -57,7 +57,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-    // 🌟 DATABASEURL SATIRI BURAYA DA EKLENDİ
     const firebaseConfig = {
         apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
         authDomain: "depo-stok-f6389.firebaseapp.com",
@@ -78,7 +77,15 @@
         const gecmis = snapshot.val() || [];
         logGövde.innerHTML = "";
         
-        const depoGrafikVerisi = { "Şarküteri": 0, "Et +4": 0, "Kuru Gıda": 0, "Pastane": 0, "Pastane -18": 0, "Sebze +4": 0 };
+        const depoGrafikVerisi = { 
+            "Şarküteri": 0, 
+            "Et +4": 0, 
+            "Kuru Gıda": 0, 
+            "Pastane": 0, 
+            "Pastane -18": 0, 
+            "Sebze +4": 0,
+            "Sebze -18": 0
+        };
 
         if (gecmis.length === 0) {
             logGövde.innerHTML = `<tr><td colspan="6" class="text-center text-muted p-4">Henüz bir işlem gerçekleştirilmedi.</td></tr>`;
@@ -87,7 +94,7 @@
                 const rozet = islem.tip === 'ekle' ? `<span class="badge bg-success-subtle text-success">Stok Girişi</span>` : `<span class="badge bg-danger-subtle text-danger">Stok Çıkışı</span>`;
                 const depoAdi = islem.depoAdi || "Kuru Gıda";
                 logGövde.innerHTML += `<tr><td><small class="text-muted">${islem.tarih}</small></td><td class="fw-semibold">${islem.personel}</td><td><span class="badge bg-secondary-subtle text-dark">${depoAdi}</span></td><td class="fw-semibold text-dark">${islem.malzeme}</td><td class="text-center fw-bold">${islem.miktar}</td><td>${rozet}</td></tr>`;
-                if (depoGrafikVerisi[depoAdi] !== undefined) { depoGrafikVerisi[depoAdi] += islem.miktar; }
+                if (depoGrafikVerisi[depoAdi] !== undefined) { depoGrafikVerisi[depoAdi] += parseInt(islem.miktar) || 0; }
             });
         }
 
@@ -96,7 +103,7 @@
         if(grafikNesnesi) { grafikNesnesi.destroy(); }
         grafikNesnesi = new Chart(document.getElementById('islemGrafik'), {
             type: 'pie',
-            data: { labels: etiketler, datasets: [{ data: rakamlar, backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14'] }] },
+            data: { labels: etiketler, datasets: [{ data: rakamlar, backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#6f42c1', '#fd7e14', '#20b2aa'] }] },
             options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
         });
     });
