@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISS Depo - Personel Girişi</title>
+    <title>ISS Catering - Otomasyon Girişi</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
@@ -11,9 +11,6 @@
         body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
         .login-card { border: none; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); background: #ffffff; max-width: 400px; width: 100%; }
         .main-title { font-weight: 700; color: #1e293b; letter-spacing: -0.5px; }
-        .input-group-text { cursor: pointer; background-color: #f8f9fa; border-right: none; }
-        .form-control { border-left: none; }
-        .form-control:focus { border-color: #dee2e6; box-shadow: none; }
         .btn-primary { background-color: #0f172a; border: none; transition: all 0.3s ease; }
         .btn-primary:hover { background-color: #1e293b; transform: translateY(-2px); }
     </style>
@@ -22,100 +19,58 @@
 
 <div class="card login-card p-5 mx-3">
     <div class="text-center mb-4">
-        <h2 class="main-title mb-1">ISS İkram & Catering</h2>
-        <p class="text-muted small">Akıllı Depo Otomasyonu v2026</p>
+        <h2 class="main-title mb-1">ISS Otomasyon</h2>
+        <p class="text-muted small">Mutfak & Depo Yönetimi v2026</p>
         <div style="width: 50px; height: 3px; background-color: #3b82f6; margin: 10px auto; border-radius: 2px;"></div>
     </div>
     <form id="loginForm">
         <div class="mb-3">
-            <label class="form-label fw-semibold text-secondary small">Kullanıcı Adı / Yetkili</label>
+            <label class="form-label fw-semibold text-secondary small">Kullanıcı Adı / Rolü</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-person-fill text-muted"></i></span>
-                <input type="text" id="username" class="form-control form-control-lg" placeholder="Örn: Yönetici, Depo, Üretim, Garson" required autocomplete="off">
+                <input type="text" id="username" class="form-control form-control-lg" placeholder="Yönetici, Garson, Üretim veya Depo" required autocomplete="off">
             </div>
         </div>
-        
-        <div class="mb-3">
+        <div class="mb-4">
             <label class="form-label fw-semibold text-secondary small">Giriş Şifresi</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-lock-fill text-muted"></i></span>
                 <input type="password" id="password" class="form-control form-control-lg" placeholder="••••" required>
-                <span class="input-group-text" id="togglePassword">
-                    <i class="bi bi-eye" id="eyeIcon"></i>
-                </span>
             </div>
         </div>
-
-        <div class="mb-4 form-check">
-            <input type="checkbox" class="form-check-input" id="beniHatirla">
-            <label class="form-check-label text-muted small fw-semibold" for="beniHatirla">Kullanıcı Adımı Hatırla</label>
-        </div>
-        
-        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 shadow-sm">Sisteme Giriş Yap</button>
+        <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 shadow-sm">Giriş Yap</button>
     </form>
 </div>
 
 <script>
-    // 🔑 Kullanıcı bazlı şifre tanımlamaları
+    // 🔑 Giriş Bilgileri ve Şifreler
     const personelVeritabani = {
-        "yonetici": { orijinalAd: "Yönetici", sifre: "2605" },
-        "depo": { orijinalAd: "Depo", sifre: "1111" },
-        "uretim": { orijinalAd: "Üretim", sifre: "2222" },
-        "garson": { orijinalAd: "Garson", sifre: "3333" }
+        "yonetici": { orijinalAd: "Yönetici (Genel Kontrol)", sifre: "2605" },
+        "garson": { orijinalAd: "Garson Birimi", sifre: "1907" },
+        "uretim": { orijinalAd: "Üretim Birimi", sifre: "2222" },
+        "depo": { orijinalAd: "Depo Birimi", sifre: "3333" }
     };
-
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
-    const beniHatirlaCheckbox = document.getElementById('beniHatirla');
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const hatirlananUser = localStorage.getItem('hatirlananKullanici');
-        if (hatirlananUser) {
-            usernameInput.value = hatirlananUser;
-            beniHatirlaCheckbox.checked = true;
-        }
-    });
-
-    document.getElementById('togglePassword').addEventListener('click', function () {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        document.getElementById('eyeIcon').classList.toggle('bi-eye');
-        document.getElementById('eyeIcon').classList.toggle('bi-eye-slash');
-    });
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault(); 
-        
-        const girilenUser = usernameInput.value.trim();
-        const girilenSifre = passwordInput.value.trim();
+        const girilenUser = document.getElementById('username').value.trim().toLowerCase();
+        const girilenSifre = document.getElementById('password').value.trim();
 
-        // Türkçe karakter ve büyük/küçük harf tolerans motoru
-        const aramaKey = girilenUser.toLowerCase()
-                                    .replace(/ı/g, 'i').replace(/ü/g, 'u').replace(/ö/g, 'o')
-                                    .replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g')
-                                    .replace(/i̇/g, 'i');
+        // Türkçe karakter temizleme motoru
+        const aramaKey = girilenUser.replace(/ı/g, 'i').replace(/ü/g, 'u').replace(/ö/g, 'o')
+                                    .replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g');
 
         if (personelVeritabani[aramaKey]) {
             const personel = personelVeritabani[aramaKey];
-            
             if (personel.sifre === girilenSifre) {
                 localStorage.setItem('aktifKullanici', personel.orijinalAd);
                 localStorage.setItem('kullaniciRolu', aramaKey); 
-                
-                if (beniHatirlaCheckbox.checked) {
-                    localStorage.setItem('hatirlananKullanici', girilenUser);
-                } else {
-                    localStorage.removeItem('hatirlananKullanici');
-                }
-
-                alert("Giriş Başarılı! Yönlendiriliyorsunuz...");
-                // 🚀 Senin istediğin sayfa adına (depo_listesi.html) yönlendirir
                 window.location.href = "depo_listesi.html";
             } else {
-                alert("Hatalı Giriş Şifresi! Lütfen tekrar deneyiniz.");
+                alert("Hatalı Giriş Şifresi!");
             }
         } else {
-            alert("Kullanıcı bulunamadı! Lütfen Yönetici, Depo, Üretim veya Garson yazarak giriş yapın.");
+            alert("Kullanıcı bulunamadı! (Yönetici, Garson, Üretim veya Depo yazabilirsiniz)");
         }
     });
 </script>
