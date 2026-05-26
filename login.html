@@ -55,12 +55,12 @@
 </div>
 
 <script>
-    // 🔑 Kullanıcı adı, şifre ve yönlendirilecek özel sayfaların haritası
+    // 🔑 İstediğin Manuel Kullanıcı Adı ve Şifre Listesi
     const personelVeritabani = {
-        "yonetici": { orijinalAd: "Yönetici", sifre: "2605", sayfa: "yonetici_panel.html" },
-        "depo": { orijinalAd: "Depo", sifre: "1111", sayfa: "depo_listesi.html" },
-        "uretim": { orijinalAd: "Üretim", sifre: "2222", sayfa: "uretim_paneli.html" },
-        "garson": { orijinalAd: "Garson", sifre: "3333", sayfa: "garson_paneli.html" }
+        "yonetici": { orijinalAd: "Yönetici", sifre: "2605" },
+        "depo": { orijinalAd: "Depo", sifre: "1111" },
+        "uretim": { orijinalAd: "Üretim", sifre: "2222" },
+        "garson": { orijinalAd: "Garson", sifre: "3333" }
     };
 
     const usernameInput = document.getElementById('username');
@@ -87,6 +87,7 @@
         const girilenUser = usernameInput.value.trim();
         const girilenSifre = passwordInput.value.trim();
 
+        // Türkçe karakter ve büyük/küçük harf toleransı
         const aramaKey = girilenUser.toLowerCase()
                                     .replace(/ı/g, 'i').replace(/ü/g, 'u').replace(/ö/g, 'o')
                                     .replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g')
@@ -97,7 +98,7 @@
             
             if (personel.sifre === girilenSifre) {
                 localStorage.setItem('aktifKullanici', personel.orijinalAd);
-                localStorage.setItem('kullaniciRolu', aramaKey); // Rol kontrolü için saklıyoruz
+                localStorage.setItem('kullaniciRolu', aramaKey); 
                 
                 if (beniHatirlaCheckbox.checked) {
                     localStorage.setItem('hatirlananKullanici', girilenUser);
@@ -105,8 +106,8 @@
                     localStorage.removeItem('hatirlananKullanici');
                 }
 
-                // 🚀 Kullanıcıyı kendine ait özel sayfaya yönlendiriyoruz
-                window.location.href = personel.sayfa;
+                // Giriş başarılıysa herkes aynı tasarıma sahip olan panele gidiyor
+                window.location.href = "panel.html";
             } else {
                 alert("Hatalı Giriş Şifresi!");
             }
