@@ -57,7 +57,6 @@
 
 <script>
     if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
-    const currentRole = localStorage.getItem('userRole');
     let inventory = JSON.parse(localStorage.getItem('depo_stok')) || [];
 
     function renderInventory(filterText = '') {
@@ -76,15 +75,8 @@
                 `<span class="status-badge status-safe">🟢 Güvenli</span>` : 
                 `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
 
-            let actionsHtml = '';
             let limitInputHtml = `<input type="number" class="limit-input" id="limit-${index}" value="${item.criticalLimit}" min="0" step="0.01"><button class="btn btn-save" onclick="updateLimit(${index})">Kaydet</button>`;
-            
-            if(currentRole === 'YÖNETİCİ' || currentRole === 'DEPO') {
-                actionsHtml = `<button class="btn btn-delete" onclick="deleteProduct(${index})">Sil</button>`;
-            } else {
-                limitInputHtml = `<input type="number" class="limit-input" value="${item.criticalLimit}" disabled>`;
-                actionsHtml = `<span style="color:#aaa; font-size:13px;">Yetki Yok</span>`;
-            }
+            let actionsHtml = `<button class="btn btn-delete" onclick="deleteProduct(${index})">Sil</button>`;
 
             const tr = document.createElement('tr');
             tr.innerHTML = `<td><strong>${item.name}</strong></td><td><strong>${item.quantity} ${item.unit}</strong></td><td>${limitInputHtml}</td><td>${statusHtml}</td><td>${actionsHtml}</td>`;
