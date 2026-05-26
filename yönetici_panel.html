@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetici Kontrol Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f4f6f9; min-height: 100vh; }
+        .navbar { background-color: #0f172a; }
+        .menu-card { border: none; border-radius: 16px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer; }
+        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
+        .icon-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; }
+    </style>
+</head>
+<body>
+
+<!-- Üst Bar -->
+<nav class="navbar navbar-dark shadow-sm py-3">
+    <div class="container">
+        <span class="navbar-brand fw-bold mb-0 h1 text-capitalize"><i class="bi bi-shield-lock-fill me-2 text-warning"></i>Yönetici Panel</span>
+        <button id="btnCikis" class="btn btn-outline-light btn-sm fw-bold"><i class="bi bi-box-arrow-right me-1"></i>Güvenli Çıkış</button>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col text-center text-md-start">
+            <h3 class="fw-bold text-dark">Hoş Geldiniz, Sistem Yöneticisi</h3>
+            <p class="text-muted">Gözlemlemek veya işlem yapmak istediğiniz birim ekranını seçiniz.</p>
+        </div>
+    </div>
+
+    <!-- 🌐 Seçenek Ekranı (Tüm Kullanıcıların Ekranları) -->
+    <div class="row g-4 justify-content-center">
+        
+        <!-- 📦 DEPO PANELİ KARTI -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card menu-card p-4 text-center bg-white h-100" onclick="window.location.href='depo_listesi.html'">
+                <div class="icon-circle bg-primary-subtle text-primary">
+                    <i class="bi bi-box-seam fs-3"></i>
+                </div>
+                <h5 class="fw-bold text-dark">Depo Yönetim Ekranı</h5>
+                <p class="text-muted small mb-0">Stok giriş/çıkış işlemlerini ve mevcut ürün miktarlarını yönetin.</p>
+            </div>
+        </div>
+
+        <!-- 🍳 ÜRETİM PANELİ KARTI -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card menu-card p-4 text-center bg-white h-100" onclick="window.location.href='uretim_paneli.html'">
+                <div class="icon-circle bg-warning-subtle text-warning">
+                    <i class="bi bi-egg-fried fs-3"></i>
+                </div>
+                <h5 class="fw-bold text-dark">Üretim / Mutfak Ekranı</h5>
+                <p class="text-muted small mb-0">Reçete takibi, gramaj kontrolleri ve mutfak tüketim süreçleri.</p>
+            </div>
+        </div>
+
+        <!-- 🍽️ GARSON PANELİ KARTI -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card menu-card p-4 text-center bg-white h-100" onclick="window.location.href='garson_paneli.html'">
+                <div class="icon-circle bg-info-subtle text-info">
+                    <i class="bi bi-person-workspace fs-3"></i>
+                </div>
+                <h5 class="fw-bold text-dark">Garson Servis Ekranı</h5>
+                <p class="text-muted small mb-0">Kat tepsisi toplama, QR kod servis takip ve kat dağıtım operasyonu.</p>
+            </div>
+        </div>
+
+        <!-- 📊 RAPORLAMA VE ANALİZ KARTI (Ekstra Kolaylık) -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card menu-card p-4 text-center bg-white h-100 border border-success-subtle" onclick="window.location.href='rapor.html'">
+                <div class="icon-circle bg-success-subtle text-success">
+                    <i class="bi bi-file-earmark-bar-graph fs-3"></i>
+                </div>
+                <h5 class="fw-bold text-success">Genel Rapor & Excel Analiz</h5>
+                <p class="text-muted small mb-0">Tüm birimlerin geçmiş log hareketlerini listeleme ve excel çıktısı alma.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Güvenlik Kontrolü: Yönetici harici girişi engelle
+    if (localStorage.getItem('kullaniciRolu') !== 'yonetici') {
+        window.location.href = "login.html";
+    }
+
+    document.getElementById('btnCikis').addEventListener('click', () => {
+        localStorage.clear();
+        window.location.replace("login.html");
+    });
+</script>
+</body>
+</html>
