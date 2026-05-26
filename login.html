@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ISS Depo - Personel Girişi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
         .login-card { border: none; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #ffffff; max-width: 400px; width: 100%; }
+        .input-group-text { cursor: pointer; background-color: #f8f9fa; }
+        .form-check-input:checked { background-color: #0d6efd; border-color: #0d6efd; }
     </style>
 </head>
 <body>
@@ -18,35 +21,107 @@
         <p class="text-muted small">Akıllı Depo Otomasyonu v2026</p>
     </div>
     <form id="loginForm">
+        <!-- 👤 Manuel Kullanıcı Adı Girişi -->
         <div class="mb-3">
-            <label class="form-label fw-semibold">Personel Adı / Yetkili</label>
-            <input type="text" id="username" class="form-control form-control-lg" placeholder="Adınızı ve Soyadınızı giriniz" required autocomplete="off">
+            <label class="form-label fw-semibold">Kullanıcı Adı / Yetkili</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person-fill text-muted"></i></span>
+                <input type="text" id="username" class="form-control form-control-lg" placeholder="Kullanıcı adınızı giriniz" required autocomplete="off">
+            </div>
         </div>
-        <div class="mb-4">
+        
+        <!-- 🔒 Şifre Alanı (Göz İkonlu) -->
+        <div class="mb-3">
             <label class="form-label fw-semibold">Giriş Şifresi</label>
-            <input type="password" id="password" class="form-control form-control-lg" placeholder="••••" required>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill text-muted"></i></span>
+                <input type="password" id="password" class="form-control form-control-lg" placeholder="••••" required>
+                <span class="input-group-text" id="togglePassword">
+                    <i class="bi bi-eye" id="eyeIcon"></i>
+                </span>
+            </div>
         </div>
+
+        <!-- 📌 Beni Hatırla Seçeneği -->
+        <div class="mb-4 form-check">
+            <input type="checkbox" class="form-check-input" id="beniHatirla">
+            <label class="form-check-label text-muted small fw-semibold" for="beniHatirla">Kullanıcı Adımı Hatırla</label>
+        </div>
+        
         <button type="submit" id="btnGiris" class="btn btn-primary btn-lg w-100 fw-bold">Sisteme Giriş Yap</button>
     </form>
 </div>
 
 <script>
+    // 🔑 Personellere özel manuel kullanıcı adı ve şifre eşleşmeleri
+    const personelVeritabani = {
+        "yönetici": { orijinalAd: "Yönetici", sifre: "2306" },
+        "depo": { orijinalAd: "Depo", sifre: "1111" },
+        "üretim": { orijinalAd: "Üretim", sifre: "2222" },
+        "garson": { orijinalAd: "Garson", sifre: "3333" }
+    };
+
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const beniHatirlaCheckbox = document.getElementById('beniHatirla');
+
+    // 🔄 Sayfa yüklendiğinde "Beni Hatırla" kontrolü
+    window.addEventListener('DOMContentLoaded', () => {
+        const hatirlananUser = localStorage.getItem('hatirlananKullanici');
+        if (hatirlananUser) {
+            usernameInput.value = hatirlananUser;
+            beniHatirlaCheckbox.checked = true;
+        }
+    });
+
+    // 👁️ Şifre Göster / Gizle Mantığı
+    const togglePassword = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        if (type === 'text') {
+            eyeIcon.classList.remove('bi-eye');
+            eyeIcon.classList.add('bi-eye-slash');
+        } else {
+            eyeIcon.classList.remove('bi-eye-slash');
+            eyeIcon.classList.add('bi-eye');
+        }
+    });
+
+    // 🚪 Giriş Kontrol Formu
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault(); 
 
-        const user = document.getElementById('username').value.trim();
-        const sifre = document.getElementById('password').value;
+        const girilenUser = usernameInput.value.trim();
+        const girilenSifre = passwordInput.value;
 
-        if (!user) {
-            alert("Lütfen personel adınızı giriniz!");
-            return;
-        }
+        // Büyük/küçük harf veya Türkçe karakter yazım hatalarını önlemek için anahtar kelimeyi normalize ediyoruz
+        const aramaKey = girilenUser.toLowerCase().replace(/ı/g, 'i').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g');
 
-        if(sifre === "1234") {
-            localStorage.setItem('aktifKullanici', user);
-            window.location.replace("depo_listesi.html");
+        if (personelVeritabani[aramaKey]) {
+            const personel = personelVeritabani[aramaKey];
+            
+            // Şifre Doğrulama
+            if (personel.sifre === girilenSifre) {
+                // Aktif kullanıcıyı işlem geçmişi için sakla (Orijinal büyük/küçük harfli haliyle)
+                localStorage.setItem('aktifKullanici', personel.orijinalAd);
+                
+                // Beni Hatırla Seçeneği aktifse yerel hafızaya kaydet
+                if (beniHatirlaCheckbox.checked) {
+                    localStorage.setItem('hatirlananKullanici', personel.orijinalAd);
+                } else {
+                    localStorage.removeItem('hatirlananKullanici');
+                }
+
+                window.location.replace("depo_listesi.html");
+            } else {
+                alert("Hatalı Giriş Şifresi! Lütfen tekrar deneyiniz.");
+            }
         } else {
-            alert("Hatalı Giriş Şifresi! Lütfen tekrar deneyiniz.");
+            alert("Kullanıcı bulunamadı! Lütfen geçerli bir kullanıcı adı giriniz.");
         }
     });
 </script>
