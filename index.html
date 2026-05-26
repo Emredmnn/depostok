@@ -10,12 +10,12 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #f4f6f9; color: #333; padding-bottom: 50px; }
         
-        /* GİRİŞ EKRANI */
+        /* KESİN TEK PARÇA GİRİŞ EKRANI */
         .login-wrapper { position: fixed; top:0; left:0; width:100%; height:100%; background: linear-gradient(135deg, #f4f6f9 0%, #dbe2ef 100%); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .login-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border-top: 5px solid #0d6efd; }
         .login-card h2 { text-align: center; margin-bottom: 25px; color: #333; }
         
-        /* ANA PANEL */
+        /* ANA PANEL (İÇERİSİ) */
         nav { background: linear-gradient(135deg, #dc3545 0%, #0d6efd 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .nav-right { display: flex; align-items: center; gap: 15px; }
         .user-badge { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; }
@@ -48,7 +48,6 @@
         .status-critical { background-color: #f8d7da; color: #842029; }
         .depot-tag { background: #e2f0fe; color: #0d6efd; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
 
-        /* Görev Buton Grupları */
         .action-btns { display: flex; gap: 6px; flex-wrap: wrap; }
         .action-btn { padding: 7px 12px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer; font-size: 12px; }
         .btn-garson { background-color: #fd7e14; }
@@ -219,41 +218,41 @@
     let reports = [];
     let activeDepotFilter = 'HEPSİ';
 
-    // EN GARANTİ GİRİŞ KONTROL MOTORU (Kusursuz Yalın Hali)
+    // DOĞRUDAN VE TEK AŞAMALI GİRİŞ KONTROLÜ
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Kullanıcının yazdığı metni alıp tamamen küçük harfe çeviriyoruz ve boşlukları siliyoruz
-        let userVal = document.getElementById('username').value.trim().toLowerCase();
-        let passVal = document.getElementById('password').value.trim();
+        // Girdileri temizle ve tamamen küçük harfe sabitle
+        let u = document.getElementById('username').value.trim().toLowerCase();
+        let p = document.getElementById('password').value.trim();
 
-        // Türkçe karakterli klavyelerdeki uyumsuzluğu engellemek için filtre
-        userVal = userVal.replace(/ı/g, 'i').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g');
+        // Türkçe karakterlerin farklı klavyelerdeki yazım riskini sıfırla
+        u = u.replace(/ı/g, 'i').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g');
 
-        // DOĞRUDAN EŞLEŞTİRME BLOKLARI
-        if ((userVal === "yonetici" || userVal === "yönetici") && passVal === "010") {
+        // DOĞRUDAN KONTROL BLOKLARI (BAŞKA HİÇBİR EKRAN VE SORGULAMA YOKTUR)
+        if ((u === "yonetici" || u === "yönetici") && p === "010") {
             currentUser = { unvan: "Yönetici", rol: "YÖNETİCİ" };
         } 
-        else if ((userVal === "depo") && passVal === "111") {
+        else if (u === "depo" && p === "111") {
             currentUser = { unvan: "Depo", rol: "DEPO" };
         } 
-        else if ((userVal === "garson") && passVal === "222") {
+        else if (u === "garson" && p === "222") {
             currentUser = { unvan: "Garson", rol: "GARSON" };
         } 
-        else if ((userVal === "uretim" || userVal === "üretim") && passVal === "333") {
+        else if (u === "uretim" || u === "üretim") && p === "333") {
             currentUser = { unvan: "Üretim", rol: "ÜRETİM" };
         }
 
-        // Karar ve Sisteme Giriş Yapısı
+        // Karar Yapısı: Eğer rol eşleştiyse ekranı kaldır ve sistemi tek aşamada yükle
         if (currentUser !== null) {
-            document.getElementById('loginWrapper').style.display = 'none';
-            baglanVeSistemiYukle();
+            document.getElementById('loginWrapper').style.style.display = 'none'; // Giriş ekranı tamamen yok olur.
+            sistemiGoster();
         } else {
-            alert("Hatalı Giriş!\nKullanıcı adı veya şifre eşleşmedi.\n\nLütfen elle (010, 111, 222 veya 333) yazarak tekrar deneyin.");
+            alert("Giriş Başarısız!\nLütfen kullanıcı adını ve şifreyi (010, 111, 222 veya 333) kontrol edin.");
         }
     });
 
-    function baglanVeSistemiYukle() {
+    function sistemiGoster() {
         document.getElementById('roleBadge').textContent = `👤 Birim: ${currentUser.unvan}`;
         
         const container = document.getElementById('mainContainer');
@@ -267,6 +266,7 @@
             adminAddCard.style.display = 'none';
         }
 
+        // Veritabanı dinleyicileri ancak başarılı giriş yapıldıktan sonra tetiklenir
         db.ref('depo_stok').on('value', (snapshot) => {
             inventory = snapshot.val() ? Object.values(snapshot.val()) : [];
             renderUi();
