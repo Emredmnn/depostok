@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operasyon Yönetim Paneli</title>
+    <title>Depo Listesi Operasyon Paneli</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
@@ -11,19 +11,16 @@
         body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
         .navbar { background-color: #0f172a; }
         .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .filter-btn { transition: all 0.2s ease; font-weight: 600; }
-        .filter-btn:hover { transform: translateY(-2px); }
+        .btn-update { padding: 2px 8px; font-weight: bold; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <nav class="navbar navbar-dark shadow-sm py-3">
     <div class="container">
-        <span class="navbar-brand fw-bold mb-0 h1">
-            <i class="bi bi-grid-1x2-fill me-2 text-info"></i>Otomasyon Paneli
-        </span>
+        <span class="navbar-brand fw-bold mb-0 h1"><i class="bi bi-grid-1x2-fill me-2 text-info"></i>ISS Depo Listesi</span>
         <div class="d-flex align-items-center gap-3">
-            <span class="text-light small fw-semibold">Oturum: <span id="lblAktifUser" class="badge bg-secondary">...</span></span>
+            <span class="text-light small fw-semibold">Aktif Hesap: <span id="lblAktifUser" class="badge bg-secondary">...</span></span>
             <button id="btnCikis" class="btn btn-outline-light btn-sm fw-bold"><i class="bi bi-box-arrow-right me-1"></i>Çıkış</button>
         </div>
     </div>
@@ -32,14 +29,14 @@
 <div class="container my-5">
     
     <div id="yoneticiFiltreAlani" class="card p-4 bg-white shadow-sm mb-4 d-none">
-        <h5 class="fw-bold text-dark mb-2"><i class="bi bi-shield-lock-fill text-warning me-2"></i>Yönetici İzleme Paneli</h5>
-        <p class="text-muted small">Canlı takibini yapmak istediğiniz personelin/birimin bağımsız ekran verisini seçiniz:</p>
+        <h5 class="fw-bold text-dark mb-2"><i class="bi bi-shield-lock-fill text-warning me-2"></i>Merkezi Yönetici İzleme Paneli</h5>
+        <p class="text-muted small">Canlı takibini ve denetimini yapmak istediğiniz personelin ekranını seçiniz:</p>
         <div class="row">
             <div class="col-md-4">
                 <select id="yoneticiBirimSecimi" class="form-select form-select-lg fw-semibold border-warning">
-                    <option value="depo">Depo Kullanıcısının Verileri</option>
-                    <option value="uretim">Üretim Kullanıcısının Verileri</option>
-                    <option value="garson">Garson Kullanıcısının Verileri</option>
+                    <option value="garson">Garson Kullanıcısının Girdiği Veriler</option>
+                    <option value="uretim">Üretim Kullanıcısının Girdiği Veriler</option>
+                    <option value="depo">Depo Kullanıcısının Girdiği Veriler</option>
                 </select>
             </div>
         </div>
@@ -49,59 +46,66 @@
         
         <div class="col-md-4">
             <div class="card p-4 bg-white shadow-sm" id="formKarti">
-                <h4 class="fw-bold text-dark mb-3">Ürün Kayıt Formu</h4>
+                <h4 class="fw-bold text-dark mb-3">Malzeme Giriş Formu</h4>
                 <hr>
                 <form id="urunForm">
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Ürün / Kalem Adı</label>
                         <input type="text" id="urunAdi" class="form-control form-control-lg" placeholder="Ürün adı yazın" required autocomplete="off">
                     </div>
+                    
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Miktar / Adet</label>
-                        <input type="number" id="urunMiktar" class="form-control form-control-lg" placeholder="0" min="1" required>
+                        <label class="form-label fw-semibold">Ait Olduğu Depo</label>
+                        <select id="urunDepoSecimi" class="form-select form-select-lg fw-semibold" required>
+                            <option value="Sebze +4">Sebze +4</option>
+                            <option value="Sebze -18">Sebze -18</option>
+                            <option value="Şarküteri">Şarküteri</option>
+                            <option value="Kuru Gıda">Kuru Gıda</option>
+                            <option value="Tatlı +4">Tatlı +4</option>
+                            <option value="Tatlı -18">Tatlı -18</option>
+                        </select>
                     </div>
+
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label fw-semibold">Mevcut Miktar</label>
+                            <input type="number" id="urunMiktar" class="form-control form-control-lg" placeholder="0" min="1" required>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label fw-semibold">Kritik Eşik</label>
+                            <input type="number" id="urunEsik" class="form-control form-control-lg" placeholder="Eşik" min="0" required>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Bölüm / Detay Notu</label>
-                        <input type="text" id="urunDetay" class="form-control form-control-lg" placeholder="Örn: 3. Kat, Ana Depo vb." autocomplete="off">
+                        <label class="form-label fw-semibold">Not / Detay</label>
+                        <input type="text" id="urunDetay" class="form-control form-control-lg" placeholder="Bölüm, lot numarası vb." autocomplete="off">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 mt-2"><i class="bi bi-plus-circle me-2"></i>Veritabanına Kaydet</button>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 mt-2"><i class="bi bi-plus-circle me-2"></i>Veritabanına Gönder</button>
                 </form>
             </div>
-            <button onclick="window.location.href='rapor.html'" class="btn btn-outline-dark w-100 fw-bold py-3 mt-3 shadow-sm">
-                <i class="bi bi-file-earmark-bar-graph me-2"></i>Merkezi Rapor Ekranını Aç
-            </button>
         </div>
 
         <div class="col-md-8">
             <div class="card p-4 bg-white shadow-sm">
-                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
-                    <h4 class="fw-bold text-dark mb-0"><i class="bi bi-list-ul me-2 text-primary"></i>Sistemde Kayıtlı Ürünleriniz</h4>
-                    
-                    <div class="btn-group shadow-sm" role="group">
-                        <button type="button" class="btn btn-sm btn-outline-secondary filter-btn active" id="btnFiltreHepsi">Hepsini Gör</button>
-                        <button type="button" class="btn btn-sm btn-outline-danger filter-btn" id="btnFiltreKritik">🔴 Kritik</button>
-                        <button type="button" class="btn btn-sm btn-outline-warning filter-btn" id="btnFiltreDusuk">🟡 Düşük</button>
-                        <button type="button" class="btn btn-sm btn-outline-success filter-btn" id="btnFiltreGuvenli">🟢 Güvenli</button>
-                    </div>
-                </div>
-
+                <h4 class="fw-bold text-dark mb-3"><i class="bi bi-list-ul me-2 text-primary"></i>Kayıtlı Malzeme Takip Listesi</h4>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                             <tr>
                                 <th>Ürün Adı</th>
-                                <th>Miktar</th>
+                                <th>Depo Sınıfı</th>
+                                <th style="width: 130px;">Miktar</th>
                                 <th>Stok Durumu</th>
-                                <th>Bölüm / Detay</th>
+                                <th>Detay Notu</th>
                                 <th class="text-end">İşlem</th>
                             </tr>
                         </thead>
-                        <tbody id="urunTabloGövde">
-                            </tbody>
+                        <tbody id="urunTabloGövde"></tbody>
                     </table>
                 </div>
                 <div id="bosVeriUyarisi" class="text-center text-muted py-4 d-none">
-                    <i class="bi bi-inbox fs-2 d-block mb-2"></i>Bu filtreye veya hesaba ait ürün verisi bulunamadı.
+                    <i class="bi bi-inbox fs-2 d-block mb-2"></i>Herhangi bir malzeme kaydı bulunamadı.
                 </div>
             </div>
         </div>
@@ -111,9 +115,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-    import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+    import { getDatabase, ref, push, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-    // 💻 Merkezi Firebase Veritabanı Altyapısı
     const firebaseConfig = {
         apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
         authDomain: "depo-stok-f6389.firebaseapp.com",
@@ -124,70 +127,66 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // Oturum verilerini localStorage hafızasından alıyoruz
     const aktifKullanici = localStorage.getItem('aktifKullanici');
     const kullaniciRolu = localStorage.getItem('kullaniciRolu');
 
-    // Güvenlik duvarı kontrolü
     if (!aktifKullanici || !kullaniciRolu) {
         window.location.replace("login.html");
     }
 
     document.getElementById('lblAktifUser').innerText = aktifKullanici;
 
-    // Oturum Kapatma İşlemi
     document.getElementById('btnCikis').addEventListener('click', () => {
         localStorage.clear();
         window.location.replace("login.html");
     });
 
-    // Verilerin ayrışacağı ana kanal adresi (depo, uretim, garson)
     let veriYolu = kullaniciRolu; 
-    let mevcutUrunlerHafiza = {}; // Canlı filtrelemelerin hızlı çalışması için yerel hafıza dizisi
-    let aktifFiltre = "hepsi";
+    let mevcutUrunlerHafiza = {};
 
-    // --- 👑 YÖNETİCİ GİRİŞ KONTROLÜ VE EKRAN AYARI ---
+    // 👑 Yönetici Modu Algılayıcı ve Tetikleyici
     if (kullaniciRolu === "yonetici") {
         document.getElementById('yoneticiFiltreAlani').classList.remove('d-none');
         document.getElementById('formKarti').innerHTML = `
-            <div class="alert alert-warning border-0 shadow-sm text-center">
-                <i class="bi bi-info-circle-fill fs-3 d-block mb-2 text-warning"></i>
-                <h5 class="fw-bold">Yönetici Denetim Modu</h5>
-                <p class="small mb-0">Yönetici hesabı doğrudan veri girişi yapamaz. Üst menüden seçtiğiniz personelin girdiği verileri sağ taraftan canlı izleyebilir ve silebilirsiniz.</p>
+            <div class="alert alert-warning border-0 shadow-sm text-center py-4">
+                <i class="bi bi-shield-fill-check fs-2 text-warning d-block mb-2"></i>
+                <h5 class="fw-bold">Yönetici Canlı İzleme Modu</h5>
+                <p class="small text-muted mb-0">Yukarıdaki listeden hangi personeli seçerseniz, onun girdiği veriler, ekleme-azaltma hareketleri ve kritik stok durumları ekranınıza anlık olarak dökülür.</p>
             </div>
         `;
         veriYolu = document.getElementById('yoneticiBirimSecimi').value;
-
-        // Yönetici izlemek istediği birimi değiştirdiğinde verileri anlık güncelle
         document.getElementById('yoneticiBirimSecimi').addEventListener('change', (e) => {
             veriYolu = e.target.value;
             verileriCanliDinle();
         });
     }
 
-    // --- 📥 VERİTABANINA VERİ EKLEME MOTORU ---
+    // 📥 Form Verisi Kaydetme Motoru
     const urunForm = document.getElementById('urunForm');
     if (urunForm) {
         urunForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const ad = document.getElementById('urunAdi').value.trim();
+            const depo = document.getElementById('urunDepoSecimi').value;
             const miktar = parseInt(document.getElementById('urunMiktar').value);
+            const esik = parseInt(document.getElementById('urunEsik').value);
             const detay = document.getElementById('urunDetay').value.trim() || "Belirtilmedi";
 
-            // Veriyi giren kullanıcının kendi klasörünün altına izole şekilde kaydeder
-            const yeniUrunRef = push(ref(database, 'birimUrunleri/' + veriYolu));
+            // Veriler 'rolBazliDepo/garson' gibi kök dizinlere izole şekilde kaydedilir
+            const yeniUrunRef = push(ref(database, 'rolBazliDepo/' + veriYolu));
             set(yeniUrunRef, {
                 urunAdi: ad,
+                urunDepo: depo,
                 urunMiktar: miktar,
+                urunEsik: esik,
                 urunDetay: detay
             }).then(() => {
-                alert("Ürün başarıyla kendi ekranınıza eklendi.");
                 urunForm.reset();
             }).catch(err => alert("Hata: " + err.message));
         });
     }
 
-    // --- 📊 VERİLERİ SÜZÜP EKRANA BASAN ANA TABLO MOTORU ---
+    // 📊 Canlı Tablo Çizim ve Akıllı Renk Karar Alıcı Mekanizma
     function tabloyuGuncelle() {
         const tbody = document.getElementById('urunTabloGövde');
         const bosUyari = document.getElementById('bosVeriUyarisi');
@@ -196,57 +195,79 @@
         let kayitVarMi = false;
 
         for (let key in mevcutUrunlerHafiza) {
+            kayitVarMi = true;
             const urun = mevcutUrunlerHafiza[key];
             const miktar = parseInt(urun.urunMiktar);
+            const esik = parseInt(urun.urunEsik);
             
-            // 🚨 İstediğin Kritik, Düşük, Güvenli Limit Ayarları ve Renkli Badgeler
+            // 🚨 Butona basmaya gerek kalmadan kritik eşik hesabı ve otomatik renk kararı
             let durumBadge = "";
-            let durumTipi = "";
-
-            if (miktar <= 10) {
-                durumBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i>Kritik Stok</span>`;
-                durumTipi = "kritik";
-            } else if (miktar > 10 && miktar <= 40) {
-                durumBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-circle-fill me-1"></i>Düşük Stok</span>`;
-                durumTipi = "dusuk";
+            if (miktar <= esik) {
+                durumBadge = `<span class="badge bg-danger text-white"><i class="bi bi-exclamation-triangle-fill me-1"></i>Kritik Stok</span>`;
             } else {
-                durumBadge = `<span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Güvenli Stok</span>`;
-                durumTipi = "guvenli";
+                durumBadge = `<span class="badge bg-success text-white"><i class="bi bi-check-circle-fill me-1"></i>Güvenli Stok</span>`;
             }
 
-            // Üstteki buton filtre kontrolü
-            if (aktifFiltre !== "hepsi" && aktifFiltre !== durumTipi) {
-                continue; 
-            }
-
-            kayitVarMi = true;
             const satir = document.createElement('tr');
             satir.innerHTML = `
                 <td class="fw-semibold text-dark">${urun.urunAdi}</td>
-                <td><span class="badge bg-primary fs-6">${miktar}</span></td>
-                <td>${durumBadge}</td>
-                <td class="text-muted">${urun.urunDetay}</td>
+                <td><span class="badge bg-dark">${urun.urunDepo}</span></td>
+                <td>
+                    <div class="d-flex align-items-center gap-1">
+                        <button class="btn btn-sm btn-outline-danger btn-update" onclick="miktarGuncelle('${key}', -1)">-</button>
+                        <span class="badge bg-light text-dark border px-2 py-1 fs-6 text-center" style="min-width:45px;">${miktar}</span>
+                        <button class="btn btn-sm btn-outline-success btn-update" onclick="miktarGuncelle('${key}', 1)">+</button>
+                    </div>
+                </td>
+                <td>${durumBadge} <small class="text-muted d-block" style="font-size:10px;">Eşik: ${esik}</small></td>
+                <td class="text-muted small">${urun.urunDetay}</td>
                 <td class="text-end">
-                    <button class="btn btn-sm btn-outline-danger" onclick="urunSil('${key}')">
-                        <i class="bi bi-trash"></i> Sil
-                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="urunSil('${key}')"><i class="bi bi-trash"></i></button>
                 </td>
             `;
             tbody.appendChild(satir);
         }
 
-        if (kayitVarMi) {
-            bosUyari.classList.add('d-none');
-        } else {
-            bosUyari.classList.remove('d-none');
-        }
+        if (kayitVarMi) bosUyari.classList.add('d-none');
+        else bosUyari.classList.remove('d-none');
     }
 
-    // Firebase'den verileri çeken canlı dinleyici
+    // Veritabanı canlı dinleyici fonksiyon
     function verileriCanliDinle() {
-        const urunlerRef = ref(database, 'birimUrunleri/' + veriYolu);
+        const urunlerRef = ref(database, 'rolBazliDepo/' + veriYolu);
         onValue(urunlerRef, (snapshot) => {
             if (snapshot.exists()) {
                 mevcutUrunlerHafiza = snapshot.val();
             } else {
-                mevcutU
+                mevcutUrunlerHafiza = {};
+            }
+            tabloyuGuncelle();
+        });
+    }
+
+    // ➕ / ➖ Butonları İçin Hızlı Güncelleme Fonksiyonu
+    window.miktarGuncelle = function(urunId, degisim miktar) {
+        const suAnkiMiktar = parseInt(mevcutUrunlerHafiza[urunId].urunMiktar);
+        const yeniMiktar = suAnkiMiktar + degisim;
+        
+        if (yeniMiktar < 0) {
+            alert("Stok miktarı sıfırın altına düşemez!");
+            return;
+        }
+
+        const guncellemeRef = ref(database, `rolBazliDepo/${veriYolu}/${urunId}`);
+        update(guncellemeRef, { urunMiktar: yeniMiktar });
+    }
+
+    // 🗑️ Kayıt Silme Fonksiyonu
+    window.urunSil = function(urunId) {
+        if (confirm("Bu malzemeyi listeden tamamen silmek istediğinize emin misiniz?")) {
+            remove(ref(database, `rolBazliDepo/${veriYolu}/${urunId}`))
+                .catch(err => alert("Hata: " + err.message));
+        }
+    }
+
+    verileriCanliDinle();
+</script>
+</body>
+</html>
