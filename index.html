@@ -3,127 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISS Akıllı Depo - İşlem Paneli</title>
+    <title>ISS İkram & Catering - Akıllı Depo Otomasyonu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; margin: 0; }
+        .hero-section { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); min-height: 100vh; display: flex; align-items: center; color: white; }
+        .card-feature { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; backdrop-filter: blur(10px); transition: transform 0.3s; }
+        .card-feature:hover { transform: translateY(-5px); }
+        .btn-start { background-color: #3b82f6; border: none; padding: 15px 40px; font-weight: 600; border-radius: 10px; transition: all 0.3s; }
+        .btn-start:hover { background-color: #2563eb; transform: scale(1.05); color: white; }
+    </style>
 </head>
-<body class="bg-light">
-<script>
-    if (!localStorage.getItem('aktifKullanici')) { window.location.href = "login.html"; }
-</script>
+<body>
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-sm-12">
-            <div class="card p-4 shadow border-0" style="border-radius:15px;">
-                <div class="d-flex justify-content-between mb-3">
-                    <span class="badge bg-secondary" id="lblKategori">Depo: -</span>
-                    <span class="badge bg-primary" id="lblMevcutStok">Mevcut: -</span>
+<div class="hero-section">
+    <div class="container py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6 text-center text-lg-start">
+                <span class="badge bg-primary px-3 py-2 mb-3 fw-bold shadow-sm">ISS CATERING v2026</span>
+                <h1 class="display-4 fw-bold mb-3">Akıllı Depo & Operasyon Otomasyonu</h1>
+                <p class="lead text-white-50 mb-4">Hastaneler ve merkezi projeler için geliştirilmiş; lot stok takibi, üretim yönetimi ve kat servis operasyonlarını tek merkezden bağlayan akıllı dijital panel.</p>
+                <a href="login.html" class="btn btn-start text-white shadow-lg"><i class="bi bi-box-arrow-in-right me-2"></i>Sisteme Giriş Yap</a>
+            </div>
+            <div class="col-lg-6">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="card-feature p-4 text-center">
+                            <i class="bi bi-box-seam text-info fs-1 mb-2"></i>
+                            <h5 class="fw-bold">İzole Depolama</h5>
+                            <p class="small text-white-50 mb-0">Her birim kendi envanterini yönetir.</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card-feature p-4 text-center">
+                            <i class="bi bi-egg-fried text-warning fs-1 mb-2"></i>
+                            <h5 class="fw-bold">Üretim Takibi</h5>
+                            <p class="small text-white-50 mb-0">Mutfak tüketim verileri anlık düşer.</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card-feature p-4 text-center">
+                            <i class="bi bi-qr-code-scan text-success fs-1 mb-2"></i>
+                            <h5 class="fw-bold">Kat Servis</h5>
+                            <p class="small text-white-50 mb-0">Tepsi toplama ve anket odaklı takip.</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card-feature p-4 text-center">
+                            <i class="bi bi-shield-check text-danger fs-1 mb-2"></i>
+                            <h5 class="fw-bold">Yönetici Denetimi</h5>
+                            <p class="small text-white-50 mb-0">Tek ekrandan tüm canlı log yönetimi.</p>
+                        </div>
+                    </div>
                 </div>
-                <h3 class="fw-bold text-center" id="lblMalzemeAdi">Yükleniyor...</h3>
-                <p class="text-center text-muted small mb-3" id="lblUrunId">#</p>
-                <hr>
-                <form id="formDepoIslem">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">İşlem Yapan Yetkili:</label>
-                        <input type="text" class="form-control bg-light fw-bold" id="txtAktifUser" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold" id="lblMiktarAlan">Miktar:</label>
-                        <input type="number" class="form-control form-control-lg text-center" id="miktar" min="1" placeholder="Miktar giriniz" required>
-                    </div>
-                    <button type="submit" class="btn btn-lg w-100 fw-bold text-white" id="btnOnay">Onayla</button>
-                </form>
-                <a href="depo_listesi.html" class="btn btn-link text-center mt-3 text-decoration-none">← İptal Et ve Dön</a>
             </div>
         </div>
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
-        authDomain: "depo-stok-f6389.firebaseapp.com",
-        databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "depo-stok-f6389",
-        storageBucket: "depo-stok-f6389.firebasestorage.app",
-        messagingSenderId: "884521404368",
-        appId: "1:884521404368:web:ea7392975933c5a2415bd5"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-
-    const aktifUser = localStorage.getItem('aktifKullanici');
-    document.getElementById('txtAktifUser').value = aktifUser;
-
-    const urlParametreleri = new URLSearchParams(window.location.search);
-    const urunId = urlParametreleri.get('id'); 
-    const islemTipi = urlParametreleri.get('tip');
-
-    let depoVeritabani = {};
-    let islemGecmisi = [];
-    let secilenUrun = null;
-
-    get(ref(database, 'depoVerisi')).then((snapshot) => {
-        depoVeritabani = snapshot.val() || {};
-        secilenUrun = depoVeritabani[urunId];
-
-        if (secilenUrun) {
-            // Güvenli sayı dönüşümü
-            secilenUrun.stok = parseInt(secilenUrun.stok) || 0;
-
-            document.getElementById('lblMalzemeAdi').innerText = secilenUrun.adi;
-            document.getElementById('lblKategori').innerText = "Depo: " + secilenUrun.kategori;
-            document.getElementById('lblMevcutStok').innerText = `Depoda Var: ${secilenUrun.stok}`;
-            document.getElementById('lblUrunId').innerText = "Ürün ID: #" + urunId;
-
-            const btn = document.getElementById('btnOnay');
-            if (islemTipi === 'ekle') {
-                document.getElementById('lblMiktarAlan').innerText = "Eklenecek Miktar:";
-                btn.innerText = "Stok Girişini Onayla"; btn.classList.add('btn-success');
-            } else {
-                document.getElementById('lblMiktarAlan').innerText = "Düşülecek Miktar:";
-                btn.innerText = "Stoktan Düşmeyi Onayla"; btn.classList.add('btn-danger');
-            }
-        }
-    });
-
-    get(ref(database, 'islemGecmisi')).then((snapshot) => {
-        islemGecmisi = snapshot.val() || [];
-    });
-
-    document.getElementById('formDepoIslem').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const miktar = parseInt(document.getElementById('miktar').value);
-
-        if (islemTipi === 'dus' && miktar > secilenUrun.stok) {
-            alert(`Hata: Depoda yeterli ürün yok!`); 
-            return;
-        }
-
-        if (islemTipi === 'dus') { 
-            secilenUrun.stok -= miktar; 
-        } else { 
-            secilenUrun.stok += miktar; 
-        }
-        
-        islemGecmisi.unshift({
-            tarih: new Date().toLocaleString('tr-TR'),
-            personel: aktifUser,
-            depoAdi: secilenUrun.kategori,
-            malzeme: secilenUrun.adi,
-            miktar: miktar,
-            tip: islemTipi
-        });
-
-        set(ref(database, 'depoVerisi'), depoVeritabani);
-        set(ref(database, 'islemGecmisi'), islemGecmisi).then(() => {
-            window.location.href = "depo_listesi.html";
-        });
-    });
-</script>
 </body>
 </html>
