@@ -3,96 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yönetici Kontrol Paneli</title>
+    <title>Operasyon Yönetim Paneli</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f4f6f9; min-height: 100vh; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f1f5f9; }
         .navbar { background-color: #0f172a; }
-        .menu-card { border: none; border-radius: 16px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer; }
-        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
-        .icon-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .table img { width: 40px; height: 40px; object-fit: cover; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-<!-- Üst Bar -->
 <nav class="navbar navbar-dark shadow-sm py-3">
     <div class="container">
-        <span class="navbar-brand fw-bold mb-0 h1 text-capitalize"><i class="bi bi-shield-lock-fill me-2 text-warning"></i>Yönetici Panel</span>
-        <button id="btnCikis" class="btn btn-outline-light btn-sm fw-bold"><i class="bi bi-box-arrow-right me-1"></i>Güvenli Çıkış</button>
+        <span class="navbar-brand fw-bold mb-0 h1">
+            <i class="bi bi-grid-1x2-fill me-2 text-info"></i>Otomasyon Paneli
+        </span>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-light small fw-semibold">Oturum: <span id="lblAktifUser" class="badge bg-secondary">...</span></span>
+            <button id="btnCikis" class="btn btn-outline-light btn-sm fw-bold"><i class="bi bi-box-arrow-right me-1"></i>Çıkış</button>
+        </div>
     </div>
 </nav>
 
 <div class="container my-5">
-    <div class="row mb-4">
-        <div class="col text-center text-md-start">
-            <h3 class="fw-bold text-dark">Hoş Geldiniz, Sistem Yöneticisi</h3>
-            <p class="text-muted">Gözlemlemek veya işlem yapmak istediğiniz birim ekranını seçiniz.</p>
+    
+    <div id="yoneticiFiltreAlani" class="card p-4 bg-white shadow-sm mb-4 d-none">
+        <h5 class="fw-bold text-dark mb-2"><i class="bi bi-shield-lock-fill text-warning me-2"></i>Yönetici İzleme Paneli</h5>
+        <p class="text-muted small">Görüntülemek istediğiniz personelin/birimin bağımsız ekran verisini seçiniz:</p>
+        <div class="row">
+            <div class="col-md-4">
+                <select id="yoneticiBirimSecimi" class="form-select form-select-lg fw-semibold border-warning">
+                    <option value="depo">Depo Kullanıcısının Ürünleri</option>
+                    <option value="uretim">Üretim Kullanıcısının Ürünleri</option>
+                    <option value="garson">Garson Kullanıcısının Ürünleri</option>
+                </select>
+            </div>
         </div>
     </div>
 
-    <!-- 🌐 Seçenek Ekranı (Tüm Kullanıcıların Ekranları) -->
-    <div class="row g-4 justify-content-center">
+    <div class="row g-4">
         
-        <!-- 📦 DEPO PANELİ KARTI -->
-        <div class="col-md-4 col-sm-6">
-            <div class="card menu-card p-4 text-center bg-white h-100" onclick="window.location.href='depo_listesi.html'">
-                <div class="icon-circle bg-primary-subtle text-primary">
-                    <i class="bi bi-box-seam fs-3"></i>
-                </div>
-                <h5 class="fw-bold text-dark">Depo Yönetim Ekranı</h5>
-                <p class="text-muted small mb-0">Stok giriş/çıkış işlemlerini ve mevcut ürün miktarlarını yönetin.</p>
+        <div class="col-md-4">
+            <div class="card p-4 bg-white shadow-sm" id="formKarti">
+                <h4 class="fw-bold text-dark mb-3" id="panelFormBaslik">Ürün Ekle</h4>
+                <hr>
+                <form id="urunForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Ürün / Kalem Adı</label>
+                        <input type="text" id="urunAdi" class="form-control form-control-lg" placeholder="Giriş yapın" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Miktar / Adet</label>
+                        <input type="number" id="urunMiktar" class="form-control form-control-lg" placeholder="0" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Bölüm / Detay</label>
+                        <input type="text" id="urunDetay" class="form-control form-control-lg" placeholder="Örn: 3. Kat, Ana Depo vb.">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 mt-2"><i class="bi bi-plus-circle me-2"></i>Veritabanına Kaydet</button>
+                </form>
             </div>
         </div>
 
-        <!-- 🍳 ÜRETİM PANELİ KARTI -->
-        <div class="col-md-4 col-sm-6">
-            <div class="card menu-card p-4 text-center bg-white h-100" onclick="window.location.href='uretim_paneli.html'">
-                <div class="icon-circle bg-warning-subtle text-warning">
-                    <i class="bi bi-egg-fried fs-3"></i>
+        <div class="col-md-8">
+            <div class="card p-4 bg-white shadow-sm">
+                <h4 class="fw-bold text-dark mb-3"><i class="bi bi-list-ul me-2 text-primary"></i>Mevcut Ürün Listesi</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Ürün Adı</th>
+                                <th>Miktar</th>
+                                <th>Bölüm/Detay</th>
+                                <th class="text-end">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="urunTabloGövde">
+                            </tbody>
+                    </table>
                 </div>
-                <h5 class="fw-bold text-dark">Üretim / Mutfak Ekranı</h5>
-                <p class="text-muted small mb-0">Reçete takibi, gramaj kontrolleri ve mutfak tüketim süreçleri.</p>
-            </div>
-        </div>
-
-        <!-- 🍽️ GARSON PANELİ KARTI -->
-        <div class="col-md-4 col-sm-6">
-            <div class="card menu-card p-4 text-center bg-white h-100" onclick="window.location.href='garson_paneli.html'">
-                <div class="icon-circle bg-info-subtle text-info">
-                    <i class="bi bi-person-workspace fs-3"></i>
+                <div id="bosVeriUyarisi" class="text-center text-muted py-4 d-none">
+                    <i class="bi bi-inbox fs-2 d-block mb-2"></i>Bu hesaba ait henüz hiçbir ürün girilmemiş.
                 </div>
-                <h5 class="fw-bold text-dark">Garson Servis Ekranı</h5>
-                <p class="text-muted small mb-0">Kat tepsisi toplama, QR kod servis takip ve kat dağıtım operasyonu.</p>
-            </div>
-        </div>
-
-        <!-- 📊 RAPORLAMA VE ANALİZ KARTI (Ekstra Kolaylık) -->
-        <div class="col-md-4 col-sm-6">
-            <div class="card menu-card p-4 text-center bg-white h-100 border border-success-subtle" onclick="window.location.href='rapor.html'">
-                <div class="icon-circle bg-success-subtle text-success">
-                    <i class="bi bi-file-earmark-bar-graph fs-3"></i>
-                </div>
-                <h5 class="fw-bold text-success">Genel Rapor & Excel Analiz</h5>
-                <p class="text-muted small mb-0">Tüm birimlerin geçmiş log hareketlerini listeleme ve excel çıktısı alma.</p>
             </div>
         </div>
 
     </div>
 </div>
 
-<script>
-    // Güvenlik Kontrolü: Yönetici harici girişi engelle
-    if (localStorage.getItem('kullaniciRolu') !== 'yonetici') {
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+    // 💻 Firebase Bağlantısı
+    const firebaseConfig = {
+        apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
+        authDomain: "depo-stok-f6389.firebaseapp.com",
+        databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "depo-stok-f6389"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Oturum Bilgilerini Alıyoruz
+    const aktifKullanici = localStorage.getItem('aktifKullanici');
+    const kullaniciRolu = localStorage.getItem('kullaniciRolu');
+
+    // Güvenlik: Giriş yapmadan gelenleri kapıya yönlendir
+    if (!aktifKullanici || !kullaniciRolu) {
         window.location.href = "login.html";
     }
 
+    document.getElementById('lblAktifUser').innerText = aktifKullanici;
+
+    // Çıkış Butonu
     document.getElementById('btnCikis').addEventListener('click', () => {
         localStorage.clear();
         window.location.replace("login.html");
     });
+
+    // Veri takibinin yapılacağı dinamik veritabanı düğümü (Kritik Nokta)
+    let veriYolu = kullaniciRolu; 
+
+    // --- 👑 YÖNETİCİ KONTROLÜ VE EKRAN AYARI ---
+    if (kullaniciRolu === "yonetici") {
+        // Yönetici ise gizli filtreleme panelini açıyoruz
+        document.getElementById('yoneticiFiltreAlani').classList.remove('d-none');
+        // Yöneticiye ürün ekleme formunu kapatıyoruz (O sadece izleyici/denetleyici)
+        document.getElementById('formKarti').innerHTML = `
+            <div class="alert alert-warning border-0 shadow-sm text-center">
+                <i class="bi bi-info-circle-fill fs-3 d-block mb-2 text-warning"></i>
+                <h5 class="fw-bold">Yönetici Modu</h5>
+                <p class="small mb-0">Yönetici hesabı doğrudan ürün girişi yapamaz. Sağ taraftan seçilen birimin canlı girilen verilerini yönetebilir ve silebilirsiniz.</p>
+            </div>
+        `;
+        
+        // Varsayılan izleme yolunu deponun verisi yapıyoruz
+        veriYolu = document.getElementById('yoneticiBirimSecimi').value;
+
+        // Yönetici menüden birimi değiştirdiğinde verileri anında değiştir
+        document.getElementById('yoneticiBirimSecimi').addEventListener('change', (e) => {
+            veriYolu = e.target.value;
+            verileriCanliDinle();
+        });
+    }
+
+    // --- 📥 VERİTABANINA ÜRÜN KAYDETME ---
+    const urunForm = document.getElementById('urunForm');
+    if (urunForm) {
+        urunForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const ad = document.getElementById('urunAdi').value.trim();
+            const miktar = document.getElementById('urunMiktar').value;
+            const detay = document.getElementById('urunDetay').value.trim() || "Belirtilmedi";
+
+            // Veriyi giren kullanıcının kendi klasörünün altına (veriYolu) kaydediyoruz
+            const yeniUrunRef = push(ref(database, 'birimUrunleri/' + veriYolu));
+            set(yeniUrunRef, {
+                urunAdi: ad,
+                urunMiktar: miktar,
+                urunDetay: detay
+            }).then(() => {
+                alert("Ürün kendi ekranınıza başarıyla eklendi.");
+                urunForm.reset();
+            }).catch(err => alert("Hata: " + err.message));
+        });
+    }
+
+    // --- 📋 VERİLERİ CANLI LİSTELEME MOTORU ---
+    function verileriCanliDinle() {
+        // birimUrunleri/depo veya birimUrunleri/uretim altındaki verileri dinler
+        const urunlerRef = ref(database, 'birimUrunleri/' + veriYolu);
+        
+        onValue(urunlerRef, (snapshot) => {
+            const tbody = document.getElementById('urunTabloGövde');
+            const bosUyari = document.getElementById('bosVeriUyarisi');
+            tbody.innerHTML = "";
+
+            if (snapshot.exists()) {
+                bosUyari.classList.add('d-none');
+                const veriler = snapshot.val();
+                
+                // Gelen verileri tabloya basma
+                for (let key in veriler) {
+                    const satir = document.createElement('tr');
+                    satir.innerHTML = `
+                        <td class="fw-semibold text-dark">${veriler[key].urunAdi}</td>
+                        <td><span class="badge bg-primary fs-6">${veriler[key].urunMiktar}</span></td>
+                        <td class="text-muted">${veriler[key].urunDetay}</td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-danger" onclick="urunSil('${key}')">
+                                <i class="bi bi-trash"></i> Sil
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(satir);
+                }
+            } else {
+                bosUyari.classList.remove('d-none');
+            }
+        });
+    }
+
+    // Ürün Silme Fonksiyonu (Global erişim için window nesnesine bağlandı)
+    window.urunSil = function(urunId) {
+        if (confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
+            remove(ref(database, `birimUrunleri/${veriYolu}/${urunId}`))
+                .then(() => alert("Ürün silindi."))
+                .catch(err => alert("Hata: " + err.message));
+        }
+    }
+
+    // Sayfa açılır açılmaz dinlemeyi başlat
+    verileriCanliDinle();
+
 </script>
 </body>
 </html>
