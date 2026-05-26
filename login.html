@@ -36,7 +36,7 @@
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Kullanıcı Adı</label>
-                <input type="text" id="username" required placeholder="Örn: YÖNETİCİ, DEPO">
+                <input type="text" id="username" required placeholder="Örn: YÖNETİCİ, GARSON, ÜRETİM, DEPO">
             </div>
             <div class="form-group">
                 <label for="password">Şifre</label>
@@ -55,7 +55,15 @@
 </div>
 
 <script>
+    // Giriş Matrisi
     const users = { "YÖNETİCİ": "2605", "GARSON": "1111", "ÜRETİM": "2222", "DEPO": "3333" };
+
+    // Türkçe karakterleri standartlaştıran temizlik fonksiyonu
+    function temizleMetin(str) {
+        return str.replace(/ı/g, 'I').replace(/i/g, 'İ').replace(/ğ/g, 'Ğ')
+                  .replace(/ü/g, 'Ü').replace(/ş/g, 'Ş').replace(/ö/g, 'Ö')
+                  .replace(/ç/g, 'Ç').toUpperCase().trim();
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
         const savedUser = localStorage.getItem('rememberedUser');
@@ -74,7 +82,8 @@
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const enteredUser = document.getElementById('username').value.trim().toUpperCase();
+        const rawUser = document.getElementById('username').value;
+        const enteredUser = temizleMetin(rawUser); // Harf uyuşmazlığı giderildi
         const enteredPass = document.getElementById('password').value.trim();
         
         if (users[enteredUser] && users[enteredUser] === enteredPass) {
@@ -82,7 +91,7 @@
             localStorage.setItem('userRole', enteredUser);
             
             if (document.getElementById('rememberMe').checked) {
-                localStorage.setItem('rememberedUser', document.getElementById('username').value.trim());
+                localStorage.setItem('rememberedUser', rawUser.trim());
             } else {
                 localStorage.removeItem('rememberedUser');
             }
