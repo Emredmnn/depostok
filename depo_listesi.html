@@ -12,6 +12,7 @@
         .navbar { background-color: #0f172a; }
         .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .btn-update { padding: 2px 8px; font-weight: bold; font-size: 14px; }
+        .action-btn { font-size: 12px; font-weight: 600; padding: 4px 8px; }
     </style>
 </head>
 <body>
@@ -46,7 +47,7 @@
         
         <div class="col-md-4">
             <div class="card p-4 bg-white shadow-sm" id="formKarti">
-                <h4 class="fw-bold text-dark mb-3">Malzeme Giriş Formu</h4>
+                <h4 class="fw-bold text-dark mb-3">Malzeme İşlem Formu</h4>
                 <hr>
                 <form id="urunForm">
                     <div class="mb-3">
@@ -66,22 +67,19 @@
                         </select>
                     </div>
 
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <label class="form-label fw-semibold">Mevcut Miktar</label>
-                            <input type="number" id="urunMiktar" class="form-control form-control-lg" placeholder="0" min="1" required>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">İşlem Miktarı</label>
+                            <input type="number" id="urunMiktar" class="form-control form-control-lg" placeholder="0" min="1" value="1" required>
+                            <small class="text-muted" style="font-size: 11px;">Ekle/Düş için miktar yazın</small>
                         </div>
-                        <div class="col-6 mb-3">
+                        <div class="col-6">
                             <label class="form-label fw-semibold">Kritik Eşik</label>
                             <input type="number" id="urunEsik" class="form-control form-control-lg" placeholder="Eşik" min="0" required>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Not / Detay</label>
-                        <input type="text" id="urunDetay" class="form-control form-control-lg" placeholder="Bölüm, lot numarası vb." autocomplete="off">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 mt-2"><i class="bi bi-plus-circle me-2"></i>Veritabanına Gönder</button>
+                    <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold py-3 mt-2"><i class="bi bi-plus-circle me-2"></i>Yeni Ürün Olarak Kaydet</button>
                 </form>
             </div>
         </div>
@@ -95,10 +93,9 @@
                             <tr>
                                 <th>Ürün Adı</th>
                                 <th>Depo Sınıfı</th>
-                                <th style="width: 130px;">Miktar</th>
+                                <th style="width: 125px;">Miktar</th>
                                 <th>Stok Durumu</th>
-                                <th>Detay Notu</th>
-                                <th class="text-end">İşlem</th>
+                                <th class="text-end" style="width: 250px;">Stok İşlemleri</th>
                             </tr>
                         </thead>
                         <tbody id="urunTabloGövde"></tbody>
@@ -144,7 +141,7 @@
     let veriYolu = kullaniciRolu; 
     let mevcutUrunlerHafiza = {};
 
-    // 👑 Yönetici Modu Algılayıcı ve Tetikleyici
+    // 👑 Yönetici Modu Algılayıcı
     if (kullaniciRolu === "yonetici") {
         document.getElementById('yoneticiFiltreAlani').classList.remove('d-none');
         document.getElementById('formKarti').innerHTML = `
@@ -161,7 +158,7 @@
         });
     }
 
-    // 📥 Form Verisi Kaydetme Motoru
+    // 📥 Form Verisi Kaydetme Motoru (Yeni Ürün)
     const urunForm = document.getElementById('urunForm');
     if (urunForm) {
         urunForm.addEventListener('submit', function(e) {
@@ -170,17 +167,16 @@
             const depo = document.getElementById('urunDepoSecimi').value;
             const miktar = parseInt(document.getElementById('urunMiktar').value);
             const esik = parseInt(document.getElementById('urunEsik').value);
-            const detay = document.getElementById('urunDetay').value.trim() || "Belirtilmedi";
 
             const yeniUrunRef = push(ref(database, 'rolBazliDepo/' + veriYolu));
             set(yeniUrunRef, {
                 urunAdi: ad,
                 urunDepo: depo,
                 urunMiktar: miktar,
-                urunEsik: esik,
-                urunDetay: detay
+                urunEsik: esik
             }).then(() => {
                 urunForm.reset();
+                document.getElementById('urunMiktar').value = "1";
             }).catch(err => alert("Hata: " + err.message));
         });
     }
@@ -201,9 +197,9 @@
             
             let durumBadge = "";
             if (miktar <= esik) {
-                durumBadge = `<span class="badge bg-danger text-white"><i class="bi bi-exclamation-triangle-fill me-1"></i>Kritik Stok</span>`;
+                durumBadge = `<span class="badge bg-danger text-white"><i class="bi bi-exclamation-triangle-fill me-1"></i>Kritik</span>`;
             } else {
-                durumBadge = `<span class="badge bg-success text-white"><i class="bi bi-check-circle-fill me-1"></i>Güvenli Stok</span>`;
+                durumBadge = `<span class="badge bg-success text-white"><i class="bi bi-check-circle-fill me-1"></i>Güvenli</span>`;
             }
 
             const satir = document.createElement('tr');
@@ -218,9 +214,12 @@
                     </div>
                 </td>
                 <td>${durumBadge} <small class="text-muted d-block" style="font-size:10px;">Eşik: ${esik}</small></td>
-                <td class="text-muted small">${urun.urunDetay}</td>
                 <td class="text-end">
-                    <button class="btn btn-sm btn-outline-danger" onclick="urunSil('${key}')"><i class="bi bi-trash"></i></button>
+                    <div class="d-inline-flex gap-1">
+                        <button class="btn btn-sm btn-success action-btn" onclick="topluMiktarIslemi('${key}', 'ekle')"><i class="bi bi-plus-lg"></i> Stoğa Ekle</button>
+                        <button class="btn btn-sm btn-danger action-btn" onclick="topluMiktarIslemi('${key}', 'dus')"><i class="bi bi-dash-lg"></i> Stoktan Düş</button>
+                        <button class="btn btn-sm btn-outline-secondary px-2" onclick="urunSil('${key}')" title="Tamamen Sil"><i class="bi bi-trash"></i></button>
+                    </div>
                 </td>
             `;
             tbody.appendChild(satir);
@@ -233,7 +232,6 @@
         }
     }
 
-    // Veritabanı canlı dinleyici fonksiyonu
     function verileriCanliDinle() {
         const urunlerRef = ref(database, 'rolBazliDepo/' + veriYolu);
         onValue(urunlerRef, (snapshot) => {
@@ -246,7 +244,7 @@
         });
     }
 
-    // ➕ / ➖ Butonları Güncelleme Fonksiyonu (Yazım Hatası Düzeltildi)
+    // ➕ / ➖ Küçük Butonlar İle 1'er Güncelleme Fonksiyonu
     window.miktarGuncelle = function(urunId, degisim) {
         const suAnkiMiktar = parseInt(mevcutUrunlerHafiza[urunId].urunMiktar);
         const yeniMiktar = suAnkiMiktar + degisim;
@@ -258,6 +256,37 @@
 
         const guncellemeRef = ref(database, `rolBazliDepo/${veriYolu}/${urunId}`);
         update(guncellemeRef, { urunMiktar: yeniMiktar });
+    }
+
+    // 🚀 Formdaki Sayıya Göre "Stoğa Ekle / Stoktan Düş" Motoru
+    window.topluMiktarIslemi = function(urunId, islemTipi) {
+        const miktarInput = document.getElementById('urunMiktar');
+        const islemMiktari = parseInt(miktarInput.value);
+
+        if (isNaN(islemMiktari) || islemMiktari <= 0) {
+            alert("Lütfen form alanına geçerli bir işlem miktarı giriniz!");
+            return;
+        }
+
+        const suAnkiMiktar = parseInt(mevcutUrunlerHafiza[urunId].urunMiktar);
+        let yeniMiktar = suAnkiMiktar;
+
+        if (islemTipi === 'ekle') {
+            yeniMiktar += islemMiktari;
+        } else if (islemTipi === 'dus') {
+            yeniMiktar -= islemMiktari;
+        }
+
+        if (yeniMiktar < 0) {
+            alert("Stok miktarı sıfırın altına düşemez! Mevcut stok: " + suAnkiMiktar);
+            return;
+        }
+
+        const guncellemeRef = ref(database, `rolBazliDepo/${veriYolu}/${urunId}`);
+        update(guncellemeRef, { urunMiktar: yeniMiktar }).then(() => {
+            // İşlem sonrası miktar alanını tekrar 1'e sıfırla (kolaylık için)
+            miktarInput.value = "1";
+        });
     }
 
     // 🗑️ Kayıt Silme Fonksiyonu
