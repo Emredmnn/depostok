@@ -43,7 +43,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-    // 🌟 DATABASEURL SATIRI BURAYA DA EKLENDİ
     const firebaseConfig = {
         apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
         authDomain: "depo-stok-f6389.firebaseapp.com",
@@ -73,6 +72,9 @@
         secilenUrun = depoVeritabani[urunId];
 
         if (secilenUrun) {
+            // Güvenli sayı dönüşümü
+            secilenUrun.stok = parseInt(secilenUrun.stok) || 0;
+
             document.getElementById('lblMalzemeAdi').innerText = secilenUrun.adi;
             document.getElementById('lblKategori').innerText = "Depo: " + secilenUrun.kategori;
             document.getElementById('lblMevcutStok').innerText = `Depoda Var: ${secilenUrun.stok}`;
@@ -102,7 +104,11 @@
             return;
         }
 
-        if (islemTipi === 'dus') { secilenUrun.stok -= miktar; } else { secilenUrun.stok += miktar; }
+        if (islemTipi === 'dus') { 
+            secilenUrun.stok -= miktar; 
+        } else { 
+            secilenUrun.stok += miktar; 
+        }
         
         islemGecmisi.unshift({
             tarih: new Date().toLocaleString('tr-TR'),
