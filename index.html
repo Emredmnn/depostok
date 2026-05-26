@@ -39,58 +39,71 @@
     </div>
 </div>
 
-<script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+    // 🌟 DATABASEURL SATIRI BURAYA DA EKLENDİ
+    const firebaseConfig = {
+        apiKey: "AIzaSyAn1CoIY21XaN-EXMOJSCuMGBhW8k_Q3FU",
+        authDomain: "depo-stok-f6389.firebaseapp.com",
+        databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "depo-stok-f6389",
+        storageBucket: "depo-stok-f6389.firebasestorage.app",
+        messagingSenderId: "884521404368",
+        appId: "1:884521404368:web:ea7392975933c5a2415bd5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
     const aktifUser = localStorage.getItem('aktifKullanici');
     document.getElementById('txtAktifUser').value = aktifUser;
 
-    const depoVeritabani = JSON.parse(localStorage.getItem('depoVerisi'));
-    const islemGecmisi = JSON.parse(localStorage.getItem('islemGecmisi')) || [];
-    
-    // URL parametrelerini tam ve kararlı okuma yöntemi
     const urlParametreleri = new URLSearchParams(window.location.search);
     const urunId = urlParametreleri.get('id'); 
     const islemTipi = urlParametreleri.get('tip');
 
-    const secilenUrun = depoVeritabani[urunId];
+    let depoVeritabani = {};
+    let islemGecmisi = [];
+    let secilenUrun = null;
 
-    if (secilenUrun) {
-        document.getElementById('lblMalzemeAdi').innerText = secilenUrun.adi;
-        document.getElementById('lblKategori').innerText = "Depo: " + secilenUrun.kategori;
-        document.getElementById('lblMevcutStok').innerText = `Depoda Var: ${secilenUrun.stok}`;
-        document.getElementById('lblUrunId').innerText = "Ürün ID: #" + urunId;
+    get(ref(database, 'depoVerisi')).then((snapshot) => {
+        depoVeritabani = snapshot.val() || {};
+        secilenUrun = depoVeritabani[urunId];
 
-        const btn = document.getElementById('btnOnay');
-        if (islemTipi === 'ekle') {
-            document.getElementById('lblMiktarAlan').innerText = "Eklenecek Miktar:";
-            btn.innerText = "Stok Girişini Onayla"; btn.classList.add('btn-success');
-        } else {
-            document.getElementById('lblMiktarAlan').innerText = "Düşülecek Miktar:";
-            btn.innerText = "Stoktan Düşmeyi Onayla"; btn.classList.add('btn-danger');
+        if (secilenUrun) {
+            document.getElementById('lblMalzemeAdi').innerText = secilenUrun.adi;
+            document.getElementById('lblKategori').innerText = "Depo: " + secilenUrun.kategori;
+            document.getElementById('lblMevcutStok').innerText = `Depoda Var: ${secilenUrun.stok}`;
+            document.getElementById('lblUrunId').innerText = "Ürün ID: #" + urunId;
+
+            const btn = document.getElementById('btnOnay');
+            if (islemTipi === 'ekle') {
+                document.getElementById('lblMiktarAlan').innerText = "Eklenecek Miktar:";
+                btn.innerText = "Stok Girişini Onayla"; btn.classList.add('btn-success');
+            } else {
+                document.getElementById('lblMiktarAlan').innerText = "Düşülecek Miktar:";
+                btn.innerText = "Stoktan Düşmeyi Onayla"; btn.classList.add('btn-danger');
+            }
         }
-    } else {
-        alert("Ürün bulunamadı veya geçersiz ID!");
-        window.location.href = "depo_listesi.html";
-    }
+    });
+
+    get(ref(database, 'islemGecmisi')).then((snapshot) => {
+        islemGecmisi = snapshot.val() || [];
+    });
 
     document.getElementById('formDepoIslem').addEventListener('submit', function(e) {
         e.preventDefault();
         const miktar = parseInt(document.getElementById('miktar').value);
 
         if (islemTipi === 'dus' && miktar > secilenUrun.stok) {
-            alert(`Hata: Depoda sadece ${secilenUrun.stok} adet var! ${miktar} adet düşemezsiniz.`); 
+            alert(`Hata: Depoda yeterli ürün yok!`); 
             return;
         }
 
-        if (islemTipi === 'dus') { 
-            secilenUrun.stok -= miktar; 
-        } else { 
-            secilenUrun.stok += miktar; 
-        }
+        if (islemTipi === 'dus') { secilenUrun.stok -= miktar; } else { secilenUrun.stok += miktar; }
         
-        // Veritabanını kaydet
-        localStorage.setItem('depoVerisi', JSON.stringify(depoVeritabani));
-        
-        // Log geçmişini kaydet
         islemGecmisi.unshift({
             tarih: new Date().toLocaleString('tr-TR'),
             personel: aktifUser,
@@ -99,10 +112,11 @@
             miktar: miktar,
             tip: islemTipi
         });
-        localStorage.setItem('islemGecmisi', JSON.stringify(islemGecmisi));
-        
-        alert("İşlem Başarıyla Kaydedildi!");
-        window.location.href = "depo_listesi.html";
+
+        set(ref(database, 'depoVerisi'), depoVeritabani);
+        set(ref(database, 'islemGecmisi'), islemGecmisi).then(() => {
+            window.location.href = "depo_listesi.html";
+        });
     });
 </script>
 </body>
