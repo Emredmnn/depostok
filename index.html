@@ -10,12 +10,14 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #f4f6f9; color: #333; padding-bottom: 50px; }
         
-        /* KESİN TEK PARÇA GİRİŞ EKRANI */
+        /* GERÇEK TEK GİRİŞ EKRANI */
         .login-wrapper { position: fixed; top:0; left:0; width:100%; height:100%; background: linear-gradient(135deg, #f4f6f9 0%, #dbe2ef 100%); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .login-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border-top: 5px solid #0d6efd; }
         .login-card h2 { text-align: center; margin-bottom: 25px; color: #333; }
         
-        /* ANA PANEL (İÇERİSİ) */
+        /* ANA PANEL (BAŞLANGIÇTA GİZLİ) */
+        .main-panel-wrapper { display: none; }
+        
         nav { background: linear-gradient(135deg, #dc3545 0%, #0d6efd 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .nav-right { display: flex; align-items: center; gap: 15px; }
         .user-badge { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; }
@@ -94,86 +96,88 @@
     </div>
 </div>
 
-<nav>
-    <h2>Catering Ortak Depo Yönetimi</h2>
-    <div class="nav-right">
-        <span class="user-badge" id="roleBadge">👤 Birim: </span>
-        <button class="btn-report" id="openReportBtn">📊 Canlı İşlem Geçmişi (Rapor)</button>
-        <button id="logoutBtn" class="btn-logout">Çıkış</button>
-    </div>
-</nav>
+<div class="main-panel-wrapper" id="mainPanelWrapper">
+    <nav>
+        <h2>Catering Ortak Depo Yönetimi</h2>
+        <div class="nav-right">
+            <span class="user-badge" id="roleBadge">👤 Birim: </span>
+            <button class="btn-report" id="openReportBtn">📊 Canlı İşlem Geçmişi (Rapor)</button>
+            <button id="logoutBtn" class="btn-logout">Çıkış</button>
+        </div>
+    </nav>
 
-<div class="container" id="mainContainer">
-    <div class="card" id="adminAddCard" style="display: none;">
-        <h3>✨ Yeni Ürün Tanımla (Manuel Giriş)</h3>
-        <form id="addForm">
-            <div class="form-group">
-                <label>Ürün Adı</label>
-                <input type="text" id="newProdName" placeholder="Örn: Ayran, Dana Kıyma, Ayçiçek Yağı" required>
-            </div>
-            <div class="form-group">
-                <label>Depo Alanı</label>
-                <select id="newProdDepot">
-                    <option value="KURU GIDA">KURU GIDA</option>
-                    <option value="ŞARKÜTERİ">ŞARKÜTERİ</option>
-                    <option value="ET +4">ET +4</option>
-                    <option value="SEBZE +4">SEBZE +4</option>
-                    <option value="SEBZE -18">SEBZE -18</option>
-                    <option value="TATLI +4">TATLI +4</option>
-                    <option value="TATLI -18">TATLI -18</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Ölçü Birimi</label>
-                <select id="newProdUnit">
-                    <option value="Adet">Adet</option>
-                    <option value="KG">Kilogram (KG)</option>
-                    <option value="Litre">Litre (L)</option>
-                    <option value="Koli">Koli</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Mevcut Stok Miktarı</label>
-                <input type="number" id="newProdQty" step="0.01" min="0" value="0" required>
-            </div>
-            <div class="form-group">
-                <label>Kritik Eşik Sınırı</label>
-                <input type="number" id="newProdLimit" step="0.01" min="0" value="0" required>
-            </div>
-            <button type="submit" class="submit-btn">Ürünü Canlı Havuza Ekle</button>
-        </form>
-    </div>
-
-    <div class="card success-theme">
-        <h3>📦 Ortak Malzeme Havuzu ve Güncel Stok Seviyeleri</h3>
-        
-        <div class="search-container">
-            <input type="text" id="searchInput" style="width:100%; padding:12px; border:2px solid #dee2e6; border-radius:6px;" placeholder="🔍 Malzeme adına göre canlı listede hızlı ara...">
+    <div class="container" id="mainContainer">
+        <div class="card" id="adminAddCard" style="display: none;">
+            <h3>✨ Yeni Ürün Tanımla (Manuel Giriş)</h3>
+            <form id="addForm">
+                <div class="form-group">
+                    <label>Ürün Adı</label>
+                    <input type="text" id="newProdName" placeholder="Örn: Ayran, Dana Kıyma, Ayçiçek Yağı" required>
+                </div>
+                <div class="form-group">
+                    <label>Depo Alanı</label>
+                    <select id="newProdDepot">
+                        <option value="KURU GIDA">KURU GIDA</option>
+                        <option value="ŞARKÜTERİ">ŞARKÜTERİ</option>
+                        <option value="ET +4">ET +4</option>
+                        <option value="SEBZE +4">SEBZE +4</option>
+                        <option value="SEBZE -18">SEBZE -18</option>
+                        <option value="TATLI +4">TATLI +4</option>
+                        <option value="TATLI -18">TATLI -18</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ölçü Birimi</label>
+                    <select id="newProdUnit">
+                        <option value="Adet">Adet</option>
+                        <option value="KG">Kilogram (KG)</option>
+                        <option value="Litre">Litre (L)</option>
+                        <option value="Koli">Koli</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Mevcut Stok Miktarı</label>
+                    <input type="number" id="newProdQty" step="0.01" min="0" value="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Kritik Eşik Sınırı</label>
+                    <input type="number" id="newProdLimit" step="0.01" min="0" value="0" required>
+                </div>
+                <button type="submit" class="submit-btn">Ürünü Canlı Havuza Ekle</button>
+            </form>
         </div>
 
-        <div class="depot-filter-bar" id="depotFilterBar">
-            <button class="btn-depot-filter active" onclick="filterByDepot('HEPSİ')">HEPSİ</button>
-            <button class="btn-depot-filter" onclick="filterByDepot('KURU GIDA')">KURU GIDA</button>
-            <button class="btn-depot-filter" onclick="filterByDepot('ŞARKÜTERİ')">ŞARKÜTERİ</button>
-            <button class="btn-depot-filter" onclick="filterByDepot('ET +4')">ET +4</button>
-            <button class="btn-depot-filter" onclick="filterByDepot('SEBZE +4')">SEBZE +4</button>
-            <button class="btn-depot-filter" onclick="filterByDepot('SEBZE -18')">SEBZE -18</button>
-            <button class="btn-depot-filter" onclick="filterByDepot('TATLI +4')">TATLI +4</button>
-            <button class="btn-depot-filter" onclick="filterByDepot('TATLI -18')">TATLI -18</button>
-        </div>
+        <div class="card success-theme">
+            <h3>📦 Ortak Malzeme Havuzu ve Güncel Stok Seviyeleri</h3>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" style="width:100%; padding:12px; border:2px solid #dee2e6; border-radius:6px;" placeholder="🔍 Malzeme adına göre canlı listede hızlı ara...">
+            </div>
 
-        <table class="materials-table">
-            <thead>
-                <tr>
-                    <th>Malzeme Adı</th>
-                    <th>Depo Alanı</th>
-                    <th>Güncel Stok</th>
-                    <th>Eşik Durumu</th>
-                    <th>Senin Rol İşlemin</th>
-                </tr>
-            </thead>
-            <tbody id="liveMaterialsBody"></tbody>
-        </table>
+            <div class="depot-filter-bar" id="depotFilterBar">
+                <button class="btn-depot-filter active" onclick="filterByDepot('HEPSİ')">HEPSİ</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('KURU GIDA')">KURU GIDA</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('ŞARKÜTERİ')">ŞARKÜTERİ</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('ET +4')">ET +4</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('SEBZE +4')">SEBZE +4</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('SEBZE -18')">SEBZE -18</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('TATLI +4')">TATLI +4</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('TATLI -18')">TATLI -18</button>
+            </div>
+
+            <table class="materials-table">
+                <thead>
+                    <tr>
+                        <th>Malzeme Adı</th>
+                        <th>Depo Alanı</th>
+                        <th>Güncel Stok</th>
+                        <th>Eşik Durumu</th>
+                        <th>Senin Rol İşlemin</th>
+                    </tr>
+                </thead>
+                <tbody id="liveMaterialsBody"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
@@ -206,7 +210,7 @@
 </div>
 
 <script>
-    // CANLI VERİTABANI BAĞLANTISI
+    // CANLI VERİTABANI BAĞLANTISI (YALNIZCA KİMLİK DOĞRULAMA GEÇİNCE TETİKLENECEK)
     const firebaseConfig = {
         databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/"
     };
@@ -218,18 +222,17 @@
     let reports = [];
     let activeDepotFilter = 'HEPSİ';
 
-    // DOĞRUDAN VE TEK AŞAMALI GİRİŞ KONTROLÜ
+    // TEK BİR PANEL ÜZERİNDEN HASSASİYETİ SIFIRLANMIŞ ŞİFRE KONTROLÜ
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Girdileri temizle ve tamamen küçük harfe sabitle
         let u = document.getElementById('username').value.trim().toLowerCase();
         let p = document.getElementById('password').value.trim();
 
-        // Türkçe karakterlerin farklı klavyelerdeki yazım riskini sıfırla
+        // Klavye dil farklarını düzeltme motoru
         u = u.replace(/ı/g, 'i').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g');
 
-        // DOĞRUDAN KONTROL BLOKLARI (BAŞKA HİÇBİR EKRAN VE SORGULAMA YOKTUR)
+        // ŞİFRELERİN VE KISITLAMALARIN İLK GİRİŞE ENTEGRASYONU
         if ((u === "yonetici" || u === "yönetici") && p === "010") {
             currentUser = { unvan: "Yönetici", rol: "YÖNETİCİ" };
         } 
@@ -239,25 +242,28 @@
         else if (u === "garson" && p === "222") {
             currentUser = { unvan: "Garson", rol: "GARSON" };
         } 
-        else if (u === "uretim" || u === "üretim") && p === "333") {
+        else if ((u === "uretim" || u === "üretim") && p === "333") {
             currentUser = { unvan: "Üretim", rol: "ÜRETİM" };
         }
 
-        // Karar Yapısı: Eğer rol eşleştiyse ekranı kaldır ve sistemi tek aşamada yükle
+        // Eğer bilgiler doğruysa, giriş ekranını tamamen kaldırıp ana yapıyı CANLI olarak başlatır
         if (currentUser !== null) {
-            document.getElementById('loginWrapper').style.style.display = 'none'; // Giriş ekranı tamamen yok olur.
-            sistemiGoster();
+            document.getElementById('loginWrapper').style.display = 'none'; // Giriş kartı yok olur
+            document.getElementById('mainPanelWrapper').style.display = 'block'; // Ana panel yüklenir
+            baglanVeSistemiYukle();
         } else {
-            alert("Giriş Başarısız!\nLütfen kullanıcı adını ve şifreyi (010, 111, 222 veya 333) kontrol edin.");
+            alert("Giriş Başarısız!\nLütfen kullanıcı adını ve şifreyi (010, 111, 222 veya 333) kontrol edip tekrar yazın.");
         }
     });
 
-    function sistemiGoster() {
+    // CANLI VE KISITLAMALI EKRAN YÜKLEYİCİSİ
+    function baglanVeSistemiYukle() {
         document.getElementById('roleBadge').textContent = `👤 Birim: ${currentUser.unvan}`;
         
         const container = document.getElementById('mainContainer');
         const adminAddCard = document.getElementById('adminAddCard');
         
+        // Kim hangi butonları görecek kısıtlaması
         if (currentUser.rol === 'YÖNETİCİ' || currentUser.rol === 'DEPO') {
             container.classList.add('admin-layout');
             adminAddCard.style.display = 'block';
@@ -266,7 +272,7 @@
             adminAddCard.style.display = 'none';
         }
 
-        // Veritabanı dinleyicileri ancak başarılı giriş yapıldıktan sonra tetiklenir
+        // Firebase Realtime veri akışını tam şimdi başlatıyoruz (Çakışma bitti)
         db.ref('depo_stok').on('value', (snapshot) => {
             inventory = snapshot.val() ? Object.values(snapshot.val()) : [];
             renderUi();
@@ -300,6 +306,7 @@
 
             let actionButtonsHtml = '';
 
+            // ROL KISITLAMALARINA GÖRE BUTON SEÇİMİ
             if (currentUser.rol === 'YÖNETİCİ') {
                 actionButtonsHtml = `
                     <button class="action-btn btn-depo-in" onclick="executeAction('${item.name}', 'IN', 'Yönetici Girişi')">+ Ekle</button>
