@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Depo Yönetim Paneli</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: #f4f6f9; color: #333; padding-bottom: 50px; }
@@ -17,7 +19,7 @@
         .btn-report { color: #212529; background: #ffc107; padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; }
         .btn-logout { color: #fff; text-decoration: none; background: #dc3545; padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; }
         
-        /* İki Sütunlu Gelişmiş Düzen */
+        /* İki Sütunlu Düzen */
         .container { max-width: 1600px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 30px; }
         @media (min-width: 992px) { .container { grid-template-columns: 1fr 2.5fr; } }
         
@@ -31,30 +33,26 @@
         input:focus, select:focus { border-color: #0d6efd; }
         .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; font-size: 16px; background: #198754; }
         
-        /* Kontrol Paneli Üst Kısmı (Arama ve Depo Filtreleri) */
+        /* Arama ve Filtreler */
         .search-container { margin-bottom: 15px; }
         .search-input { width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 15px; outline: none; }
         
-        /* Depo Seçim Buton Grubu */
         .depot-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding: 10px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; }
         .btn-depot-filter { padding: 8px 14px; border: 2px solid #ced4da; background: white; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: #495057; }
         .btn-depot-filter:hover { background: #e9ecef; }
         .btn-depot-filter.active { background: #0d6efd; color: white; border-color: #0d6efd; box-shadow: 0 3px 8px rgba(13,110,253,0.2); }
 
-        /* Gelişmiş Envanter Tablosu */
+        /* Envanter Tablosu */
         .materials-table { width: 100%; border-collapse: collapse; }
         .materials-table th, .materials-table td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 14px; }
         .materials-table th { background: #f8f9fa; color: #495057; font-weight: 600; }
         
-        /* Stok Durum Rozetleri */
         .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; text-align: center; }
         .status-safe { background-color: #d1e7dd; color: #0f5132; }
         .status-critical { background-color: #f8d7da; color: #842029; }
         
-        /* Depo Etiketi Hücre İçi */
         .depot-tag { background: #e2f0fe; color: #0d6efd; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
 
-        /* Aksiyon Buton Grubu */
         .action-btns { display: flex; gap: 4px; }
         .action-btn { padding: 6px 10px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer; font-size: 12px; white-space: nowrap; }
         .btn-add-stock { background-color: #0d6efd; }
@@ -69,7 +67,6 @@
         
         .modal-actions-bar { display: flex; justify-content: flex-end; margin-bottom: 15px; }
         .btn-clear-all-reports { background-color: #dc3545; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: none; }
-        .btn-clear-all-reports:hover { background-color: #bb2d3b; }
 
         table.report-table { width: 100%; border-collapse: collapse; }
         table.report-table th, table.report-table td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 14px; }
@@ -200,9 +197,32 @@
     const currentRole = localStorage.getItem('userRole') || 'YÖNETİCİ';
     document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`;
 
-    let inventory = JSON.parse(localStorage.getItem('depo_stok')) || [];
-    let reports = JSON.parse(localStorage.getItem('depo_rapor')) || [];
+    // CANLI VERİTABANI BAĞLANTISI (FIREBASE REALTIME DATABASE)
+    const firebaseConfig = {
+        databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let inventory = [];
+    let reports = [];
     let activeDepotFilter = 'HEPSİ';
+
+    // FIREBASE'DEN STOKLARI CANLI DİNLEME (Başka cihazda değiştiği an burayı da anında tetikler)
+    db.ref('depo_stok').on('value', (snapshot) => {
+        inventory = snapshot.val() ? Object.values(snapshot.val()) : [];
+        renderUi();
+    });
+
+    // FIREBASE'DEN RAPORLARI CANLI DİNLEME
+    db.ref('depo_rapor').on('value', (snapshot) => {
+        reports = [];
+        if (snapshot.val()) {
+            // Raporları tarih sırasına göre tersten dizmek için diziye çevirip sıralıyoruz
+            reports = Object.values(snapshot.val());
+            reports.sort((a, b) => new Date(b.rawTime) - new Date(a.rawTime));
+        }
+    });
 
     function renderUi() {
         const tbody = document.getElementById('liveMaterialsBody');
@@ -228,12 +248,11 @@
                 `<span class="status-badge status-safe">🟢 Güvenli</span>` : 
                 `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
 
-            let realIndex = inventory.findIndex(i => i.name === item.name);
-
+            // Firebase işlemleri için benzersiz isim (key) baz alınır
             let buttonsHtml = `
-                <button class="action-btn btn-add-stock" onclick="manageStock(${realIndex}, 'in')">+ Ekle</button>
-                <button class="action-btn btn-drop-stock" onclick="manageStock(${realIndex}, 'out')">- Düş</button>
-                <button class="action-btn btn-del-stock" onclick="deleteProductDirect(${realIndex})">🗑️ Sil</button>
+                <button class="action-btn btn-add-stock" onclick="manageStock('${item.name}', 'in')">+ Ekle</button>
+                <button class="action-btn btn-drop-stock" onclick="manageStock('${item.name}', 'out')">- Düş</button>
+                <button class="action-btn btn-del-stock" onclick="deleteProductDirect('${item.name}')">🗑️ Sil</button>
             `;
 
             const tr = document.createElement('tr');
@@ -259,6 +278,7 @@
         renderUi();
     };
 
+    // Yeni Ürün Tanımlama (Canlı Buluta Gönderir)
     document.getElementById('addForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('newProdName').value.trim();
@@ -269,20 +289,30 @@
         
         if(inventory.some(item => item.name.toLowerCase() === name.toLowerCase())) { alert("Bu ürün zaten kayıtlı!"); return; }
 
-        inventory.push({ name: name, depot: depot, unit: unit, quantity: qty, criticalLimit: limit });
-        localStorage.setItem('depo_stok', JSON.stringify(inventory));
+        const cleanKey = name.replace(/[.#$\[\]]/g, ""); // Firebase özel karakter temizliği
+
+        db.ref('depo_stok/' + cleanKey).set({ name: name, depot: depot, unit: unit, quantity: qty, criticalLimit: limit });
         
-        reports.unshift({ time: new Date().toLocaleString('tr-TR'), user: currentRole, product: `${name} (${depot})`, type: 'YENİ ÜRÜN', qty: `${qty} ${unit}` });
-        localStorage.setItem('depo_rapor', JSON.stringify(reports));
+        const now = new Date();
+        db.ref('depo_rapor').push({
+            time: now.toLocaleString('tr-TR'),
+            rawTime: now.toISOString(),
+            user: currentRole,
+            product: `${name} (${depot})`,
+            type: 'YENİ ÜRÜN',
+            qty: `${qty} ${unit}`
+        });
 
         document.getElementById('addForm').reset();
         document.getElementById('newProdQty').value = "0";
         document.getElementById('newProdLimit').value = "0";
-        renderUi();
     });
 
-    window.manageStock = function(index, action) {
-        const item = inventory[index];
+    // Stok Ekle / Düş Dünyası (Canlı Eşitlenir)
+    window.manageStock = function(prodName, action) {
+        const item = inventory.find(i => i.name === prodName);
+        if(!item) return;
+        
         const actionText = action === 'in' ? 'eklemek' : 'düşmek';
         const amountVal = prompt(`Kaç ${item.unit} ${item.name} ${actionText} istiyorsunuz?`);
         const amount = parseFloat(amountVal);
@@ -293,100 +323,118 @@
         const confirmAction = confirm(`"${item.name}" ürününden ${amount} ${item.unit} ${actionText} işlemini onaylıyor musunuz?`);
         if(!confirmAction) return;
 
-        if(action === 'in') {
-            item.quantity = parseFloat((item.quantity + amount).toFixed(2));
-            reports.unshift({ time: new Date().toLocaleString('tr-TR'), user: currentRole, product: `${item.name} [${item.depot}]`, type: 'GİRİŞ', qty: `${amount} ${item.unit}` });
-        } else {
-            item.quantity = parseFloat((item.quantity - amount).toFixed(2));
-            reports.unshift({ time: new Date().toLocaleString('tr-TR'), user: currentRole, product: `${item.name} [${item.depot}]`, type: 'ÇIKIŞ', qty: `${amount} ${item.unit}` });
-        }
+        let newQty = action === 'in' ? parseFloat((item.quantity + amount).toFixed(2)) : parseFloat((item.quantity - amount).toFixed(2));
+        const cleanKey = item.name.replace(/[.#$\[\]]/g, "");
 
-        localStorage.setItem('depo_stok', JSON.stringify(inventory));
-        localStorage.setItem('depo_rapor', JSON.stringify(reports));
-        renderUi();
+        db.ref('depo_stok/' + cleanKey + '/quantity').set(newQty);
+
+        const now = new Date();
+        db.ref('depo_rapor').push({
+            time: now.toLocaleString('tr-TR'),
+            rawTime: now.toISOString(),
+            user: currentRole,
+            product: `${item.name} [${item.depot}]`,
+            type: action === 'in' ? 'GİRİŞ' : 'ÇIKIŞ',
+            qty: `${amount} ${item.unit}`
+        });
     };
 
-    window.deleteProductDirect = function(index) {
-        const name = inventory[index].name;
-        const depot = inventory[index].depot;
-        if(confirm(`"${name}" isimli malzemeyi depodan tamamen silmek istediğinize emin misiniz?`)) {
-            inventory.splice(index, 1);
-            localStorage.setItem('depo_stok', JSON.stringify(inventory));
-            reports.unshift({ time: new Date().toLocaleString('tr-TR'), user: currentRole, product: `${name} (${depot})`, type: 'ÜRÜN SİLİNDİ', qty: '---' });
-            localStorage.setItem('depo_rapor', JSON.stringify(reports));
-            renderUi();
+    // Canlı Ürün Silme
+    window.deleteProductDirect = function(prodName) {
+        const item = inventory.find(i => i.name === prodName);
+        if(!item) return;
+
+        if(confirm(`"${item.name}" isimli malzemeyi depodan tamamen silmek istediğinize emin misiniz?`)) {
+            const cleanKey = item.name.replace(/[.#$\[\]]/g, "");
+            db.ref('depo_stok/' + cleanKey).remove();
+
+            const now = new Date();
+            db.ref('depo_rapor').push({
+                time: now.toLocaleString('tr-TR'),
+                rawTime: now.toISOString(),
+                user: currentRole,
+                product: `${item.name} (${item.depot})`,
+                type: 'ÜRÜN SİLİNDİ',
+                qty: '---'
+            });
         }
     };
 
     document.getElementById('searchInput').addEventListener('input', renderUi);
 
-    // Rapor Modalı Motoru
+    // Rapor Modalı ve Firebase Entegrasyonu
     const modal = document.getElementById('reportModal');
     document.getElementById('openReportBtn').addEventListener('click', () => {
-        const tbody = document.getElementById('reportTableBody');
-        const headerAction = document.getElementById('reportActionHeader');
-        const clearAllBtn = document.getElementById('clearAllReportsBtn');
-        tbody.innerHTML = '';
-        
-        // Sadece YÖNETİCİ rolündeyse toplu silme butonunu ve sütun başlığını göster
-        if(currentRole === 'YÖNETİCİ') {
-            headerAction.style.display = 'table-cell';
-            clearAllBtn.style.display = 'block';
-        } else {
-            headerAction.style.display = 'none';
-            clearAllBtn.style.display = 'none';
-        }
+        // Güncel veriyi Firebase'den anlık çekip modala basıyoruz
+        db.ref('depo_rapor').once('value', (snapshot) => {
+            const tbody = document.getElementById('reportTableBody');
+            const headerAction = document.getElementById('reportActionHeader');
+            const clearAllBtn = document.getElementById('clearAllReportsBtn');
+            tbody.innerHTML = '';
+            
+            if(currentRole === 'YÖNETİCİ') {
+                headerAction.style.display = 'table-cell';
+                clearAllBtn.style.display = 'block';
+            } else {
+                headerAction.style.display = 'none';
+                clearAllBtn.style.display = 'none';
+            }
 
-        if(reports.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="${currentRole === 'YÖNETİCİ' ? 6 : 5}" style="text-align:center; color:#888;">Kayıt bulunamadı.</td></tr>`;
-        } else {
-            reports.forEach((rep, rIndex) => {
-                let bCls = 'badge-new';
-                if(rep.type === 'GİRİŞ') bCls = 'badge-in';
-                if(rep.type === 'ÇIKIŞ') bCls = 'badge-out';
-                if(rep.type === 'ÜRÜN SİLİNDİ') bCls = 'badge-del';
-                
-                let deleteCellHtml = '';
-                if(currentRole === 'YÖNETİCİ') {
-                    deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteReportRow(${rIndex})">Kayıt Sil</button></td>`;
-                }
+            let modalReports = snapshot.val() ? Object.entries(snapshot.val()) : [];
+            
+            if(modalReports.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${currentRole === 'YÖNETİCİ' ? 6 : 5}" style="text-align:center; color:#888;">Kayıt bulunamadı.</td></tr>`;
+            } else {
+                // Tarihe göre sıralama (Yeniden eskiye)
+                modalReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
 
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${rep.time}</td>
-                        <td><strong>${rep.user}</strong></td>
-                        <td>${rep.product}</td>
-                        <td><span class="${bCls}">${rep.type}</span></td>
-                        <td>${rep.qty}</td>
-                        ${deleteCellHtml}
-                    </tr>`;
-            });
-        }
-        modal.style.display = 'flex';
+                modalReports.forEach(([fbKey, rep]) => {
+                    let bCls = 'badge-new';
+                    if(rep.type === 'GİRİŞ') bCls = 'badge-in';
+                    if(rep.type === 'ÇIKIŞ') bCls = 'badge-out';
+                    if(rep.type === 'ÜRÜN SİLİNDİ') bCls = 'badge-del';
+                    
+                    let deleteCellHtml = '';
+                    if(currentRole === 'YÖNETİCİ') {
+                        deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button></td>`;
+                    }
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${rep.time}</td>
+                            <td><strong>${rep.user}</strong></td>
+                            <td>${rep.product}</td>
+                            <td><span class="${bCls}">${rep.type}</span></td>
+                            <td>${rep.qty}</td>
+                            ${deleteCellHtml}
+                        </tr>`;
+                });
+            }
+            modal.style.display = 'flex';
+        });
     });
 
-    window.deleteReportRow = function(rIndex) {
+    // Tekli Rapor Satırı Silme (Buluttan Silinir)
+    window.deleteReportRow = function(fbKey) {
         if(confirm("Bu işlem geçmişi kaydını kalıcı olarak silmek istediğinize emin misiniz?")) {
-            reports.splice(rIndex, 1);
-            localStorage.setItem('depo_rapor', JSON.stringify(reports));
-            document.getElementById('openReportBtn').click();
+            db.ref('depo_rapor/' + fbKey).remove().then(() => {
+                document.getElementById('openReportBtn').click(); // Modalı tazele
+            });
         }
     };
 
-    // YÖNETİCİYE ÖZEL TOPLU SİLME FONKSİYONU
+    // Tüm Geçmişi Toplu Silme (Buluttan Sıfırlanır)
     window.clearAllReports = function() {
         if(confirm("DİKKAT! Tüm işlem geçmişi raporunu kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz!")) {
-            reports = [];
-            localStorage.setItem('depo_rapor', JSON.stringify(reports));
-            document.getElementById('openReportBtn').click();
+            db.ref('depo_rapor').remove().then(() => {
+                document.getElementById('openReportBtn').click(); // Modalı tazele
+            });
         }
     };
 
     document.getElementById('closeReportBtn').addEventListener('click', () => modal.style.display = 'none');
     window.addEventListener('click', (e) => { if(e.target === modal) modal.style.display = 'none'; });
     document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('isLoggedIn'); window.location.replace('login.html'); });
-
-    renderUi();
 </script>
 </body>
 </html>
