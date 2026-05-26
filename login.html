@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Depo Stok Takibi - Giriş</title>
+    <title>ISS Depo - Personel Girişi</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
@@ -22,7 +22,8 @@
 
 <div class="card login-card p-5 mx-3">
     <div class="text-center mb-4">
-        <h2 class="main-title mb-1">depo stok takibi</h2>
+        <h2 class="main-title mb-1">ISS İkram & Catering</h2>
+        <p class="text-muted small">Akıllı Depo Otomasyonu v2026</p>
         <div style="width: 50px; height: 3px; background-color: #3b82f6; margin: 10px auto; border-radius: 2px;"></div>
     </div>
     <form id="loginForm">
@@ -30,7 +31,7 @@
             <label class="form-label fw-semibold text-secondary small">Kullanıcı Adı / Yetkili</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="bi bi-person-fill text-muted"></i></span>
-                <input type="text" id="username" class="form-control form-control-lg" placeholder="Kullanıcı adınız" required autocomplete="off">
+                <input type="text" id="username" class="form-control form-control-lg" placeholder="Örn: Yönetici, Depo, Üretim, Garson" required autocomplete="off">
             </div>
         </div>
         
@@ -55,7 +56,7 @@
 </div>
 
 <script>
-    // 🔑 İstediğin Manuel Kullanıcı Adı ve Şifre Listesi
+    // 🔑 Kullanıcı bazlı şifre tanımlamaları
     const personelVeritabani = {
         "yonetici": { orijinalAd: "Yönetici", sifre: "2605" },
         "depo": { orijinalAd: "Depo", sifre: "1111" },
@@ -84,10 +85,11 @@
 
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault(); 
+        
         const girilenUser = usernameInput.value.trim();
         const girilenSifre = passwordInput.value.trim();
 
-        // Türkçe karakter ve büyük/küçük harf toleransı
+        // Türkçe karakter ve büyük/küçük harf tolerans motoru
         const aramaKey = girilenUser.toLowerCase()
                                     .replace(/ı/g, 'i').replace(/ü/g, 'u').replace(/ö/g, 'o')
                                     .replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g')
@@ -106,13 +108,14 @@
                     localStorage.removeItem('hatirlananKullanici');
                 }
 
-                // Giriş başarılıysa herkes aynı tasarıma sahip olan panele gidiyor
-                window.location.href = "panel.html";
+                alert("Giriş Başarılı! Yönlendiriliyorsunuz...");
+                // 🚀 Senin istediğin sayfa adına (depo_listesi.html) yönlendirir
+                window.location.href = "depo_listesi.html";
             } else {
-                alert("Hatalı Giriş Şifresi!");
+                alert("Hatalı Giriş Şifresi! Lütfen tekrar deneyiniz.");
             }
         } else {
-            alert("Kullanıcı bulunamadı!");
+            alert("Kullanıcı bulunamadı! Lütfen Yönetici, Depo, Üretim veya Garson yazarak giriş yapın.");
         }
     });
 </script>
