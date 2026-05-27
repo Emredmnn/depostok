@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Depo Yönetim Paneli</title>
-    <!-- Firebase ve EmailJS Kütüphaneleri -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -131,9 +130,7 @@
 <input type="date" id="globalHiddenDatePicker" class="hidden-date-picker">
 
 <div class="container" id="mainContainer">
-    <!-- Sol Sütun -->
     <div id="addProductColumn">
-        <!-- FORM 1: Yeni Ürün Tanımla -->
         <div class="card">
             <h3>✨ Yeni Ürün Tanımla</h3>
             <form id="addForm">
@@ -178,10 +175,8 @@
             </form>
         </div>
 
-        <!-- TETİKLEYİCİ BUTON: Sipariş Paneli Açma Butonu -->
         <button class="toggle-panel-btn" onclick="toggleOrderPanel()">📦 Sipariş Oluştur</button>
 
-        <!-- FORM 2: E-Posta Gönderimli Sipariş Paneli -->
         <div class="card warning-theme sliding-panel" id="orderPanelCard">
             <h3>📧 Malzeme Talep Formu (E-Posta)</h3>
             <form id="orderForm">
@@ -208,7 +203,6 @@
         </div>
     </div>
 
-    <!-- Sağ Sütun: Envanter Listesi -->
     <div class="card success-theme">
         <h3>📦 Detaylı Depo Envanter ve Canlı İşlem Paneli</h3>
         
@@ -250,7 +244,6 @@
     </div>
 </div>
 
-<!-- Rapor Modalı -->
 <div class="modal" id="reportModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -277,7 +270,6 @@
     </div>
 </div>
 
-<!-- Sipariş Listesi Modalı -->
 <div class="modal" id="ordersListModal">
     <div class="modal-content" style="border-top: 4px solid #20c997;">
         <div class="modal-header">
@@ -515,7 +507,6 @@
                 const nowStr = new Date().toLocaleString('tr-TR');
                 const timestampIso = new Date().toISOString();
 
-                // 🌟 JAVASCRIPT & PANEL DEĞİŞKEN ÇAKIŞMASINI ÇÖZEN NET PARAMETRELER
                 const emailParams = {
                     name: currentRole,
                     email: targetMail,
@@ -527,12 +518,13 @@
                     order_date: nowStr
                 };
 
+                // 🌟 CANLI HATA DEDEKTÖRÜ EKLEMESİ
                 emailjs.send("service_wt1igmj", "template_ydhkoa6", emailParams)
-                    .then(() => {
-                        console.log("E-Posta gönderimi başarıyla tetiklendi.");
+                    .then((response) => {
+                        alert(`✅ BAŞARILI! Sunucu maili kabul etti.\nDurum Kodu: ${response.status}\nMesaj: ${response.text}`);
                     })
                     .catch((err) => {
-                        console.error("E-Posta gönderim hatası: ", err);
+                        alert(`❌ HATA ALINDI!\nSunucu Mesajı: ${JSON.stringify(err)}\n\nLütfen bu hatayı bana bildirin!`);
                     });
 
                 // Bağımsız Sipariş Listesi Düğümüne Kayıt Atılıyor
@@ -555,7 +547,6 @@
                     qty: `${qty} ${item.unit}`
                 });
 
-                alert(`Talep Onaylandı ve Mail Gönderimi Tetiklendi!\nHedef Adres: ${targetMail}\nÜrün: ${qty} ${item.unit} ${item.name}`);
                 orderFormEl.reset();
                 document.getElementById('orderEmail').value = "bahcelievlermemorialct@gmail.com";
                 document.getElementById('orderPanelCard').style.display = 'none'; 
