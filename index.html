@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Depo Yönetim Paneli</title>
+    <!-- Firebase ve EmailJS Kütüphaneleri -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -130,7 +131,9 @@
 <input type="date" id="globalHiddenDatePicker" class="hidden-date-picker">
 
 <div class="container" id="mainContainer">
+    <!-- Sol Sütun -->
     <div id="addProductColumn">
+        <!-- FORM 1: Yeni Ürün Tanımla -->
         <div class="card">
             <h3>✨ Yeni Ürün Tanımla</h3>
             <form id="addForm">
@@ -175,8 +178,10 @@
             </form>
         </div>
 
+        <!-- TETİKLEYİCİ BUTON: Sipariş Paneli Açma Butonu -->
         <button class="toggle-panel-btn" onclick="toggleOrderPanel()">📦 Sipariş Oluştur</button>
 
+        <!-- FORM 2: E-Posta Gönderimli Sipariş Paneli -->
         <div class="card warning-theme sliding-panel" id="orderPanelCard">
             <h3>📧 Malzeme Talep Formu (E-Posta)</h3>
             <form id="orderForm">
@@ -203,6 +208,7 @@
         </div>
     </div>
 
+    <!-- Sağ Sütun: Envanter Listesi -->
     <div class="card success-theme">
         <h3>📦 Detaylı Depo Envanter ve Canlı İşlem Paneli</h3>
         
@@ -244,6 +250,7 @@
     </div>
 </div>
 
+<!-- Rapor Modalı -->
 <div class="modal" id="reportModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -270,6 +277,7 @@
     </div>
 </div>
 
+<!-- Sipariş Listesi Modalı -->
 <div class="modal" id="ordersListModal">
     <div class="modal-content" style="border-top: 4px solid #20c997;">
         <div class="modal-header">
@@ -300,7 +308,7 @@
     if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
     
     // ========================================================
-    // 📧 GÜNCEL EMAILJS ENTEGRASYONU (SABİT / DEĞİŞMEYEN ANAHTAR)
+    // 📧 EMAILJS ENTEGRASYONU
     // ========================================================
     emailjs.init("0X07o5yxfZIA-O6rU8Obr"); 
 
@@ -507,15 +515,16 @@
                 const nowStr = new Date().toLocaleString('tr-TR');
                 const timestampIso = new Date().toISOString();
 
-                // EMAILJS ORİJİNAL PARAMETRE DEĞİŞKENLERİ
+                // 🌟 JAVASCRIPT & PANEL DEĞİŞKEN ÇAKIŞMASINI ÇÖZEN NET PARAMETRELER
                 const emailParams = {
-                    name: currentRole,              // Şablondaki {{name}} alanını besler
-                    email: targetMail,              // Şablondaki {{email}} alanını besler
-                    product_name: item.name,        // Şablondaki {{product_name}} alanını besler
-                    quantity: `${qty} ${item.unit}`,// Şablondaki {{quantity}} alanını besler
-                    order_notes: notes,             // Şablondaki {{order_notes}} alanını besler
-                    sender_role: currentRole,       // Şablondaki {{sender_role}} alanını besler
-                    order_date: nowStr              // Şablondaki {{order_date}} alanını besler
+                    name: currentRole,
+                    email: targetMail,
+                    to_email: targetMail,
+                    product_name: item.name,
+                    quantity: `${qty} ${item.unit}`,
+                    order_notes: notes,
+                    sender_role: currentRole,
+                    order_date: nowStr
                 };
 
                 emailjs.send("service_wt1igmj", "template_ydhkoa6", emailParams)
@@ -546,7 +555,7 @@
                     qty: `${qty} ${item.unit}`
                 });
 
-                alert(`Talep Onaylandı ve Mail Gönderimi Tetiklendi!\nYönetici: ${targetMail}\nÜrün: ${qty} ${item.unit} ${item.name}`);
+                alert(`Talep Onaylandı ve Mail Gönderimi Tetiklendi!\nHedef Adres: ${targetMail}\nÜrün: ${qty} ${item.unit} ${item.name}`);
                 orderFormEl.reset();
                 document.getElementById('orderEmail').value = "bahcelievlermemorialct@gmail.com";
                 document.getElementById('orderPanelCard').style.display = 'none'; 
