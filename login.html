@@ -11,11 +11,21 @@
         .logo-area { margin-bottom: 25px; }
         .logo-area h2 { color: #0d6efd; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
         .logo-area p { color: #6c757d; font-size: 14px; font-weight: 600; }
-        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group { margin-bottom: 20px; text-align: left; position: relative; }
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #495057; }
-        input, select { width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
-        input:focus, select:focus { border-color: #0d6efd; }
-        .btn-login { width: 100%; padding: 14px; background: #0d6efd; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 12px; padding-right: 65px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        input:focus { border-color: #0d6efd; }
+        
+        /* Şifre Göster Butonu */
+        .toggle-password { position: absolute; right: 12px; top: 34px; background: none; border: none; cursor: pointer; color: #6c757d; font-weight: 600; font-size: 12px; outline: none; padding: 4px; }
+        .toggle-password:hover { color: #0d6efd; }
+        
+        /* Beni Hatırla Alanı */
+        .remember-me-container { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; text-align: left; }
+        .remember-me-container input { width: 16px; height: 16px; cursor: pointer; }
+        .remember-me-container label { display: inline; margin-bottom: 0; font-size: 13px; color: #495057; cursor: pointer; user-select: none; }
+
+        .btn-login { width: 100%; padding: 14px; background: #0d6efd; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: background 0.2s; margin-top: 5px; }
         .btn-login:hover { background: #0b5ed7; }
         .error-msg { color: #dc3545; font-size: 13px; margin-top: 12px; font-weight: 600; display: none; }
     </style>
@@ -35,31 +45,77 @@
         <div class="form-group">
             <label>Şifre</label>
             <input type="password" id="password" placeholder="••••••••" required>
+            <button type="button" class="toggle-password" id="togglePasswordBtn" onclick="togglePasswordVisibility()">GÖSTER</button>
         </div>
-        <div class="form-group">
-            <label>Çalışma Rolünüz / Biriminiz</label>
-            <select id="userRole">
-                <option value="YÖNETİCİ">YÖNETİCİ Panel Girişi</option>
-                <option value="ÜRETİM">ÜRETİM / Mutfak Girişi</option>
-                <option value="GARSON">GARSON / Kat Servis Girişi</option>
-            </select>
+        
+        <div class="remember-me-container">
+            <input type="checkbox" id="rememberMe">
+            <label for="rememberMe">Beni Hatırla</label>
         </div>
+
         <button type="submit" class="btn-login">Sisteme Güvenli Giriş Yap</button>
         <div class="error-msg" id="errorMsg">⚠️ Kullanıcı adı veya şifre hatalı!</div>
     </form>
 </div>
 
 <script>
+    // Sayfa yüklendiğinde Beni Hatırla kontrolü yap
+    document.addEventListener("DOMContentLoaded", function() {
+        const savedUser = localStorage.getItem('rememberedUsername');
+        if (savedUser) {
+            document.getElementById('username').value = savedUser;
+            document.getElementById('rememberMe').checked = true;
+        }
+    });
+
+    // Şifre Göster / Gizle Fonksiyonu
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('password');
+        const toggleBtn = document.getElementById('togglePasswordBtn');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleBtn.textContent = 'GİZLE';
+        } else {
+            passwordInput.type = 'password';
+            toggleBtn.textContent = 'GÖSTER';
+        }
+    }
+
+    // Giriş Kontrolü ve Belirlenen Şifre Kombinasyonları
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const user = document.getElementById('username').value.trim();
+        
+        // Türkçe karakter girişlerini yumuşatarak olası hataları önlüyoruz
+        let userInput = document.getElementById('username').value.trim().toLowerCase();
+        let user = userInput.replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c');
+        
         const pass = document.getElementById('password').value;
-        const role = document.getElementById('userRole').value;
+        const rememberMeChecked = document.getElementById('rememberMe').checked;
 
-        // Statik hesap doğrulaması (İhtiyaca göre çoğaltılabilir)
-        if((user === "admin" && pass === "1234") || (user === "mutfak" && pass === "1234") || (user === "garson" && pass === "1234")) {
+        let detectedRole = "";
+
+        // Yeni şifre ve kullanıcı adı eşleşme matrisi
+        if ((user === "yonetici" || userInput === "yönetici") && pass === "2605") {
+            detectedRole = "YÖNETİCİ";
+        } else if (user === "garson" && pass === "2222") {
+            detectedRole = "GARSON";
+        } else if ((user === "uretim" || userInput === "üretim") && pass === "3333") {
+            detectedRole = "ÜRETİM";
+        } else if (user === "depo" && pass === "1111") {
+            detectedRole = "YÖNETİCİ"; // Depo kullanıcısı da yönetim yetkilerine sahip olur
+        }
+
+        if (detectedRole !== "") {
+            // Beni hatırla seçiliyse orijinal girdiyi kaydet
+            if (rememberMeChecked) {
+                localStorage.setItem('rememberedUsername', document.getElementById('username').value.trim());
+            } else {
+                localStorage.removeItem('rememberedUsername');
+            }
+
+            // Yetki atamasını yap ve ana panele yönlendir
             localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userRole', role);
+            localStorage.setItem('userRole', detectedRole);
             window.location.replace('index.html');
         } else {
             document.getElementById('errorMsg').style.display = 'block';
