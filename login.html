@@ -3,98 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catering Depo Yönetimi - Giriş</title>
+    <title>Giriş - Bahçelievler Memorial CT</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: #f4f6f9; display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
-        .login-container { background: #ffffff; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); width: 100%; max-width: 420px; overflow: hidden; }
-        .login-header { background: linear-gradient(135deg, #dc3545 0%, #0d6efd 100%); padding: 35px 20px; text-align: center; color: white; }
-        .login-header h2 { font-size: 24px; font-weight: 700; letter-spacing: 1px; margin-bottom: 5px; }
-        .login-header p { font-size: 14px; opacity: 0.9; }
-        .login-body { padding: 30px 40px; }
-        .form-group { margin-bottom: 20px; position: relative; }
-        label { display: block; margin-bottom: 8px; color: #495057; font-size: 14px; font-weight: 600; }
-        input[type="text"], input[type="password"] { width: 100%; padding: 12px 15px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 16px; outline: none; }
-        input:focus { border-color: #0d6efd; }
-        .password-toggle { position: absolute; right: 15px; top: 38px; cursor: pointer; color: #6c757d; user-select: none; font-size: 13px; font-weight: bold; }
-        .form-options { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .remember-me { display: flex; align-items: center; cursor: pointer; font-size: 14px; color: #6c757d; }
-        .remember-me input { margin-right: 8px; width: 16px; height: 16px; cursor: pointer; }
-        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%); border: none; color: white; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2); }
-        button:hover { background: linear-gradient(135deg, #0b5ed7 0%, #0a58ca 100%); }
-        .error-msg { color: #dc3545; font-size: 14px; text-align: center; margin-top: 15px; display: none; font-weight: 600; background: #f8d7da; padding: 10px; border-radius: 4px; border: 1px solid #f5c2c7; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: linear-gradient(135deg, #f4f6f9 0%, #e9ecef 100%); height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .login-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-top: 5px solid #0d6efd; text-align: center; }
+        .logo-area { margin-bottom: 25px; }
+        .logo-area h2 { color: #0d6efd; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
+        .logo-area p { color: #6c757d; font-size: 14px; font-weight: 600; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #495057; }
+        input, select { width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        input:focus, select:focus { border-color: #0d6efd; }
+        .btn-login { width: 100%; padding: 14px; background: #0d6efd; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        .btn-login:hover { background: #0b5ed7; }
+        .error-msg { color: #dc3545; font-size: 13px; margin-top: 12px; font-weight: 600; display: none; }
     </style>
 </head>
 <body>
 
-<div class="login-container">
-    <div class="login-header">
-        <h2>DEPO YÖNETİMİ</h2>
-        <p>Catering Stok Takip Sistemi</p>
+<div class="login-card">
+    <div class="logo-area">
+        <h2>BAHÇELİEVLER MEMORİAL CT</h2>
+        <p>Canlı Stok Takip Sistemi</p>
     </div>
-    <div class="login-body">
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="username">Kullanıcı Adı</label>
-                <input type="text" id="username" required placeholder="Örn: YÖNETİCİ, GARSON, ÜRETİM, DEPO">
-            </div>
-            <div class="form-group">
-                <label for="password">Şifre</label>
-                <input type="password" id="password" required placeholder="••••">
-                <span class="password-toggle" id="togglePassword">GÖSTER</span>
-            </div>
-            <div class="form-options">
-                <label class="remember-me">
-                    <input type="checkbox" id="rememberMe"> Beni Hatırla
-                </label>
-            </div>
-            <button type="submit">Giriş Yap</button>
-            <div class="error-msg" id="errorMsg">Kullanıcı adı veya şifre hatalı!</div>
-        </form>
-    </div>
+    <form id="loginForm">
+        <div class="form-group">
+            <label>Kullanıcı Adı</label>
+            <input type="text" id="username" placeholder="Kullanıcı adınızı girin" required>
+        </div>
+        <div class="form-group">
+            <label>Şifre</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+        <div class="form-group">
+            <label>Çalışma Rolünüz / Biriminiz</label>
+            <select id="userRole">
+                <option value="YÖNETİCİ">YÖNETİCİ Panel Girişi</option>
+                <option value="ÜRETİM">ÜRETİM / Mutfak Girişi</option>
+                <option value="GARSON">GARSON / Kat Servis Girişi</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-login">Sisteme Güvenli Giriş Yap</button>
+        <div class="error-msg" id="errorMsg">⚠️ Kullanıcı adı veya şifre hatalı!</div>
+    </form>
 </div>
 
 <script>
-    // Giriş Matrisi
-    const users = { "YÖNETİCİ": "2605", "GARSON": "1111", "ÜRETİM": "2222", "DEPO": "3333" };
-
-    // Türkçe karakterleri standartlaştıran temizlik fonksiyonu
-    function temizleMetin(str) {
-        return str.replace(/ı/g, 'I').replace(/i/g, 'İ').replace(/ğ/g, 'Ğ')
-                  .replace(/ü/g, 'Ü').replace(/ş/g, 'Ş').replace(/ö/g, 'Ö')
-                  .replace(/ç/g, 'Ç').toUpperCase().trim();
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const savedUser = localStorage.getItem('rememberedUser');
-        if (savedUser) {
-            document.getElementById('username').value = savedUser;
-            document.getElementById('rememberMe').checked = true;
-        }
-    });
-
-    document.getElementById('togglePassword').addEventListener('click', function () {
-        const pInput = document.getElementById('password');
-        const type = pInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        pInput.setAttribute('type', type);
-        this.textContent = type === 'password' ? 'GÖSTER' : 'GİZLE';
-    });
-
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const rawUser = document.getElementById('username').value;
-        const enteredUser = temizleMetin(rawUser); // Harf uyuşmazlığı giderildi
-        const enteredPass = document.getElementById('password').value.trim();
-        
-        if (users[enteredUser] && users[enteredUser] === enteredPass) {
+        const user = document.getElementById('username').value.trim();
+        const pass = document.getElementById('password').value;
+        const role = document.getElementById('userRole').value;
+
+        // Statik hesap doğrulaması (İhtiyaca göre çoğaltılabilir)
+        if((user === "admin" && pass === "1234") || (user === "mutfak" && pass === "1234") || (user === "garson" && pass === "1234")) {
             localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('userRole', enteredUser);
-            
-            if (document.getElementById('rememberMe').checked) {
-                localStorage.setItem('rememberedUser', rawUser.trim());
-            } else {
-                localStorage.removeItem('rememberedUser');
-            }
+            localStorage.setItem('userRole', role);
             window.location.replace('index.html');
         } else {
             document.getElementById('errorMsg').style.display = 'block';
