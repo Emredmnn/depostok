@@ -24,7 +24,10 @@
         
         /* İki Sütunlu Düzen */
         .container { max-width: 1600px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 30px; }
-        @media (min-width: 992px) { .container { grid-template-columns: 1fr 2.5fr; } }
+        @media (min-width: 992px) { 
+            /* Sadece sol sütun görünür olduğunda tek sütun, her ikisi varken 1fr'e 2.5fr olacak */
+            .container.two-columns { grid-template-columns: 1fr 2.5fr; } 
+        }
         
         .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid #0d6efd; }
         .card.success-theme { border-top-color: #198754; }
@@ -36,9 +39,12 @@
         input:focus, select:focus { border-color: #0d6efd; }
         .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; font-size: 16px; background: #198754; }
         
-        /* Arama ve Filtreler */
-        .search-container { margin-bottom: 15px; }
-        .search-input { width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 15px; outline: none; }
+        /* Arama ve Tarih Filtre Alanı */
+        .filter-wrapper { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .search-container { flex: 2; min-width: 250px; }
+        .date-filter-container { flex: 1; min-width: 200px; display: flex; gap: 8px; }
+        .search-input, .date-input { width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 15px; outline: none; height: 48px; }
+        .btn-clear-date { padding: 0 15px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; }
         
         .depot-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding: 10px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; }
         .btn-depot-filter { padding: 8px 14px; border: 2px solid #ced4da; background: white; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: #495057; }
@@ -55,6 +61,7 @@
         .status-critical { background-color: #f8d7da; color: #842029; }
         
         .depot-tag { background: #e2f0fe; color: #0d6efd; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+        .date-tag { display: block; font-size: 11px; color: #6c757d; margin-top: 2px; font-weight: normal; }
 
         .action-btns { display: flex; gap: 4px; flex-wrap: wrap; }
         .action-btn { padding: 6px 10px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer; font-size: 12px; white-space: nowrap; }
@@ -107,8 +114,8 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="card">
+<div class="container" id="mainContainer">
+    <div class="card" id="addProductColumn">
         <h3>✨ Yeni Ürün Tanımla</h3>
         <form id="addForm">
             <div class="form-group">
@@ -151,8 +158,14 @@
     <div class="card success-theme">
         <h3>📦 Detaylı Depo Envanter ve Canlı İşlem Paneli</h3>
         
-        <div class="search-container">
-            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Malzeme adına göre listede hızlı arama yapın...">
+        <div class="filter-wrapper">
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 Malzeme adına göre listede hızlı arama yapın...">
+            </div>
+            <div class="date-filter-container">
+                <input type="date" id="dateFilterInput" class="date-input" title="İşlem Tarihine Göre Filtrele">
+                <button class="btn-clear-date" id="clearDateBtn" onclick="clearDateFilter()">❌ Temizle</button>
+            </div>
         </div>
 
         <div class="depot-filter-bar" id="depotFilterBar">
@@ -212,8 +225,22 @@
 
 <script>
     if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
-    const currentRole = localStorage.getItem('userRole') || 'YÖNETİCİ';
+    
+    // ROL VE YETKİ KONTROLLERİ
+    // LocalStorage'dan rol bilgisini büyük harfe çevirerek alıyoruz (GARSON, ÜRETİM, YÖNETİCİ vb.)
+    const currentRole = (localStorage.getItem('userRole') || 'YÖNETİCİ').toUpperCase();
     document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`;
+
+    const mainContainer = document.getElementById('mainContainer');
+    const addProductColumn = document.getElementById('addProductColumn');
+
+    // Eğer rol GARSON veya ÜRETİM ise "Yeni Ürün Tanımla" sütununu kaldır ve tasarımı tek sütun yap
+    if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
+        if(addProductColumn) { addProductColumn.remove(); }
+        mainContainer.classList.remove('two-columns');
+    } else {
+        mainContainer.classList.add('two-columns');
+    }
 
     // CANLI TARİH VE SAAT FONKSİYONU
     function startLiveClock() {
@@ -253,19 +280,33 @@
         }
     });
 
+    function getTodayDateString() {
+        const now = new Date();
+        const offset = now.getTimezoneOffset();
+        const localNow = new Date(now.getTime() - (offset * 60 * 1000));
+        return localNow.toISOString().split('T')[0];
+    }
+
     function renderUi() {
         const tbody = document.getElementById('liveMaterialsBody');
         const filterText = document.getElementById('searchInput').value.toLowerCase();
+        const selectedDate = document.getElementById('dateFilterInput').value;
         tbody.innerHTML = '';
         
         let filteredInventory = inventory.filter(item => {
             let matchesSearch = item.name.toLowerCase().includes(filterText);
             let matchesDepot = (activeDepotFilter === 'HEPSİ' || item.depot === activeDepotFilter);
-            return matchesSearch && matchesDepot;
+            
+            let matchesDate = true;
+            if (selectedDate) {
+                matchesDate = (item.lastUpdatedDate === selectedDate);
+            }
+            
+            return matchesSearch && matchesDepot && matchesDate;
         });
 
         if(filteredInventory.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888; padding:20px;">Seçili kritere uygun malzeme bulunamadı.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888; padding:20px;">Seçili kriterlere uygun malzeme bulunamadı.</td></tr>';
             return;
         }
 
@@ -277,16 +318,34 @@
                 `<span class="status-badge status-safe">🟢 Güvenli</span>` : 
                 `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
 
-            let buttonsHtml = `
-                <button class="action-btn btn-add-stock" onclick="manageStock('${item.name}', 'in')">+ Ekle</button>
-                <button class="action-btn btn-drop-stock" onclick="manageStock('${item.name}', 'out')">- Düş</button>
-                <button class="action-btn btn-waste-stock" onclick="manageStock('${item.name}', 'waste')">💥 İmha</button>
-                <button class="action-btn btn-del-stock" onclick="deleteProductDirect('${item.name}')">🗑️ Sil</button>
-            `;
+            let displayDate = "---";
+            if(item.lastUpdatedDate) {
+                const parts = item.lastUpdatedDate.split('-');
+                if(parts.length === 3) displayDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
+            }
+
+            // ROL BAZLI BUTON YETKİLENDİRMESİ
+            let buttonsHtml = '';
+            
+            if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
+                // Garson ve Üretim sadece "- Düş" butonunu görebilir (+ Ekle, İmha ve Sil butonları kalktı)
+                buttonsHtml = `<button class="action-btn btn-drop-stock" onclick="manageStock('${item.name}', 'out')">- Düş</button>`;
+            } else {
+                // Yönetici ve diğer tam yetkililer tüm butonları görür
+                buttonsHtml = `
+                    <button class="action-btn btn-add-stock" onclick="manageStock('${item.name}', 'in')">+ Ekle</button>
+                    <button class="action-btn btn-drop-stock" onclick="manageStock('${item.name}', 'out')">- Düş</button>
+                    <button class="action-btn btn-waste-stock" onclick="manageStock('${item.name}', 'waste')">💥 İmha</button>
+                    <button class="action-btn btn-del-stock" onclick="deleteProductDirect('${item.name}')">🗑️ Sil</button>
+                `;
+            }
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><strong>${item.name}</strong></td>
+                <td>
+                    <strong>${item.name}</strong>
+                    <span class="date-tag" title="Son İşlem / Eklenme Tarihi">📅 ${displayDate}</span>
+                </td>
                 <td><span class="depot-tag">${item.depot}</span></td>
                 <td><strong>${item.quantity} ${item.unit}</strong></td>
                 <td><strong>${item.criticalLimit} ${item.unit}</strong></td>
@@ -307,38 +366,62 @@
         renderUi();
     };
 
-    // Yeni Ürün Tanımlama
-    document.getElementById('addForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const name = document.getElementById('newProdName').value.trim();
-        const depot = document.getElementById('newProdDepot').value;
-        const unit = document.getElementById('newProdUnit').value;
-        const qty = parseFloat(document.getElementById('newProdQty').value) || 0;
-        const limit = parseFloat(document.getElementById('newProdLimit').value) || 0;
-        
-        if(inventory.some(item => item.name.toLowerCase() === name.toLowerCase())) { alert("Bu ürün zaten kayıtlı!"); return; }
+    window.clearDateFilter = function() {
+        document.getElementById('dateFilterInput').value = '';
+        renderUi();
+    }
 
-        const cleanKey = name.replace(/[.#$\[\]]/g, "");
+    document.getElementById('dateFilterInput').addEventListener('change', renderUi);
 
-        db.ref('depo_stok/' + cleanKey).set({ name: name, depot: depot, unit: unit, quantity: qty, criticalLimit: limit });
-        
-        const now = new Date();
-        db.ref('depo_rapor').push({
-            time: now.toLocaleString('tr-TR'),
-            rawTime: now.toISOString(),
-            user: currentRole,
-            product: `${name} (${depot})`,
-            type: 'YENİ ÜRÜN',
-            qty: `${qty} ${unit}`
+    // Form Elemanı Mevcutsa Yeni Ürün Tanımlama Dinleyicisini Ekle (Yönetici Durumu)
+    const addFormEl = document.getElementById('addForm');
+    if(addFormEl) {
+        addFormEl.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('newProdName').value.trim();
+            const depot = document.getElementById('newProdDepot').value;
+            const unit = document.getElementById('newProdUnit').value;
+            const qty = parseFloat(document.getElementById('newProdQty').value) || 0;
+            const limit = parseFloat(document.getElementById('newProdLimit').value) || 0;
+            const todayStr = getTodayDateString();
+            
+            if(inventory.some(item => item.name.toLowerCase() === name.toLowerCase())) { alert("Bu ürün zaten kayıtlı!"); return; }
+
+            const cleanKey = name.replace(/[.#$\[\]]/g, "");
+
+            db.ref('depo_stok/' + cleanKey).set({ 
+                name: name, 
+                depot: depot, 
+                unit: unit, 
+                quantity: qty, 
+                criticalLimit: limit,
+                lastUpdatedDate: todayStr
+            });
+            
+            const now = new Date();
+            db.ref('depo_rapor').push({
+                time: now.toLocaleString('tr-TR'),
+                rawTime: now.toISOString(),
+                user: currentRole,
+                product: `${name} (${depot})`,
+                type: 'YENİ ÜRÜN',
+                qty: `${qty} ${unit}`
+            });
+
+            document.getElementById('addForm').reset();
+            document.getElementById('newProdQty').value = "0";
+            document.getElementById('newProdLimit').value = "0";
         });
-
-        document.getElementById('addForm').reset();
-        document.getElementById('newProdQty').value = "0";
-        document.getElementById('newProdLimit').value = "0";
-    });
+    }
 
     // Stok Ekle / Düş / İmha Yönetimi
     window.manageStock = function(prodName, action) {
+        // Garson ve Üretim rolleri koruması (Kod manipülasyonuna karşı)
+        if((action === 'in' || action === 'waste') && (currentRole === 'GARSON' || currentRole === 'ÜRETİM')) {
+            alert("Bu işlem için yetkiniz bulunmamaktadır!");
+            return;
+        }
+
         const item = inventory.find(i => i.name === prodName);
         if(!item) return;
         
@@ -358,8 +441,10 @@
 
         let newQty = action === 'in' ? parseFloat((item.quantity + amount).toFixed(2)) : parseFloat((item.quantity - amount).toFixed(2));
         const cleanKey = item.name.replace(/[.#$\[\]]/g, "");
+        const todayStr = getTodayDateString();
 
         db.ref('depo_stok/' + cleanKey + '/quantity').set(newQty);
+        db.ref('depo_stok/' + cleanKey + '/lastUpdatedDate').set(todayStr);
 
         const now = new Date();
         db.ref('depo_rapor').push({
@@ -374,6 +459,8 @@
 
     // Canlı Ürün Silme
     window.deleteProductDirect = function(prodName) {
+        if(currentRole === 'GARSON' || currentRole === 'ÜRETİM') { alert("Yetkisiz işlem!"); return; }
+        
         const item = inventory.find(i => i.name === prodName);
         if(!item) return;
 
@@ -446,8 +533,8 @@
         });
     });
 
-    // Tekli Rapor Satırı Silme
     window.deleteReportRow = function(fbKey) {
+        if(currentRole !== 'YÖNETİCİ') return;
         if(confirm("Bu işlem geçmişi kaydını kalıcı olarak silmek istediğinize emin misiniz?")) {
             db.ref('depo_rapor/' + fbKey).remove().then(() => {
                 document.getElementById('openReportBtn').click();
@@ -455,8 +542,8 @@
         }
     };
 
-    // Tüm Geçmişi Toplu Silme
     window.clearAllReports = function() {
+        if(currentRole !== 'YÖNETİCİ') return;
         if(confirm("DİKKAT! Tüm işlem geçmişi raporunu kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz!")) {
             db.ref('depo_rapor').remove().then(() => {
                 document.getElementById('openReportBtn').click();
