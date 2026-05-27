@@ -260,7 +260,7 @@
                     <th>Tarih / Saat</th>
                     <th>İşlemi Yapan</th>
                     <th>Ürün Adı</th>
-                    <th>İşlem Türı</th>
+                    <th>İşlem Türü</th>
                     <th>Miktar / Birim</th>
                     <th id="reportActionHeader" style="display:none;">Yönetim</th>
                 </tr>
@@ -300,7 +300,7 @@
     if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
     
     // ========================================================
-    // 📧 GÜNCEL EMAILJS ENTEGRASYONU
+    // 📧 GÜNCEL EMAILJS ENTEGRASYONU (SABİT / DEĞİŞMEYEN ANAHTAR)
     // ========================================================
     emailjs.init("0X07o5yxfZIA-O6rU8Obr"); 
 
@@ -507,17 +507,17 @@
                 const nowStr = new Date().toLocaleString('tr-TR');
                 const timestampIso = new Date().toISOString();
 
-                // EmailJS Şablon Değişkenleri
+                // EMAILJS ORİJİNAL PARAMETRE DEĞİŞKENLERİ
                 const emailParams = {
-                    to_email: targetMail,
-                    product_name: item.name,
-                    quantity: `${qty} ${item.unit}`,
-                    order_notes: notes,
-                    sender_role: currentRole,
-                    order_date: nowStr
+                    name: currentRole,              // Şablondaki {{name}} alanını besler
+                    email: targetMail,              // Şablondaki {{email}} alanını besler
+                    product_name: item.name,        // Şablondaki {{product_name}} alanını besler
+                    quantity: `${qty} ${item.unit}`,// Şablondaki {{quantity}} alanını besler
+                    order_notes: notes,             // Şablondaki {{order_notes}} alanını besler
+                    sender_role: currentRole,       // Şablondaki {{sender_role}} alanını besler
+                    order_date: nowStr              // Şablondaki {{order_date}} alanını besler
                 };
 
-                // YENİ GÜNCEL SERVIS KIMLIĞI BURAYA BAĞLANDI
                 emailjs.send("service_wt1igmj", "template_ydhkoa6", emailParams)
                     .then(() => {
                         console.log("E-Posta gönderimi başarıyla tetiklendi.");
@@ -546,7 +546,7 @@
                     qty: `${qty} ${item.unit}`
                 });
 
-                alert(`Talep Onaylandı ve Mail Gönderimi Tetiklendi!\nHedef Adres: ${targetMail}\nÜrün: ${qty} ${item.unit} ${item.name}`);
+                alert(`Talep Onaylandı ve Mail Gönderimi Tetiklendi!\nYönetici: ${targetMail}\nÜrün: ${qty} ${item.unit} ${item.name}`);
                 orderFormEl.reset();
                 document.getElementById('orderEmail').value = "bahcelievlermemorialct@gmail.com";
                 document.getElementById('orderPanelCard').style.display = 'none'; 
@@ -646,4 +646,81 @@
             } else {
                 modalReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
                 modalReports.forEach(([fbKey, rep]) => {
-                    let
+                    let deleteCellHtml = '';
+                    if(currentRole === 'YÖNETİCİ') {
+                        deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button></td>`;
+                    }
+                    tbody.innerHTML += `<tr><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order">${rep.type}</span></td><td>${rep.qty}</td>${deleteCellHtml}</tr>`;
+                });
+            }
+            reportModal.style.display = 'flex';
+        });
+    });
+
+    window.deleteReportRow = function(fbKey) {
+        if(currentRole !== 'YÖNETİCİ') return;
+        if(confirm("Bu kayıt silinsin mi?")) {
+            db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click());
+        }
+    };
+
+    window.clearAllReports = function() {
+        if(currentRole !== 'YÖNETİCİ') { alert("Yetkiniz yok!"); return; }
+        if(confirm("Tüm işlem geçmişi raporunu kalıcı olarak silmek istediğinize emin misiniz?")) {
+            db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click());
+        }
+    };
+
+    // Sipariş Listesi Geçmişi Tetikleyici
+    document.getElementById('openOrdersBtn').addEventListener('click', () => {
+        db.ref('depo_siparisler').once('value', (snapshot) => {
+            const tbody = document.getElementById('ordersTableBody');
+            const headerAction = document.getElementById('orderActionHeader');
+            const clearAllBtn = document.getElementById('clearAllOrdersBtn');
+            tbody.innerHTML = '';
+            
+            if(currentRole === 'YÖNETİCİ') {
+                headerAction.style.display = 'table-cell';
+                clearAllBtn.style.display = 'block';
+            } else {
+                headerAction.style.display = 'none';
+                clearAllBtn.style.display = 'none';
+            }
+
+            let modalOrders = snapshot.val() ? Object.entries(snapshot.val()) : [];
+            if(modalOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${currentRole === 'YÖNETİCİ' ? 6 : 5}" style="text-align:center; color:#888;">Henüz verilmiş bir sipariş bulunmamaktadır.</td></tr>`;
+            } else {
+                modalOrders.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
+                modalOrders.forEach(([fbKey, ord]) => {
+                    let deleteCellHtml = '';
+                    if(currentRole === 'YÖNETİCİ') {
+                        deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteOrderRow('${fbKey}')">Kayıt Sil</button></td>`;
+                    }
+                    tbody.innerHTML += `<tr><td>${ord.time}</td><td><b>${ord.user}</b></td><td>${ord.product}</td><td><strong>${ord.qty}</strong></td><td><i style="color:#666;">${ord.notes}</i></td>${deleteCellHtml}</tr>`;
+                });
+            }
+            ordersListModal.style.display = 'flex';
+        });
+    });
+
+    window.deleteOrderRow = function(fbKey) {
+        if(currentRole !== 'YÖNETİCİ') return;
+        if(confirm("Bu sipariş kaydı listeden silinsin mi?")) {
+            db.ref('depo_siparisler/' + fbKey).remove().then(() => document.getElementById('openOrdersBtn').click());
+        }
+    };
+
+    window.clearAllOrders = function() {
+        if(currentRole !== 'YÖNETİCİ') { alert("Yetkiniz yok!"); return; }
+        if(confirm("DİKKAT! Verilen tüm siparişlerin geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) {
+            db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click());
+        }
+    };
+
+    document.getElementById('closeReportBtn').addEventListener('click', () => reportModal.style.display = 'none');
+    document.getElementById('closeOrdersBtn').addEventListener('click', () => ordersListModal.style.display = 'none');
+    document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('isLoggedIn'); window.location.replace('login.html'); });
+</script>
+</body>
+</html>
