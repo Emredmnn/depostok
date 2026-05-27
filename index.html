@@ -178,7 +178,7 @@
         <button class="toggle-panel-btn" onclick="toggleOrderPanel()">📦 Sipariş Oluştur</button>
 
         <div class="card warning-theme sliding-panel" id="orderPanelCard">
-            <h3>📧 Tedarikçiye Sipariş Oluştur (E-Posta)</h3>
+            <h3>📧 Malzeme Talep Formu (E-Posta)</h3>
             <form id="orderForm">
                 <div class="form-group">
                     <label>Sipariş Verilecek Malzeme (Sistemden)</label>
@@ -191,14 +191,14 @@
                     <input type="number" id="orderQty" step="0.01" min="0.01" placeholder="Miktar giriniz" required>
                 </div>
                 <div class="form-group">
-                    <label>Hedef E-Posta Adresi</label>
+                    <label>Bildirilecek Yönetici E-Posta Adresi</label>
                     <input type="email" id="orderEmail" value="emrdmnfb@gmail.com" readonly style="background-color: #e9ecef; font-weight: bold; color: #495057;">
                 </div>
                 <div class="form-group">
                     <label>Sipariş Notu / Özel Talep (Opsiyonel)</label>
-                    <textarea id="orderNotes" placeholder="Örn: Lütfen acil gönderilsin..."></textarea>
+                    <textarea id="orderNotes" placeholder="Örn: Acil ihtiyaçtır, sabah servisine yetişmesi gerekiyor..."></textarea>
                 </div>
-                <button type="submit" class="order-btn">Sipariş Oluştur ve Mail Gönder</button>
+                <button type="submit" class="order-btn">Talebi Onayla ve Mail Gönder</button>
             </form>
         </div>
     </div>
@@ -299,9 +299,10 @@
 <script>
     if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
     
-    // EmailJS Başlatma Altyapısı (Maillerin Düşmesi İçin Bu Alan Önemli!)
-    // NOT: 'BURAYA_EMAILJS_PUBLIC_KEY_GELECEK' alanına EmailJS panelindeki Public Key'ini girmelisin.
-    emailjs.init("BURAYA_EMAILJS_PUBLIC_KEY_GELECEK"); 
+    // ========================================================
+    // 📧 EMAILJS ENTEGRASYONU (TÜM BAĞLANTILAR TAMAMLANDI)
+    // ========================================================
+    emailjs.init("CGdZJSzmTcVwwF0w_"); 
 
     const currentRole = (localStorage.getItem('userRole') || 'YÖNETİCİ').toUpperCase();
     document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`;
@@ -502,11 +503,11 @@
             const item = inventory.find(i => i.name === prodName);
             if(!item) { alert("Lütfen ürün seçin!"); return; }
 
-            if(confirm(`Sipariş detayı "${targetMail}" adresine e-posta olarak gönderilsin mi?`)) {
+            if(confirm(`Talep detayı "${targetMail}" adresine e-posta olarak gönderilsin mi?`)) {
                 const nowStr = new Date().toLocaleString('tr-TR');
                 const timestampIso = new Date().toISOString();
 
-                // EmailJS Parametre Yapısı (EmailJS Taslağındaki Değişken İsimleriyle Eşleşmelidir)
+                // EmailJS Şablon Değişkenleri
                 const emailParams = {
                     to_email: targetMail,
                     product_name: item.name,
@@ -516,13 +517,13 @@
                     order_date: nowStr
                 };
 
-                // NOT: "service_id" ve "template_id" kısımlarını kendi EmailJS panelindekilerle değiştirin.
-                emailjs.send("service_id", "template_id", emailParams)
+                // Entegrasyon Tamamlandı: Şablon ve Servis Kimlikleri Eklendi
+                emailjs.send("service_ec974zo", "template_tfj7msw", emailParams)
                     .then(() => {
-                        console.log("E-Posta gönderimi başarılı.");
+                        console.log("E-Posta gönderimi tetiklendi.");
                     })
                     .catch((err) => {
-                        console.error("E-Posta gönderim hatası (Public Key veya ID'leri kontrol edin): ", err);
+                        console.error("E-Posta gönderim hatası: ", err);
                     });
 
                 // Bağımsız Sipariş Listesi Düğümüne Kayıt Atılıyor
@@ -535,17 +536,17 @@
                     notes: notes
                 });
 
-                // Aynı zamanda genel işlem geçmişi raporuna da işleniyor
+                // Genel işlem geçmişine kayıt düşülüyor
                 db.ref('depo_rapor').push({
                     time: nowStr,
                     rawTime: timestampIso,
                     user: currentRole,
-                    product: `${item.name} [Mail: ${targetMail}]`,
-                    type: 'SİPARİŞ VERİLDİ',
+                    product: `${item.name}`,
+                    type: 'TALEP GÖNDERİLDİ',
                     qty: `${qty} ${item.unit}`
                 });
 
-                alert(`Sipariş Onaylandı ve Mail Tetiklendi!\nAlıcı: ${targetMail}\nÜrün: ${qty} ${item.unit} ${item.name}`);
+                alert(`Talep Onaylandı ve Mail Gönderimi Tetiklendi!\nYönetici: ${targetMail}\nÜrün: ${qty} ${item.unit} ${item.name}`);
                 orderFormEl.reset();
                 document.getElementById('orderEmail').value = "emrdmnfb@gmail.com";
                 document.getElementById('orderPanelCard').style.display = 'none'; 
@@ -620,7 +621,6 @@
         }
     };
 
-    // MODAL AÇILIŞ / KAPANIŞ YÖNETİMLERİ
     const reportModal = document.getElementById('reportModal');
     const ordersListModal = document.getElementById('ordersListModal');
 
@@ -671,7 +671,7 @@
         }
     };
 
-    // 📦 AYRI PANEL: E-Posta Sipariş Listesi Geçmişi Tetikleyici
+    // Sipariş Listesi Geçmişi Tetikleyici
     document.getElementById('openOrdersBtn').addEventListener('click', () => {
         db.ref('depo_siparisler').once('value', (snapshot) => {
             const tbody = document.getElementById('ordersTableBody');
@@ -681,7 +681,7 @@
             
             if(currentRole === 'YÖNETİCİ') {
                 headerAction.style.display = 'table-cell';
-                clearAllBtn.style.display = 'block'; // Temizle butonu sadece yöneticiye açılır
+                clearAllBtn.style.display = 'block';
             } else {
                 headerAction.style.display = 'none';
                 clearAllBtn.style.display = 'none';
@@ -697,15 +697,7 @@
                     if(currentRole === 'YÖNETİCİ') {
                         deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteOrderRow('${fbKey}')">Kayıt Sil</button></td>`;
                     }
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${ord.time}</td>
-                            <td><b>${ord.user}</b></td>
-                            <td>${ord.product}</td>
-                            <td><strong>${ord.qty}</strong></td>
-                            <td><i style="color:#666;">${ord.notes}</i></td>
-                            ${deleteCellHtml}
-                        </tr>`;
+                    tbody.innerHTML += `<tr><td>${ord.time}</td><td><b>${ord.user}</b></td><td>${ord.product}</td><td><strong>${ord.qty}</strong></td><td><i style="color:#666;">${ord.notes}</i></td>${deleteCellHtml}</tr>`;
                 });
             }
             ordersListModal.style.display = 'flex';
