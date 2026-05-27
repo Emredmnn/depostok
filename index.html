@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Depo Yönetim Paneli</title>
-    <!-- Firebase ve EmailJS Kütüphaneleri -->
+    <title>Bahçelievler Memorial CT - Stok Takip Paneli</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -13,9 +12,9 @@
         body { background: #f4f6f9; color: #333; padding-bottom: 50px; }
         
         /* Kurumsal Üst Bar */
-        nav { background: linear-gradient(135deg, #dc3545 0%, #0d6efd 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        nav { background: linear-gradient(135deg, #0d6efd 0%, #1e3a8a 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .nav-left { display: flex; flex-direction: column; gap: 2px; }
-        nav h2 { font-size: 22px; font-weight: 700; line-height: 1.2; }
+        nav h2 { font-size: 20px; font-weight: 800; line-height: 1.2; letter-spacing: 0.5px; }
         .live-clock { font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.85); letter-spacing: 0.5px; }
         
         .nav-right { display: flex; align-items: center; gap: 12px; }
@@ -40,11 +39,19 @@
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; }
         input, select, textarea { width: 100%; padding: 10px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 14px; outline: none; }
         input:focus, select:focus, textarea:focus { border-color: #0d6efd; }
-        textarea { resize: vertical; min-height: 80px; }
+        textarea { resize: vertical; min-height: 60px; }
         
         .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; font-size: 15px; background: #198754; }
-        .order-btn { width: 100%; padding: 14px; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; font-size: 15px; background: #0d6efd; }
+        .order-btn { width: 100%; padding: 12px; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; font-size: 14px; background: #0d6efd; margin-top: 10px; }
         
+        /* Çoklu Sipariş Sepet Yapısı */
+        .btn-add-to-list { width: 100%; padding: 12px; background: #6f42c1; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; }
+        .order-basket-container { margin-top: 15px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; }
+        .basket-title { font-size: 14px; font-weight: 700; color: #495057; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .basket-list { list-style: none; max-height: 150px; overflow-y: auto; margin-bottom: 10px; }
+        .basket-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 6px 10px; border-radius: 4px; border: 1px solid #e9ecef; margin-bottom: 6px; font-size: 13px; }
+        .btn-remove-basket-item { background: none; border: none; color: #dc3545; font-weight: bold; cursor: pointer; font-size: 14px; }
+
         /* Açılır Sipariş Butonu */
         .toggle-panel-btn { width: 100%; padding: 12px; background: #fd7e14; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer; margin-bottom: 15px; text-align: center; display: block; }
         .toggle-panel-btn:hover { background: #e06d0f; }
@@ -117,7 +124,7 @@
 
 <nav>
     <div class="nav-left">
-        <h2>Catering Depo Yönetimi</h2>
+        <h2>BAHÇELİEVLER MEMORİAL CT</h2>
         <div class="live-clock" id="liveClockDisplay">📅 Yükleniyor...</div>
     </div>
     <div class="nav-right">
@@ -131,9 +138,7 @@
 <input type="date" id="globalHiddenDatePicker" class="hidden-date-picker">
 
 <div class="container" id="mainContainer">
-    <!-- Sol Sütun -->
     <div id="addProductColumn">
-        <!-- FORM 1: Yeni Ürün Tanımla -->
         <div class="card">
             <h3>✨ Yeni Ürün Tanımla</h3>
             <form id="addForm">
@@ -178,37 +183,45 @@
             </form>
         </div>
 
-        <!-- TETİKLEYİCİ BUTON: Sipariş Paneli Açma Butonu -->
         <button class="toggle-panel-btn" onclick="toggleOrderPanel()">📦 Sipariş Oluştur</button>
 
-        <!-- FORM 2: E-Posta Gönderimli Sipariş Paneli -->
         <div class="card warning-theme sliding-panel" id="orderPanelCard">
             <h3>📧 Malzeme Talep Formu (E-Posta)</h3>
-            <form id="orderForm">
-                <div class="form-group">
-                    <label>Sipariş Verilecek Malzeme (Sistemden)</label>
-                    <select id="orderProductSelect" required>
-                        <option value="">-- Depodaki Ürünlerden Seçin --</option>
-                    </select>
+            <div class="form-group">
+                <label>Sipariş Verilecek Malzeme (Sistemden)</label>
+                <select id="orderProductSelect">
+                    <option value="">-- Depodaki Ürünlerden Seçin --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Sipariş Miktarı</label>
+                <input type="number" id="orderQty" step="0.01" min="0.01" placeholder="Miktar giriniz">
+            </div>
+            
+            <button type="button" class="btn-add-to-list" onclick="addItemToBasket()">➕ Seçilen Malzemeyi Listeye Ekle</button>
+
+            <div class="order-basket-container">
+                <div class="basket-title">
+                    <span>📋 Sipariş Edilecek Malzeme Listesi</span>
+                    <span id="basketCount">(0 Ürün)</span>
                 </div>
-                <div class="form-group">
-                    <label>Sipariş Miktarı</label>
-                    <input type="number" id="orderQty" step="0.01" min="0.01" placeholder="Miktar giriniz" required>
-                </div>
-                <div class="form-group">
-                    <label>Bildirilecek Yönetici E-Posta Adresi</label>
-                    <input type="email" id="orderEmail" value="bahcelievlermemorialct@gmail.com" readonly style="background-color: #e9ecef; font-weight: bold; color: #495057;">
-                </div>
-                <div class="form-group">
-                    <label>Sipariş Notu / Özel Talep (Opsiyonel)</label>
-                    <textarea id="orderNotes" placeholder="Örn: Acil ihtiyaçtır, sabah servisine yetişmesi gerekiyor..."></textarea>
-                </div>
-                <button type="submit" class="order-btn">Talebi Onayla ve Mail Gönder</button>
-            </form>
+                <ul class="basket-list" id="basketListVisual">
+                    </ul>
+                <form id="orderForm">
+                    <div class="form-group">
+                        <label>Bildirilecek Yönetici E-Posta Adresi</label>
+                        <input type="email" id="orderEmail" value="bahcelievlermemorialct@gmail.com" readonly style="background-color: #e9ecef; font-weight: bold; color: #495057;">
+                    </div>
+                    <div class="form-group">
+                        <label>Sipariş Notu / Özel Talep (Opsiyonel)</label>
+                        <textarea id="orderNotes" placeholder="Örn: Acil ihtiyaçtır, sabah servisine yetişmesi gerekiyor..."></textarea>
+                    </div>
+                    <button type="submit" class="order-btn">Tüm Listeyi Sipariş Ver ve Mail Gönder</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Sağ Sütun: Envanter Listesi -->
     <div class="card success-theme">
         <h3>📦 Detaylı Depo Envanter ve Canlı İşlem Paneli</h3>
         
@@ -250,7 +263,6 @@
     </div>
 </div>
 
-<!-- Rapor Modalı -->
 <div class="modal" id="reportModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -277,7 +289,6 @@
     </div>
 </div>
 
-<!-- Sipariş Listesi Modalı -->
 <div class="modal" id="ordersListModal">
     <div class="modal-content" style="border-top: 4px solid #20c997;">
         <div class="modal-header">
@@ -308,7 +319,7 @@
     if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
     
     // ========================================================
-    // 📧 EMAILJS ENTEGRASYONU (GÜNCELLENDİ)
+    // 📧 EMAILJS ENTEGRASYONU (GÜNCELLENEN KEY AKTİF)
     // ========================================================
     emailjs.init("LzIhLTNYH47AasrBj"); 
 
@@ -350,6 +361,7 @@
 
     let inventory = [];
     let activeDepotFilter = 'HEPSİ';
+    let orderBasket = []; // Çoklu Sipariş Sepeti Dizisi
 
     db.ref('depo_stok').on('value', (snapshot) => {
         const rawData = snapshot.val();
@@ -401,6 +413,63 @@
         });
         if(currentSelected) selectEl.value = currentSelected;
     }
+
+    // ÇOKLU SİPARİŞ SEPET FONKSİYONLARI
+    window.addItemToBasket = function() {
+        const selectEl = document.getElementById('orderProductSelect');
+        const qtyInput = document.getElementById('orderQty');
+        
+        const prodName = selectEl.value;
+        const qty = parseFloat(qtyInput.value);
+
+        if(!prodName) { alert("Lütfen listeden bir malzeme seçin!"); return; }
+        if(isNaN(qty) || qty <= 0) { alert("Lütfen geçerli bir sipariş miktarı girin!"); return; }
+
+        const item = inventory.find(i => i.name === prodName);
+        if(!item) return;
+
+        // Sepette ürün zaten var mı kontrol et
+        const existingIndex = orderBasket.findIndex(b => b.name === prodName);
+        if(existingIndex > -1) {
+            orderBasket[existingIndex].qty = parseFloat((orderBasket[existingIndex].qty + qty).toFixed(2));
+        } else {
+            orderBasket.push({ name: item.name, qty: qty, unit: item.unit });
+        }
+
+        qtyInput.value = "";
+        selectEl.value = "";
+        renderBasketVisual();
+    };
+
+    window.removeItemFromBasket = function(index) {
+        orderBasket.splice(index, 1);
+        renderBasketVisual();
+    };
+
+    function renderBasketVisual() {
+        const ul = document.getElementById('basketListVisual');
+        const countSpan = document.getElementById('basketCount');
+        if(!ul || !countSpan) return;
+
+        ul.innerHTML = "";
+        countSpan.textContent = `(${orderBasket.length} Ürün)`;
+
+        if(orderBasket.length === 0) {
+            ul.innerHTML = '<li style="text-align:center; color:#aaa; font-size:12px; padding:10px;">Liste boş. Yukarıdan ürün ekleyin.</li>';
+            return;
+        }
+
+        orderBasket.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = "basket-item";
+            li.innerHTML = `
+                <span>📦 <b>${item.name}</b></span>
+                <span>${item.qty} ${item.unit} <button class="btn-remove-basket-item" onclick="removeItemFromBasket(${index})">×</button></span>
+            `;
+            ul.appendChild(li);
+        });
+    }
+    renderBasketVisual();
 
     function renderUi() {
         const tbody = document.getElementById('liveMaterialsBody');
@@ -498,63 +567,70 @@
         selectedProductForSkt = "";
     });
 
-    // CANLI MAİL GÖNDERİMİ VE SİPARİŞ TAKİBİ
+    // CANLI ÇOKLU MAİL GÖNDERİMİ VE SİPARİŞ TAKİBİ
     const orderFormEl = document.getElementById('orderForm');
     if(orderFormEl) {
         orderFormEl.addEventListener('submit', function(e) {
             e.preventDefault();
-            const prodName = document.getElementById('orderProductSelect').value;
-            const qty = document.getElementById('orderQty').value;
+            
+            if(orderBasket.length === 0) { alert("Sipariş göndermek için önce listeye en az 1 ürün eklemelisiniz!"); return; }
+            
             const targetMail = document.getElementById('orderEmail').value;
             const notes = document.getElementById('orderNotes').value.trim() || "Yok";
-            
-            const item = inventory.find(i => i.name === prodName);
-            if(!item) { alert("Lütfen ürün seçin!"); return; }
 
-            if(confirm(`Talep detayı "${targetMail}" adresine e-posta olarak gönderilsin mi?`)) {
+            if(confirm(`Listede bulunan ${orderBasket.length} farklı malzemeyi tek seferde e-posta olarak göndermek istiyor musunuz?`)) {
                 const nowStr = new Date().toLocaleString('tr-TR');
                 const timestampIso = new Date().toISOString();
 
+                // E-posta şablonunda düzgün görünmesi için sepet listesini bir metne dönüştürüyoruz
+                let basketTextFormat = orderBasket.map(b => `• ${b.name} -> Miktar: ${b.qty} ${b.unit}`).join('\n');
+                let flatProductsNames = orderBasket.map(b => b.name).join(', ');
+                let flatQuantities = orderBasket.map(b => `${b.qty} ${b.unit}`).join(', ');
+
                 const emailParams = {
-                    name: currentRole,
+                    name: "Bahçelievler Memorial CT Canlı Stok Sistemi",
                     email: targetMail,
                     to_email: targetMail,
-                    product_name: item.name,
-                    quantity: `${qty} ${item.unit}`,
-                    order_notes: notes,
+                    product_name: flatProductsNames, // Çoklu ürün isimlerini düz metin gönderir
+                    quantity: flatQuantities, // Çoklu miktarları düz metin gönderir
+                    order_notes: `--- SİPARİŞ LİSTESİ ---\n${basketTextFormat}\n\nEkstra Talep Notu: ${notes}`,
                     sender_role: currentRole,
                     order_date: nowStr
                 };
 
-                // Yenilenmiş Güvenli EmailJS Gönderimi
+                // EmailJS Gönderim Akışı
                 emailjs.send("service_wt1igmj", "template_ydhkoa6", emailParams)
                     .then((response) => {
-                        alert(`✅ BAŞARILI! Sipariş e-postası başarıyla gönderildi.\nDurum Kodu: ${response.status}`);
+                        alert(`✅ BAŞARILI! Sipariş listesi başarıyla yöneticiye e-posta olarak iletildi.`);
                     })
                     .catch((err) => {
                         alert(`❌ HATA ALINDI!\nSunucu Mesajı: ${JSON.stringify(err)}`);
                     });
 
-                // Bağımsız Sipariş Listesi Düğümüne Kayıt Atılıyor
-                db.ref('depo_siparisler').push({
-                    time: nowStr,
-                    rawTime: timestampIso,
-                    user: currentRole,
-                    product: item.name,
-                    qty: `${qty} ${item.unit}`,
-                    notes: notes
+                // Her bir sepet kalemini veritabanına ve rapora tek tek işleme
+                orderBasket.forEach(bItem => {
+                    db.ref('depo_siparisler').push({
+                        time: nowStr,
+                        rawTime: timestampIso,
+                        user: currentRole,
+                        product: bItem.name,
+                        qty: `${bItem.qty} ${bItem.unit}`,
+                        notes: notes
+                    });
+
+                    db.ref('depo_rapor').push({
+                        time: nowStr,
+                        rawTime: timestampIso,
+                        user: currentRole,
+                        product: bItem.name,
+                        type: 'TALEP GÖNDERİLDİ',
+                        qty: `${bItem.qty} ${bItem.unit}`
+                    });
                 });
 
-                // Genel işlem geçmişine kayıt düşülüyor
-                db.ref('depo_rapor').push({
-                    time: nowStr,
-                    rawTime: timestampIso,
-                    user: currentRole,
-                    product: `${item.name}`,
-                    type: 'TALEP GÖNDERİLDİ',
-                    qty: `${qty} ${item.unit}`
-                });
-
+                // Sepeti ve formu temizle
+                orderBasket = [];
+                renderBasketVisual();
                 orderFormEl.reset();
                 document.getElementById('orderEmail').value = "bahcelievlermemorialct@gmail.com";
                 document.getElementById('orderPanelCard').style.display = 'none'; 
@@ -614,7 +690,7 @@
         let newQty = action === 'in' ? parseFloat((item.quantity + amount).toFixed(2)) : parseFloat((item.quantity - amount).toFixed(2));
         const cleanKey = item.name.replace(/[.#$\[\]]/g, "");
 
-        db.ref('depo_stok/' + cleanKey + '/quantity').set(newQty);
+        db.ref('depo_stok/' + cleanKey /quantity).set(newQty);
         db.ref('depo_stok/' + cleanKey + '/lastUpdatedDate').set(getTodayDateString());
 
         db.ref('depo_rapor').push({
