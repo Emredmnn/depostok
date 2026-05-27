@@ -300,7 +300,7 @@
     if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
     
     // ========================================================
-    // 📧 GÜNCEL EMAILJS ENTEGRASYONU (YENİ ANAHTARLAR)
+    // 📧 GÜNCEL EMAILJS ENTEGRASYONU (EN SON YENİLENEN ANAHTAR)
     // ========================================================
     emailjs.init("0X07o5yxfZIA-O6rU8Obr"); 
 
@@ -517,8 +517,8 @@
                     order_date: nowStr
                 };
 
-                // Entegrasyon Tamamlandı: Güncel Şablon ve Servis Kimlikleri Eklendi
-                emailjs.send("LzIhLTNYH47AasrBj", "template_ydhkoa6", emailParams)
+                // Entegrasyon Tamamlandı: En güncel Service ID ve Template ID alanı bağlandı
+                emailjs.send("service_cr392kb", "template_ydhkoa6", emailParams)
                     .then(() => {
                         console.log("E-Posta gönderimi başarıyla tetiklendi.");
                     })
