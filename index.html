@@ -300,9 +300,9 @@
     if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
     
     // ========================================================
-    // 📧 EMAILJS ENTEGRASYONU (TÜM BAĞLANTILAR TAMAMLANDI)
+    // 📧 GÜNCEL EMAILJS ENTEGRASYONU (YENİ ANAHTARLAR)
     // ========================================================
-    emailjs.init("CGdZJSzmTcVwwF0w_"); 
+    emailjs.init("0X07o5yxfZIA-O6rU8Obr"); 
 
     const currentRole = (localStorage.getItem('userRole') || 'YÖNETİCİ').toUpperCase();
     document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`;
@@ -517,10 +517,10 @@
                     order_date: nowStr
                 };
 
-                // Entegrasyon Tamamlandı: Şablon ve Servis Kimlikleri Eklendi
-                emailjs.send("service_ec974zo", "template_tfj7msw", emailParams)
+                // Entegrasyon Tamamlandı: Güncel Şablon ve Servis Kimlikleri Eklendi
+                emailjs.send("LzIhLTNYH47AasrBj", "template_ydhkoa6", emailParams)
                     .then(() => {
-                        console.log("E-Posta gönderimi tetiklendi.");
+                        console.log("E-Posta gönderimi başarıyla tetiklendi.");
                     })
                     .catch((err) => {
                         console.error("E-Posta gönderim hatası: ", err);
