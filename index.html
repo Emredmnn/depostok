@@ -17,11 +17,12 @@
         nav h2 { font-size: 22px; font-weight: 700; line-height: 1.2; }
         .live-clock { font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.85); letter-spacing: 0.5px; }
         
-        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
         .user-badge { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; }
         
-        .btn-report { color: #212529; background: #ffc107; padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; }
-        .btn-logout { color: #fff; text-decoration: none; background: #dc3545; padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; }
+        .btn-report { color: #212529; background: #ffc107; padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; }
+        .btn-orders-list { color: white; background: #20c997; padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; }
+        .btn-logout { color: #fff; text-decoration: none; background: #dc3545; padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; }
         
         /* Düzen */
         .container { max-width: 1600px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 30px; }
@@ -85,7 +86,7 @@
         .btn-del-stock { background-color: #dc3545; }
         .btn-edit-skt { background-color: #6f42c1; color: white; }
 
-        /* Rapor Modalı */
+        /* Rapor ve Sipariş Modalları */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: white; padding: 30px; border-radius: 10px; width: 100%; max-width: 1000px; max-height: 80vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f3f5; padding-bottom: 10px; }
@@ -93,18 +94,11 @@
         
         .modal-actions-bar { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px; }
         .btn-print-report { background-color: #0dcaf0; color: #212529; border: none; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; }
-        .btn-clear-all-reports { background-color: #dc3545; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: none; }
+        .btn-clear-all-reports, .btn-clear-all-orders { background-color: #dc3545; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: none; }
 
         table.report-table { width: 100%; border-collapse: collapse; }
         table.report-table th, table.report-table td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 14px; }
         table.report-table th { background: #f8f9fa; }
-        .badge-in { background: #d1e7dd; color: #0f5132; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
-        .badge-out { background: #fff3cd; color: #664d03; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
-        .badge-waste { background: #ffe8d6; color: #a04000; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
-        .badge-new { background: #e2f0fe; color: #0d6efd; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
-        .badge-del { background: #f8d7da; color: #842029; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
-        .badge-auto-del { background: #6c757d; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
-        .badge-skt-update { background: #e0cffc; color: #6f42c1; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
         .badge-order { background: #bfdbfe; color: #1e40af; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
         
         .btn-report-del { background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
@@ -112,8 +106,7 @@
 
         @media print {
             body * { visibility: hidden; }
-            #reportModal, #reportModal * { visibility: visible; }
-            #reportModal { position: absolute; left: 0; top: 0; width: 100%; background: white; display: block !important; padding: 0; }
+            .modal { position: absolute; left: 0; top: 0; width: 100%; background: white; display: block !important; padding: 0; }
             .modal-content { max-height: none; overflow: visible; box-shadow: none; padding: 0; }
             .close-modal, .modal-actions-bar, .btn-report-del, th:last-child, td:last-child { display: none !important; }
         }
@@ -128,6 +121,7 @@
     </div>
     <div class="nav-right">
         <span class="user-badge" id="roleBadge">👤 Rol:</span>
+        <button class="btn-orders-list" id="openOrdersBtn">📦 Verilen Siparişler</button>
         <button class="btn-report" id="openReportBtn">📊 İşlem Geçmişi (Rapor)</button>
         <button id="logoutBtn" class="btn-logout">Çıkış Yap</button>
     </div>
@@ -258,7 +252,7 @@
         </div>
         <div class="modal-actions-bar">
             <button class="btn-print-report" onclick="window.print()">🖨️ Raporu Yazdır</button>
-            <button id="clearAllReportsBtn" class="btn-clear-all-reports" onclick="clearAllReports()">🗑️ Tüm Geçmişi Temizle</button>
+            <button id="clearAllReportsBtn" class="btn-clear-all-reports" onclick="clearAllReports()">🗑️ Tüm Geçmişi Temizle (Toplu Sil)</button>
         </div>
         <table class="report-table">
             <thead>
@@ -276,17 +270,45 @@
     </div>
 </div>
 
+<div class="modal" id="ordersListModal">
+    <div class="modal-content" style="border-top: 4px solid #20c997;">
+        <div class="modal-header">
+            <h2>📦 Gönderilen E-Posta Sipariş Listesi Geçmişi</h2>
+            <span class="close-modal" id="closeOrdersBtn">&times;</span>
+        </div>
+        <div class="modal-actions-bar">
+            <button class="btn-print-report" onclick="window.print()">🖨️ Listeyi Yazdır</button>
+            <button id="clearAllOrdersBtn" class="btn-clear-all-orders" onclick="clearAllOrders()">🗑️ Sipariş Listesini Temizle</button>
+        </div>
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Sipariş Tarihi</th>
+                    <th>Siparişi Veren</th>
+                    <th>Ürün Adı</th>
+                    <th>Miktar</th>
+                    <th>Notlar</th>
+                    <th id="orderActionHeader" style="display:none;">Yönetim</th>
+                </tr>
+            </thead>
+            <tbody id="ordersTableBody"></tbody>
+        </table>
+    </div>
+</div>
+
 <script>
     if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
     
-    // Rol kontrolü
+    // EmailJS Başlatma Altyapısı (Maillerin Düşmesi İçin Bu Alan Önemli!)
+    // NOT: 'BURAYA_EMAILJS_PUBLIC_KEY_GELECEK' alanına EmailJS panelindeki Public Key'ini girmelisin.
+    emailjs.init("BURAYA_EMAILJS_PUBLIC_KEY_GELECEK"); 
+
     const currentRole = (localStorage.getItem('userRole') || 'YÖNETİCİ').toUpperCase();
     document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`;
 
     const mainContainer = document.getElementById('mainContainer');
     const addProductColumn = document.getElementById('addProductColumn');
 
-    // İstek Üzerine: ÜRETİM ve GARSON rollerinde sol panel tamamen gizlenir, butonlar kapatılır.
     if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
         if(addProductColumn) { addProductColumn.remove(); }
         mainContainer.classList.remove('two-columns');
@@ -294,15 +316,10 @@
         mainContainer.classList.add('two-columns');
     }
 
-    // Sipariş panelini açıp kapatan toggle fonksiyonu
     window.toggleOrderPanel = function() {
         const panel = document.getElementById('orderPanelCard');
         if(!panel) return;
-        if(panel.style.display === 'block') {
-            panel.style.display = 'none';
-        } else {
-            panel.style.display = 'block';
-        }
+        panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
     };
 
     function startLiveClock() {
@@ -323,7 +340,6 @@
     const db = firebase.database();
 
     let inventory = [];
-    let reports = [];
     let activeDepotFilter = 'HEPSİ';
 
     db.ref('depo_stok').on('value', (snapshot) => {
@@ -473,7 +489,7 @@
         selectedProductForSkt = "";
     });
 
-    // E-POSTA SİPARİŞİ TETİKLEME KODU
+    // CANLI MAİL GÖNDERİMİ VE SİPARİŞ TAKİBİ
     const orderFormEl = document.getElementById('orderForm');
     if(orderFormEl) {
         orderFormEl.addEventListener('submit', function(e) {
@@ -486,23 +502,53 @@
             const item = inventory.find(i => i.name === prodName);
             if(!item) { alert("Lütfen ürün seçin!"); return; }
 
-            if(confirm(`Sipariş detayı "${targetMail}" adresine gönderilsin mi?`)) {
+            if(confirm(`Sipariş detayı "${targetMail}" adresine e-posta olarak gönderilsin mi?`)) {
                 const nowStr = new Date().toLocaleString('tr-TR');
+                const timestampIso = new Date().toISOString();
 
-                // Firebase İşlem Kaydı oluşturuluyor
+                // EmailJS Parametre Yapısı (EmailJS Taslağındaki Değişken İsimleriyle Eşleşmelidir)
+                const emailParams = {
+                    to_email: targetMail,
+                    product_name: item.name,
+                    quantity: `${qty} ${item.unit}`,
+                    order_notes: notes,
+                    sender_role: currentRole,
+                    order_date: nowStr
+                };
+
+                // NOT: "service_id" ve "template_id" kısımlarını kendi EmailJS panelindekilerle değiştirin.
+                emailjs.send("service_id", "template_id", emailParams)
+                    .then(() => {
+                        console.log("E-Posta gönderimi başarılı.");
+                    })
+                    .catch((err) => {
+                        console.error("E-Posta gönderim hatası (Public Key veya ID'leri kontrol edin): ", err);
+                    });
+
+                // Bağımsız Sipariş Listesi Düğümüne Kayıt Atılıyor
+                db.ref('depo_siparisler').push({
+                    time: nowStr,
+                    rawTime: timestampIso,
+                    user: currentRole,
+                    product: item.name,
+                    qty: `${qty} ${item.unit}`,
+                    notes: notes
+                });
+
+                // Aynı zamanda genel işlem geçmişi raporuna da işleniyor
                 db.ref('depo_rapor').push({
                     time: nowStr,
-                    rawTime: new Date().toISOString(),
+                    rawTime: timestampIso,
                     user: currentRole,
                     product: `${item.name} [Mail: ${targetMail}]`,
                     type: 'SİPARİŞ VERİLDİ',
                     qty: `${qty} ${item.unit}`
                 });
 
-                alert(`Sipariş Onaylandı!\nAlıcı: ${targetMail}\nÜrün: ${qty} ${item.unit} ${item.name}\nRapor panelinize başarıyla işlendi.`);
+                alert(`Sipariş Onaylandı ve Mail Tetiklendi!\nAlıcı: ${targetMail}\nÜrün: ${qty} ${item.unit} ${item.name}`);
                 orderFormEl.reset();
                 document.getElementById('orderEmail').value = "emrdmnfb@gmail.com";
-                document.getElementById('orderPanelCard').style.display = 'none'; // Gönderimden sonra paneli kapat
+                document.getElementById('orderPanelCard').style.display = 'none'; 
             }
         });
     }
@@ -550,7 +596,6 @@
     window.manageStock = function(prodName, action) {
         const item = inventory.find(i => i.name === prodName);
         if(!item) return;
-        let actionText = action === 'in' ? 'eklemek' : (action === 'out' ? 'düşmek' : 'imha etmek');
         let reportLabel = action === 'in' ? 'GİRİŞ' : (action === 'out' ? 'ÇIKIŞ' : 'İMHA');
 
         const amountVal = prompt(`Miktar girin (${item.unit}):`);
@@ -575,21 +620,114 @@
         }
     };
 
-    const modal = document.getElementById('reportModal');
+    // MODAL AÇILIŞ / KAPANIŞ YÖNETİMLERİ
+    const reportModal = document.getElementById('reportModal');
+    const ordersListModal = document.getElementById('ordersListModal');
+
+    // Genel İşlem Raporu Tetikleyici
     document.getElementById('openReportBtn').addEventListener('click', () => {
         db.ref('depo_rapor').once('value', (snapshot) => {
             const tbody = document.getElementById('reportTableBody');
+            const headerAction = document.getElementById('reportActionHeader');
+            const clearAllBtn = document.getElementById('clearAllReportsBtn');
             tbody.innerHTML = '';
+            
+            if(currentRole === 'YÖNETİCİ') {
+                headerAction.style.display = 'table-cell';
+                clearAllBtn.style.display = 'block';
+            } else {
+                headerAction.style.display = 'none';
+                clearAllBtn.style.display = 'none';
+            }
+
             let modalReports = snapshot.val() ? Object.entries(snapshot.val()) : [];
-            modalReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
-            modalReports.forEach(([fbKey, rep]) => {
-                tbody.innerHTML += `<tr><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order">${rep.type}</span></td><td>${rep.qty}</td></tr>`;
-            });
-            modal.style.display = 'flex';
+            if(modalReports.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${currentRole === 'YÖNETİCİ' ? 6 : 5}" style="text-align:center; color:#888;">Kayıt bulunamadı.</td></tr>`;
+            } else {
+                modalReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
+                modalReports.forEach(([fbKey, rep]) => {
+                    let deleteCellHtml = '';
+                    if(currentRole === 'YÖNETİCİ') {
+                        deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button></td>`;
+                    }
+                    tbody.innerHTML += `<tr><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order">${rep.type}</span></td><td>${rep.qty}</td>${deleteCellHtml}</tr>`;
+                });
+            }
+            reportModal.style.display = 'flex';
         });
     });
 
-    document.getElementById('closeReportBtn').addEventListener('click', () => modal.style.display = 'none');
+    window.deleteReportRow = function(fbKey) {
+        if(currentRole !== 'YÖNETİCİ') return;
+        if(confirm("Bu kayıt silinsin mi?")) {
+            db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click());
+        }
+    };
+
+    window.clearAllReports = function() {
+        if(currentRole !== 'YÖNETİCİ') { alert("Yetkiniz yok!"); return; }
+        if(confirm("Tüm işlem geçmişi raporunu kalıcı olarak silmek istediğinize emin misiniz?")) {
+            db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click());
+        }
+    };
+
+    // 📦 AYRI PANEL: E-Posta Sipariş Listesi Geçmişi Tetikleyici
+    document.getElementById('openOrdersBtn').addEventListener('click', () => {
+        db.ref('depo_siparisler').once('value', (snapshot) => {
+            const tbody = document.getElementById('ordersTableBody');
+            const headerAction = document.getElementById('orderActionHeader');
+            const clearAllBtn = document.getElementById('clearAllOrdersBtn');
+            tbody.innerHTML = '';
+            
+            if(currentRole === 'YÖNETİCİ') {
+                headerAction.style.display = 'table-cell';
+                clearAllBtn.style.display = 'block'; // Temizle butonu sadece yöneticiye açılır
+            } else {
+                headerAction.style.display = 'none';
+                clearAllBtn.style.display = 'none';
+            }
+
+            let modalOrders = snapshot.val() ? Object.entries(snapshot.val()) : [];
+            if(modalOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${currentRole === 'YÖNETİCİ' ? 6 : 5}" style="text-align:center; color:#888;">Henüz verilmiş bir sipariş bulunmamaktadır.</td></tr>`;
+            } else {
+                modalOrders.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
+                modalOrders.forEach(([fbKey, ord]) => {
+                    let deleteCellHtml = '';
+                    if(currentRole === 'YÖNETİCİ') {
+                        deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteOrderRow('${fbKey}')">Kayıt Sil</button></td>`;
+                    }
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${ord.time}</td>
+                            <td><b>${ord.user}</b></td>
+                            <td>${ord.product}</td>
+                            <td><strong>${ord.qty}</strong></td>
+                            <td><i style="color:#666;">${ord.notes}</i></td>
+                            ${deleteCellHtml}
+                        </tr>`;
+                });
+            }
+            ordersListModal.style.display = 'flex';
+        });
+    });
+
+    window.deleteOrderRow = function(fbKey) {
+        if(currentRole !== 'YÖNETİCİ') return;
+        if(confirm("Bu sipariş kaydı listeden silinsin mi?")) {
+            db.ref('depo_siparisler/' + fbKey).remove().then(() => document.getElementById('openOrdersBtn').click());
+        }
+    };
+
+    window.clearAllOrders = function() {
+        if(currentRole !== 'YÖNETİCİ') { alert("Yetkiniz yok!"); return; }
+        if(confirm("DİKKAT! Verilen tüm siparişlerin geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) {
+            db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click());
+        }
+    };
+
+    document.getElementById('closeReportBtn').addEventListener('click', () => reportModal.style.display = 'none');
+    document.getElementById('closeOrdersBtn').addEventListener('click', () => ordersListModal.style.display = 'none');
     document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('isLoggedIn'); window.location.replace('login.html'); });
 </script>
 </body>
