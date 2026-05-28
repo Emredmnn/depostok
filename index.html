@@ -514,7 +514,15 @@
             let buttonsHtml = '';
             if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
                 buttonsHtml = `<button class="action-btn btn-drop-stock" onclick="manageStock('${item.name}', 'out')">- Düş</button>`;
-            } else {
+            } else if (currentRole === 'DEPO') {
+                // Depo rolü için buton yetkileri (İsteğe göre düzenlenebilir, şu an silme hariç her şey açık)
+                buttonsHtml = `
+                    <button class="action-btn btn-add-stock" onclick="manageStock('${item.name}', 'in')">+ Ekle</button>
+                    <button class="action-btn btn-drop-stock" onclick="manageStock('${item.name}', 'out')">- Düş</button>
+                    <button class="action-btn btn-waste-stock" onclick="manageStock('${item.name}', 'waste')">💥 İmha</button>
+                    <button class="action-btn btn-edit-skt" onclick="triggerSktUpdate('${item.name}')">📝 SKT</button>
+                `;
+            } else { // YÖNETİCİ rolü
                 buttonsHtml = `
                     <button class="action-btn btn-add-stock" onclick="manageStock('${item.name}', 'in')">+ Ekle</button>
                     <button class="action-btn btn-drop-stock" onclick="manageStock('${item.name}', 'out')">- Düş</button>
@@ -660,7 +668,7 @@
         });
     }
 
-    // EKLE - DÜŞ - İMHA BUTONLARI ARTIK KESİNTİSİZ ÇALIŞIYOR
+    // EKLE - DÜŞ - İMHA BUTONLARI ARTIK KESİNTİSİZ ÇALISIYOR
     window.manageStock = function(prodName, action) {
         const item = inventory.find(i => i.name === prodName);
         if(!item) return;
@@ -674,7 +682,6 @@
         if(newQty < 0) newQty = 0; // Stok eksiye düşmesin diye güvenlik sınırı
         const cleanKey = item.name.replace(/[.#$\[\]]/g, "");
 
-        // Doğru Firebase veritabanı yolu sağlandı
         db.ref('depo_stok/' + cleanKey + '/quantity').set(newQty);
         db.ref('depo_stok/' + cleanKey + '/lastUpdatedDate').set(getTodayDateString());
 
@@ -701,6 +708,7 @@
             const clearAllBtn = document.getElementById('clearAllReportsBtn');
             tbody.innerHTML = '';
             
+            // Sadece YÖNETİCİ ise yönetim sütununu ve toplu silme butonunu göster
             if(currentRole === 'YÖNETİCİ') {
                 headerAction.style.display = 'table-cell';
                 clearAllBtn.style.display = 'block';
@@ -747,6 +755,7 @@
             const clearAllBtn = document.getElementById('clearAllOrdersBtn');
             tbody.innerHTML = '';
             
+            // Sadece YÖNETİCİ ise yönetim sütununu ve toplu silme butonunu göster
             if(currentRole === 'YÖNETİCİ') {
                 headerAction.style.display = 'table-cell';
                 clearAllBtn.style.display = 'block';
