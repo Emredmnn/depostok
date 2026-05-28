@@ -94,7 +94,7 @@
 
         let detectedRole = "";
 
-        // Yeni şifre ve kullanıcı adı eşleşme matrisi
+        // Şifre ve kullanıcı adı eşleşme matrisi (Düzeltildi)
         if ((user === "yonetici" || userInput === "yönetici") && pass === "2605") {
             detectedRole = "YÖNETİCİ";
         } else if (user === "garson" && pass === "2222") {
@@ -102,7 +102,7 @@
         } else if ((user === "uretim" || userInput === "üretim") && pass === "3333") {
             detectedRole = "ÜRETİM";
         } else if (user === "depo" && pass === "1111") {
-            detectedRole = "YÖNETİCİ"; // Depo kullanıcısı da yönetim yetkilerine sahip olur
+            detectedRole = "DEPO"; // Rol ataması DEPO olarak düzeltildi
         }
 
         if (detectedRole !== "") {
