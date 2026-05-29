@@ -86,6 +86,9 @@
         .skt-expired { background: #f8d7da; color: #dc3545; text-decoration: line-through; }
         .skt-none { color: #aaa; font-style: italic; }
 
+        .total-row { background-color: #e2f0fe; font-weight: bold; border-top: 2px solid #0d6efd !important; }
+        .total-row td { padding: 15px 10px; font-size: 15px; color: #1e3a8a; }
+
         .action-btns { display: flex; gap: 4px; flex-wrap: wrap; }
         .action-btn { padding: 6px 10px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer; font-size: 12px; white-space: nowrap; }
         .btn-add-stock { background-color: #0d6efd; }
@@ -263,6 +266,7 @@
                 </tr>
             </thead>
             <tbody id="liveMaterialsBody"></tbody>
+            <tfoot id="tableTotalFooter"></tfoot>
         </table>
     </div>
 </div>
@@ -472,10 +476,12 @@
 
     function renderUi() {
         const tbody = document.getElementById('liveMaterialsBody');
+        const tfoot = document.getElementById('tableTotalFooter');
         if(!tbody) return;
         const filterText = document.getElementById('searchInput').value.toLowerCase();
         const selectedDate = document.getElementById('dateFilterInput').value;
         tbody.innerHTML = '';
+        tfoot.innerHTML = '';
         
         let filteredInventory = inventory.filter(item => {
             let matchesSearch = item.name.toLowerCase().includes(filterText);
@@ -489,8 +495,20 @@
             return;
         }
 
+        // Birim bazlı toplamları toplamak için boş nesne
+        let totalsByUnit = {};
+
         filteredInventory.forEach((item) => {
             if(item.criticalLimit === undefined) item.criticalLimit = 0;
+            
+            // Toplam hesaplaması için birimleri grupla
+            let itemUnit = item.unit || "Adet";
+            let itemQty = parseFloat(item.quantity) || 0;
+            if(!totalsByUnit[itemUnit]) {
+                totalsByUnit[itemUnit] = 0;
+            }
+            totalsByUnit[itemUnit] += itemQty;
+
             let statusHtml = item.quantity > item.criticalLimit ? 
                 `<span class="status-badge status-safe">🟢 Güvenli</span>` : 
                 `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
@@ -543,6 +561,20 @@
             `;
             tbody.appendChild(tr);
         });
+
+        // ALT TOPLAM SATIRI OLUŞTURMA (Birimleri alt alta düzenli listeler)
+        let totalStrings = [];
+        for (const [unit, sum] of Object.entries(totalsByUnit)) {
+            totalStrings.push(`${sum.toFixed(2)} ${unit}`);
+        }
+        
+        const footTr = document.createElement('tr');
+        footTr.className = "total-row";
+        footTr.innerHTML = `
+            <td colspan="2" style="text-align: right;">🧮 FİLTRELENEN TOPLAM:</td>
+            <td colspan="5">${totalStrings.join(' | ')}</td>
+        `;
+        tfoot.appendChild(footTr);
     }
 
     let selectedProductForSkt = "";
@@ -639,7 +671,7 @@
     document.getElementById('dateFilterInput').addEventListener('change', renderUi);
     document.getElementById('searchInput').addEventListener('input', renderUi);
 
-    // SOL FORM: YENİ ÜRÜN EKLEME (AKILLI MULTI-SKT DESTEKLİ)
+    // SOL FORM: YENİ ÜRÜN EKLEME
     const addFormEl = document.getElementById('addForm');
     if(addFormEl) {
         addFormEl.addEventListener('submit', function(e) {
@@ -651,10 +683,10 @@
             const limit = parseFloat(document.getElementById('newProdLimit').value) || 0;
             const sktVal = document.getElementById('newProdSkt').value;
             
-            // Eğer bir SKT seçilmişse, benzersiz olması için ismin arkasına ekliyoruz
+            // SKT TABLODAKİ FORMATLA BİREBİR AYNI ŞEKİLDE OLUŞTURULUYOR (HATA DÜZELTİLDİ)
             if(sktVal) {
                 const sParts = sktVal.split('-');
-                const formattedSkt = `${sParts[2]}.${sParts[1]}.${sParts[2] ? sParts[0] : ''}`;
+                const formattedSkt = `${sParts[2]}.${sParts[1]}.${sParts[0]}`;
                 name = `${name} (SKT: ${formattedSkt})`;
             }
 
@@ -675,13 +707,12 @@
         });
     }
 
-    // SAĞ TABLO: EKLE - DÜŞ - İMHA (ORİJİNAL KODUN - DEĞİŞİKLİKSİZ VE KESİNTİSİZ)
+    // SAĞ TABLO: EKLE - DÜŞ - İMHA
     window.manageStock = function(prodName, action) {
         const item = inventory.find(i => i.name === prodName);
         if(!item) return;
         let reportLabel = action === 'in' ? 'GİRİŞ' : (action === 'out' ? 'ÇIKIŞ' : 'İMHA');
 
-        // EĞER "EKLE" İŞLEMİYSE VE KULLANICI FARKLI BİR SKT İLE YENİ BİR SATIR OLUŞTURMAK İSTİYORSA
         if (action === 'in') {
             const changeSkt = confirm(`Mevcut Satır: ${item.name}\n\nYeni eklemek istediğiniz partinin SKT'si farklı mı?\n\n(Farklı ise 'Tamam'a basıp yeni parti oluşturun, aynı ise 'İptal'e basıp bu satırın stoğunu artırın)`);
             if (changeSkt) {
@@ -691,7 +722,6 @@
                     const amount = parseFloat(amountVal);
                     if(isNaN(amount) || amount <= 0) return;
 
-                    // İsmin ham halini bulup yeni SKT'yi parantez içine koyuyoruz
                     let baseName = item.name.split(' (SKT:')[0].trim();
                     const sParts = newSktVal.split('-');
                     const formattedSkt = `${sParts[2]}.${sParts[1]}.${sParts[0]}`;
@@ -726,7 +756,6 @@
         });
     };
 
-    // SİL BUTONU ARTIK TAMAMEN AKTİF
     window.deleteProductDirect = function(prodName) {
         if(confirm(`"${prodName}" ürününü depodan kalıcı olarak silmek istediğinize emin misiniz?`)) {
             const cleanKey = prodName.replace(/[.#$\[\]]/g, "");
