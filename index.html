@@ -20,6 +20,14 @@
         .nav-right { display: flex; align-items: center; gap: 12px; }
         .user-badge { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; }
         
+        /* SKT Kritik Uyarı Butonu */
+        .btn-skt-alert { background: #ffc107; color: #212529; border: none; padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: none; animation: pulse-border 2s infinite; }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+        }
+
         .btn-report { color: #212529; background: #ffc107; padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; }
         .btn-orders-list { color: white; background: #20c997; padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; }
         .btn-logout { color: #fff; text-decoration: none; background: #dc3545; padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; }
@@ -77,7 +85,6 @@
         .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; text-align: center; }
         .status-safe { background-color: #d1e7dd; color: #0f5132; }
         .status-critical { background-color: #f8d7da; color: #842029; }
-        .status-warning { background-color: #fff3cd; color: #664d03; border: 1px solid #ffecb5; margin-left: 5px; }
         
         .depot-tag { background: #e2f0fe; color: #0d6efd; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
         .date-tag { display: block; font-size: 11px; color: #6c757d; margin-top: 2px; font-weight: normal; }
@@ -141,6 +148,7 @@
         <div class="live-clock" id="liveClockDisplay">📅 Yükleniyor...</div>
     </div>
     <div class="nav-right">
+        <button class="btn-skt-alert" id="sktAlertButton" onclick="filterSktUrgentOnly()">⚠️ SKT Yaklaşanlar</button>
         <span class="user-badge" id="roleBadge">👤 Rol:</span>
         <button class="btn-orders-list" id="openOrdersBtn">📦 Verilen Siparişler</button>
         <button class="btn-report" id="openReportBtn">📊 İşlem Geçmişi (Rapor)</button>
@@ -266,7 +274,7 @@
         </div>
 
         <div class="depot-filter-bar">
-            <button class="btn-depot-filter active" onclick="filterByDepot('HEPSİ')">HEPSİ</button>
+            <button class="btn-depot-filter active" id="btnDepotAll" onclick="filterByDepot('HEPSİ')">HEPSİ</button>
             <button class="btn-depot-filter" onclick="filterByDepot('KURU GIDA')">KURU GIDA</button>
             <button class="btn-depot-filter" onclick="filterByDepot('ŞARKÜTERİ')">ŞARKÜTERİ</button>
             <button class="btn-depot-filter" onclick="filterByDepot('ET +4')">ET +4</button>
@@ -389,6 +397,7 @@
 
     let inventory = [];
     let activeDepotFilter = 'HEPSİ';
+    let onlyShowUrgentSkt = false; // Yeni Akıllı Filtre Durumu
     let orderBasket = [];
 
     let currentModalProduct = null;
@@ -400,6 +409,7 @@
         inventory = rawData ? Object.values(rawData) : [];
         checkExpiredProducts(rawData);
         updateOrderProductDropdown();
+        updateSktAlertBtnState(); // Üst bar butonunu güncelle
         renderUi();
     });
 
@@ -429,6 +439,42 @@
             }
         });
     }
+
+    // Üst bardaki uyarı butonunun görünüp görünmeyeceğini ve sayısını kontrol eden mekanizma
+    function updateSktAlertBtnState() {
+        const btn = document.getElementById('sktAlertButton');
+        if(!btn) return;
+
+        const todayStr = getTodayDateString();
+        let urgentCount = 0;
+
+        inventory.forEach(item => {
+            if(item.skt) {
+                let todayTime = new Date(todayStr).getTime();
+                let sktTime = new Date(item.skt).getTime();
+                let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
+                if(diffDays >= 0 && diffDays <= 1) {
+                    urgentCount++;
+                }
+            }
+        });
+
+        if(urgentCount > 0) {
+            btn.textContent = `⚠️ SKT Kritik (${urgentCount} Ürün)`;
+            btn.style.display = "block";
+        } else {
+            btn.style.display = "none";
+        }
+    }
+
+    // Butona basıldığında listeyi sadece 1 gün kalanlara göre filtreleyen fonksiyon
+    window.filterSktUrgentOnly = function() {
+        onlyShowUrgentSkt = true;
+        // Diğer depo filtrelerinin aktifliğini görsel olarak kaldırıyoruz
+        const buttons = document.querySelectorAll('.btn-depot-filter');
+        buttons.forEach(b => b.classList.remove('active'));
+        renderUi();
+    };
 
     function updateOrderProductDropdown() {
         const selectEl = document.getElementById('orderProductSelect');
@@ -516,11 +562,24 @@
         tbody.innerHTML = '';
         tfoot.innerHTML = '';
         
+        const todayStr = getTodayDateString();
+
         let filteredInventory = inventory.filter(item => {
             let matchesSearch = item.name.toLowerCase().includes(filterText);
-            let matchesDepot = (activeDepotFilter === 'HEPSİ' || item.depot === activeDepotFilter);
             let matchesDate = selectedDate ? (item.lastUpdatedDate === selectedDate) : true;
-            return matchesSearch && matchesDepot && matchesDate;
+            
+            // Eğer üst bardaki SKT uyarısına basıldıysa sadece 1 gün kalanları eşle
+            if (onlyShowUrgentSkt) {
+                if(!item.skt) return false;
+                let todayTime = new Date(todayStr).getTime();
+                let sktTime = new Date(item.skt).getTime();
+                let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
+                return matchesSearch && matchesDate && (diffDays >= 0 && diffDays <= 1);
+            } else {
+                // Normal şartlarda genel depo filtresine uy
+                let matchesDepot = (activeDepotFilter === 'HEPSİ' || item.depot === activeDepotFilter);
+                return matchesSearch && matchesDepot && matchesDate;
+            }
         });
 
         if(filteredInventory.length === 0) {
@@ -529,7 +588,6 @@
         }
 
         let totalsByUnit = {};
-        const todayStr = getTodayDateString();
 
         filteredInventory.forEach((item) => {
             if(item.criticalLimit === undefined) item.criticalLimit = 0;
@@ -541,7 +599,6 @@
             }
             totalsByUnit[itemUnit] += itemQty;
 
-            // STOK DURUMU SÜTUNUNDAN UYARI ALINDI. SADECE STOK KONTROLÜ YAPILIYOR
             let statusHtml = "";
             if(item.quantity > item.criticalLimit) { 
                 statusHtml = `<span class="status-badge status-safe">🟢 Güvenli</span>`;
@@ -555,23 +612,14 @@
                 if(parts.length === 3) displayDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
             }
 
-            // 1 GÜN KALA UYARISI ARTIK DOĞRUDAN SKT BADGE'İNİN YANINA EKLENDİ
+            // TABLO SÜTUNLARINDAN UYARI ETİKETLERİ TAMAMEN TEMİZLENDİ (SADECE TARİH YAZIYOR)
             let sktHtml = `<span class="skt-badge skt-none">Belirtilmedi</span>`;
             if(item.skt) {
                 const sParts = item.skt.split('-');
-                let todayTime = new Date(todayStr).getTime();
-                let sktTime = new Date(item.skt).getTime();
-                let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
-                
-                let warningBadge = "";
-                if(diffDays >= 0 && diffDays <= 1) {
-                    warningBadge = `<span class="status-badge status-warning">⚠️ 1 Gün Kaldı!</span>`;
-                }
-
                 if(item.skt < todayStr) {
                     sktHtml = `<span class="skt-badge skt-expired">❌ ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>`;
                 } else {
-                    sktHtml = `<span class="skt-badge skt-ok">📅 ${sParts[2]}.${sParts[1]}.${sParts[0]}</span> ${warningBadge}`;
+                    sktHtml = `<span class="skt-badge skt-ok">📅 ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>`;
                 }
             }
 
@@ -680,11 +728,9 @@
             const newSktVal = document.getElementById('actionModalSkt').value;
             if(!newSktVal) { alert("Lütfen takvimden Son Kullanma Tarihini seçin!"); return; }
 
-            // YENİ SKT'Lİ GİRİŞLERDE MALZEME ADI DEĞİŞMEZ, ARTIK AYRI SATIR OLMASI İÇİN YENİ BİR KEY OLUŞTURULUR
             let baseCleanName = item.name.replace(/[.#$\[\]]/g, "");
             let targetKey = baseCleanName + "_" + newSktVal;
             
-            // Eğer o tarihte zaten bir satır varsa üzerine ekler, yoksa sıfırdan o tarihe yeni satır açar
             let matchExisting = inventory.find(i => i.dbKey === targetKey);
             let finalQty = matchExisting ? parseFloat((matchExisting.quantity + qty).toFixed(2)) : qty;
 
@@ -720,7 +766,6 @@
         closeStockActionModal();
     });
 
-    // MAİL VE SİPARİŞ GÖNDERİMİ
     const orderFormEl = document.getElementById('orderForm');
     if(orderFormEl) {
         orderFormEl.addEventListener('submit', function(e) {
@@ -772,6 +817,7 @@
     }
 
     window.filterByDepot = function(depotName) {
+        onlyShowUrgentSkt = false; // SKT filtrelemesini kapatıp normal filtreyi açıyoruz
         activeDepotFilter = depotName;
         const buttons = document.querySelectorAll('.btn-depot-filter');
         buttons.forEach(btn => { btn.classList.toggle('active', btn.textContent === depotName); });
@@ -786,7 +832,6 @@
     document.getElementById('dateFilterInput').addEventListener('change', renderUi);
     document.getElementById('searchInput').addEventListener('input', renderUi);
 
-    // SOL FORM: SIFIRDAN YENİ MALZEME TANIMLAMA (EŞSİZ DBKEY BAĞLANDI)
     const addFormEl = document.getElementById('addForm');
     if(addFormEl) {
         addFormEl.addEventListener('submit', function(e) {
