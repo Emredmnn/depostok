@@ -385,7 +385,7 @@
     let currentModalProduct = null;
     let currentModalAction = "";
     let isNewPartyWithSkt = false;
-    let isDropdownInitialized = false; // İlk yükleme kilidi
+    let isDropdownInitialized = false; 
 
     db.ref('depo_stok').on('value', (snapshot) => {
         const rawData = snapshot.val();
@@ -491,12 +491,10 @@
     };
     window.closeSktUrgentModal = function() { document.getElementById('sktUrgentModal').style.display = "none"; };
 
-    // Menüyü ilk haliyle koruyan ve sonradan eklenen ürünlerin buraya yansımasını engelleyen fonksiyon
     function updateOrderProductDropdown() {
         const selectEl = document.getElementById('orderProductSelect');
         if(!selectEl) return;
         
-        // Eğer menü ilk seferde başarıyla dolduysa, sonraki veri güncellemelerinde çalışmayı durdurur
         if (isDropdownInitialized) return;
         
         const currentSelected = selectEl.value;
@@ -516,7 +514,6 @@
         });
         if(currentSelected) selectEl.value = currentSelected;
         
-        // Veri listesi boş değilse menü dolmuş demektir, kilidi aktif et
         if (inventory.length > 0) { isDropdownInitialized = true; }
     }
 
@@ -575,6 +572,9 @@
         const todayStr = getTodayDateString();
         
         let filteredInventory = inventory.filter(item => {
+            // DÜZELTME: Mevcut stok miktarı 0 olan ürünler doğrudan elenir, panel listesinden kaldırılır
+            if(parseFloat(item.quantity) <= 0) return false;
+
             let matchesSearch = item.name.toLowerCase().includes(filterText);
             let matchesDate = selectedDate ? (item.lastUpdatedDate === selectedDate) : true;
             let matchesDepot = (activeDepotFilter === 'HEPSİ' || item.depot === activeDepotFilter);
@@ -814,7 +814,7 @@
         if(confirm(`"${item.name}" ürününü depodan kalıcı olarak silmek istediğinize emin misiniz? (İstediğinizde İşlem Geçmişinden geri alabilirsiniz)`)) {
             const now = new Date();
             db.ref('depo_rapor').push({
-                time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(), user: currentRole, product: item.name, type: 'ÜRÜN SİLİNDİ', qty: `${item.quantity} ${item.unit}`, backupKey: item.dbKey || uniqueId, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt || null
+                time: now.toLocaleString('tr-TR'), nowTime: now.toISOString(), user: currentRole, product: item.name, type: 'ÜRÜN SİLİNDİ', qty: `${item.quantity} ${item.unit}`, backupKey: item.dbKey || uniqueId, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt || null
             });
             db.ref('depo_stok/' + uniqueId).remove();
         }
