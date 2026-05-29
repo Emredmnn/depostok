@@ -385,7 +385,7 @@
     let currentModalProduct = null;
     let currentModalAction = "";
     let isNewPartyWithSkt = false;
-    let isDropdownInitialized = false; // YENİ EKLENEN KİLİTLEME DEĞİŞKENİ
+    let isDropdownInitialized = false; // İlk yükleme kilidi
 
     db.ref('depo_stok').on('value', (snapshot) => {
         const rawData = snapshot.val();
@@ -491,10 +491,12 @@
     };
     window.closeSktUrgentModal = function() { document.getElementById('sktUrgentModal').style.display = "none"; };
 
-    // GÜNCELLENEN SEÇİM KUTUSU FONKSİYONU
+    // Menüyü ilk haliyle koruyan ve sonradan eklenen ürünlerin buraya yansımasını engelleyen fonksiyon
     function updateOrderProductDropdown() {
         const selectEl = document.getElementById('orderProductSelect');
         if(!selectEl) return;
+        
+        // Eğer menü ilk seferde başarıyla dolduysa, sonraki veri güncellemelerinde çalışmayı durdurur
         if (isDropdownInitialized) return;
         
         const currentSelected = selectEl.value;
@@ -513,6 +515,8 @@
             selectEl.appendChild(opt);
         });
         if(currentSelected) selectEl.value = currentSelected;
+        
+        // Veri listesi boş değilse menü dolmuş demektir, kilidi aktif et
         if (inventory.length > 0) { isDropdownInitialized = true; }
     }
 
