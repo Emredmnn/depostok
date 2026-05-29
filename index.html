@@ -77,6 +77,7 @@
         .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; text-align: center; }
         .status-safe { background-color: #d1e7dd; color: #0f5132; }
         .status-critical { background-color: #f8d7da; color: #842029; }
+        .status-warning { background-color: #fff3cd; color: #664d03; border: 1px solid #ffecb5; }
         
         .depot-tag { background: #e2f0fe; color: #0d6efd; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
         .date-tag { display: block; font-size: 11px; color: #6c757d; margin-top: 2px; font-weight: normal; }
@@ -99,8 +100,6 @@
         .btn-waste-stock:hover { background-color: #e06d0f; }
         .btn-del-stock { background-color: #dc3545; }
         .btn-del-stock:hover { background-color: #bb2d3b; }
-        .btn-edit-skt { background-color: #6f42c1; color: white; }
-        .btn-edit-skt:hover { background-color: #59359a; }
 
         /* Rapor ve Sipariş Modalları */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 20px; }
@@ -118,7 +117,6 @@
         .badge-order { background: #bfdbfe; color: #1e40af; padding: 3px 6px; border-radius: 4px; font-weight: bold; }
         
         .btn-report-del { background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
-        .hidden-date-picker { position: fixed; left: -9999px; top: -9999px; opacity: 0; width: 1px; height: 1px; }
 
         /* Stok Giriş/Düzenleme Özel Modalı */
         .stock-modal-card { background: white; padding: 25px; border-radius: 8px; max-width: 450px; width: 100%; border-top: 4px solid #0d6efd; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
@@ -150,14 +148,12 @@
     </div>
 </nav>
 
-<input type="date" id="globalHiddenDatePicker" class="hidden-date-picker">
-
 <div class="modal" id="stockActionModal">
     <div class="stock-modal-card">
         <div class="stock-modal-title" id="actionModalTitle">📥 Stok Giriş İşlemi</div>
         <form id="stockActionForm">
             <div class="form-group" id="partySktGroup" style="display:none;">
-                <label style="color:#d63384; font-weight:bold;">⚠️ Yeni Partinin Son Kullanma Tarihi (Takvimden Seçin)</label>
+                <label style="color:#d63384; font-weight:bold;">⚠️ Ürünün Son Kullanma Tarihi (Takvimden Seçin)</label>
                 <input type="date" id="actionModalSkt">
             </div>
             <div class="form-group">
@@ -395,7 +391,6 @@
     let activeDepotFilter = 'HEPSİ';
     let orderBasket = [];
 
-    // Gelişmiş Stok Giriş Modal Takip Değişkenleri
     let currentModalProduct = null;
     let currentModalAction = "";
     let isNewPartyWithSkt = false;
@@ -527,6 +522,7 @@
         }
 
         let totalsByUnit = {};
+        const todayStr = getTodayDateString();
 
         filteredInventory.forEach((item) => {
             if(item.criticalLimit === undefined) item.criticalLimit = 0;
@@ -538,9 +534,28 @@
             }
             totalsByUnit[itemUnit] += itemQty;
 
-            let statusHtml = item.quantity > item.criticalLimit ? 
-                `<span class="status-badge status-safe">🟢 Güvenli</span>` : 
-                `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
+            // AKILLI DURUM VE 1 GÜN KALA KONTROL SİSTEMİ
+            let statusHtml = "";
+            let isNearExpiry = false;
+
+            if(item.skt) {
+                let todayTime = new Date(todayStr).getTime();
+                let sktTime = new Date(item.skt).getTime();
+                let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
+                
+                // SKT'ye tam 1 gün kaldıysa veya bugün son günüyse sarı uyarı ver
+                if(diffDays >= 0 && diffDays <= 1) {
+                    isNearExpiry = true;
+                }
+            }
+
+            if(isNearExpiry) {
+                statusHtml = `<span class="status-badge status-warning">⚠️ 1 Gün Kaldı!</span>`;
+            } else if(item.quantity > item.criticalLimit) { 
+                statusHtml = `<span class="status-badge status-safe">🟢 Güvenli</span>`;
+            } else { 
+                statusHtml = `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
+            }
 
             let displayDate = "---";
             if(item.lastUpdatedDate) {
@@ -551,13 +566,14 @@
             let sktHtml = `<span class="skt-badge skt-none">Belirtilmedi</span>`;
             if(item.skt) {
                 const sParts = item.skt.split('-');
-                if(item.skt < getTodayDateString()) {
+                if(item.skt < todayStr) {
                     sktHtml = `<span class="skt-badge skt-expired">❌ ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>`;
                 } else {
                     sktHtml = `<span class="skt-badge skt-ok">📅 ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>`;
                 }
             }
 
+            // HIZLI İŞLEMLERDEN SKT BUTONU TAMAMEN KALDIRILDI
             let buttonsHtml = '';
             if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
                 buttonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${item.name}', 'out')">- Düş</button>`;
@@ -566,14 +582,12 @@
                     <button class="action-btn btn-add-stock" onclick="openStockModal('${item.name}', 'in')">+ Ekle</button>
                     <button class="action-btn btn-drop-stock" onclick="openStockModal('${item.name}', 'out')">- Düş</button>
                     <button class="action-btn btn-waste-stock" onclick="openStockModal('${item.name}', 'waste')">💥 İmha</button>
-                    <button class="action-btn btn-edit-skt" onclick="triggerSktUpdate('${item.name}')">📝 SKT</button>
                 `;
             } else { 
                 buttonsHtml = `
                     <button class="action-btn btn-add-stock" onclick="openStockModal('${item.name}', 'in')">+ Ekle</button>
                     <button class="action-btn btn-drop-stock" onclick="openStockModal('${item.name}', 'out')">- Düş</button>
                     <button class="action-btn btn-waste-stock" onclick="openStockModal('${item.name}', 'waste')">💥 İmha</button>
-                    <button class="action-btn btn-edit-skt" onclick="triggerSktUpdate('${item.name}')">📝 SKT</button>
                     <button class="action-btn btn-del-stock" onclick="deleteProductDirect('${item.name}')">🗑️ Sil</button>
                 `;
             }
@@ -605,36 +619,7 @@
         tfoot.appendChild(footTr);
     }
 
-    // TAKVİMDEN SKT SEÇEREK HIZLI GÜNCELLEME
-    let selectedProductForSkt = "";
-    window.triggerSktUpdate = function(prodName) {
-        selectedProductForSkt = prodName;
-        const picker = document.getElementById('globalHiddenDatePicker');
-        if(picker) { picker.click(); }
-    };
-
-    document.getElementById('globalHiddenDatePicker').addEventListener('change', function() {
-        if (!selectedProductForSkt || !this.value) return;
-        const item = inventory.find(i => i.name === selectedProductForSkt);
-        if (!item) return;
-
-        const cleanKey = item.name.replace(/[.#$\[\]]/g, "");
-        db.ref('depo_stok/' + cleanKey + '/skt').set(this.value);
-        db.ref('depo_stok/' + cleanKey + '/lastUpdatedDate').set(getTodayDateString());
-
-        db.ref('depo_rapor').push({
-            time: new Date().toLocaleString('tr-TR'),
-            rawTime: new Date().toISOString(),
-            user: currentRole,
-            product: `${item.name}`,
-            type: 'SKT GÜNCELLEME',
-            qty: `Yeni Tarih: ${this.value}`
-        });
-        selectedProductForSkt = "";
-        this.value = ""; 
-    });
-
-    // TAKVİMLİ VE GÜVENLİ STOK GİRİŞ PANELİ (YENİ MODAL YÖNETİMİ)
+    // YENİ STOK EKLEME VE PARTİ MODALI (MALZEME ADI DEĞİŞTİRME TAMAMEN KALDIRILDI)
     window.openStockModal = function(prodName, action) {
         const item = inventory.find(i => i.name === prodName);
         if(!item) return;
@@ -655,12 +640,11 @@
             title.textContent = `📥 ${item.name} - Stok Ekleme`;
             qtyLabel.textContent = `Giriş Yapılacak Miktar (${item.unit})`;
             
-            // Kullanıcıya sor: Farklı SKT'li yeni parti mi?
-            const changeSkt = confirm(`Mevcut Satır: ${item.name}\n\nYeni eklemek istediğiniz partinin SKT'si farklı mı?\n\n(Farklı ise 'Tamam'a basıp takvimden tarih seçin, aynı ise 'İptal'e basıp normal miktar ekleyin)`);
+            const changeSkt = confirm(`Mevcut Satır: ${item.name}\n\nBu giriş için Son Kullanma Tarihini güncellemek istiyor musunuz?\n\n(Tarih atamak/güncellemek için 'Tamam'a, sadece miktar eklemek için 'İptal'e basın)`);
             if(changeSkt) {
                 isNewPartyWithSkt = true;
                 sktGroup.style.display = "block";
-                title.textContent = `✨ ${item.name} - Yeni Parti (SKT'li) Girişi`;
+                title.textContent = `✨ ${item.name} - Stok Girişi & SKT Atama`;
             }
         } else if(action === 'out') {
             title.textContent = `📤 ${item.name} - Stok Düşme`;
@@ -678,7 +662,6 @@
         currentModalProduct = null;
     };
 
-    // FORM ONAYLANDIĞINDA ÇALIŞACAK AKILLI MOTOR
     document.getElementById('stockActionForm').addEventListener('submit', function(e) {
         e.preventDefault();
         if(!currentModalProduct) return;
@@ -689,33 +672,32 @@
 
         if(isNaN(qty) || qty <= 0) { alert("Geçerli bir miktar giriniz!"); return; }
 
+        const cleanKey = item.name.replace(/[.#$\[\]]/g, "");
+
         if (currentModalAction === 'in' && isNewPartyWithSkt) {
             const newSktVal = document.getElementById('actionModalSkt').value;
-            if(!newSktVal) { alert("Lütfen takvimden yeni partinin Son Kullanma Tarihini seçin!"); return; }
+            if(!newSktVal) { alert("Lütfen takvimden Son Kullanma Tarihini seçin!"); return; }
 
-            let baseName = item.name.split(' (SKT:')[0].trim();
-            const sParts = newSktVal.split('-');
-            const formattedSkt = `${sParts[2]}.${sParts[1]}.${sParts[0]}`;
-            let newProdName = `${baseName} (SKT: ${formattedSkt})`;
-
-            const cleanKey = newProdName.replace(/[.#$\[\]]/g, "");
-            db.ref('depo_stok/' + cleanKey).set({ 
-                name: newProdName, depot: item.depot, unit: item.unit, quantity: qty, criticalLimit: item.criticalLimit, skt: newSktVal, lastUpdatedDate: getTodayDateString()
+            // ARTIK ISIM GÜNCELLEMESİ YAPILMIYOR, MALZEME ADI SAF KALIYOR. YALNIZCA SKT SAHASI VE STOK DEĞİŞİYOR.
+            let newQty = parseFloat((item.quantity + qty).toFixed(2));
+            
+            db.ref('depo_stok/' + cleanKey).update({ 
+                quantity: newQty,
+                skt: newSktVal, 
+                lastUpdatedDate: getTodayDateString()
             });
 
             db.ref('depo_rapor').push({
-                time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: newProdName, type: 'YENİ PARTİ GİRİŞİ', qty: `${qty} ${item.unit}`
+                time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'STOK + SKT GİRİŞİ', qty: `${qty} ${item.unit}`
             });
             
             closeStockActionModal();
             return;
         }
 
-        // Normal Ekleme / Düşme / İmha İşlemleri
         let newQty = currentModalAction === 'in' ? parseFloat((item.quantity + qty).toFixed(2)) : parseFloat((item.quantity - qty).toFixed(2));
         if(newQty < 0) newQty = 0; 
         
-        const cleanKey = item.name.replace(/[.#$\[\]]/g, "");
         db.ref('depo_stok/' + cleanKey + '/quantity').set(newQty);
         db.ref('depo_stok/' + cleanKey + '/lastUpdatedDate').set(getTodayDateString());
 
@@ -792,7 +774,7 @@
     document.getElementById('dateFilterInput').addEventListener('change', renderUi);
     document.getElementById('searchInput').addEventListener('input', renderUi);
 
-    // SOL FORM: YENİ ÜRÜN EKLEME
+    // SOL FORM: YENİ ÜRÜN EKLEME (MALZEME ADI ARTIK DEĞİŞTİRİLMEZ SAF BIRAKILIR)
     const addFormEl = document.getElementById('addForm');
     if(addFormEl) {
         addFormEl.addEventListener('submit', function(e) {
@@ -804,14 +786,8 @@
             const limit = parseFloat(document.getElementById('newProdLimit').value) || 0;
             const sktVal = document.getElementById('newProdSkt').value;
             
-            if(sktVal) {
-                const sParts = sktVal.split('-');
-                const formattedSkt = `${sParts[2]}.${sParts[1]}.${sParts[0]}`;
-                name = `${name} (SKT: ${formattedSkt})`;
-            }
-
             if(inventory.some(item => item.name.toLowerCase() === name.toLowerCase())) { 
-                alert("Bu ürün zaten bu son kullanma tarihiyle kayıtlı! Mevcut satırın + Ekle butonunu kullanabilirsiniz."); 
+                alert("Bu ürün zaten sistemde kayıtlı! Mevcut satırın + Ekle butonunu kullanarak stoğunu güncelleyebilirsiniz."); 
                 return; 
             }
             const cleanKey = name.replace(/[.#$\[\]]/g, "");
@@ -879,7 +855,7 @@
     window.clearAllReports = function() {
         if(currentRole !== 'YÖNETİCİ') { alert("Yetkiniz yok!"); return; }
         if(confirm("Tüm işlem geçmişi raporunu kalıcı olarak silmek istediğinize emin misiniz?")) {
-            db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click());
+            db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtnBtn').click());
         }
     };
 
