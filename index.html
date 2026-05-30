@@ -8,1084 +8,1450 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script> 
     <style> 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; } 
-        body { background: #f4f6f9; color: #333; padding-bottom: 50px; } 
-        
+        * { 
+            box-sizing: border-box;
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+        } 
+        body { 
+            background: #f4f6f9; 
+            color: #333; 
+            padding-bottom: 50px;
+        }  
         /* Kurumsal Üst Bar */ 
-        nav { background: linear-gradient(135deg, #0d6efd 0%, #1e3a8a 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); } 
-        .nav-left { display: flex; flex-direction: column; gap: 2px; } 
-        nav h2 { font-size: 20px; font-weight: 800; line-height: 1.2; letter-spacing: 0.5px; } 
-        .live-clock { font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.85); letter-spacing: 0.5px; } 
-        .nav-right { display: flex; align-items: center; gap: 12px; } 
-        .user-badge { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600; } 
-        
+        nav { 
+            background: linear-gradient(135deg, #0d6efd 0%, #1e3a8a 100%); 
+            padding: 15px 30px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center; 
+            color: white; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        } 
+        .nav-left { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 2px;
+        } 
+        nav h2 { 
+            font-size: 20px; 
+            font-weight: 800; 
+            line-height: 1.2; 
+            letter-spacing: 0.5px; 
+        } 
+        .live-clock { 
+            font-size: 13px; 
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.85); 
+            letter-spacing: 0.5px; 
+        }  
+        .nav-right { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+        } 
+        .user-badge { 
+            background: rgba(255,255,255,0.2); 
+            padding: 6px 12px; 
+            border-radius: 20px; 
+            font-size: 14px; 
+            font-weight: 600;
+        }  
         /* SKT Kritik Uyarı Butonu */ 
-        .btn-skt-alert { background: #dc3545; color: white; border: none; padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; display: none; animation: pulse-border 2s infinite; } 
+        .btn-skt-alert { 
+            background: #dc3545; 
+            color: white; 
+            border: none; 
+            padding: 8px 14px;
+            border-radius: 20px; 
+            font-size: 13px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            display: none; 
+            animation: pulse-border 2s infinite;
+        } 
         @keyframes pulse-border { 
             0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); } 
             70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); } 
             100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); } 
         } 
-        .btn-report { color: #212529; background: #ffc107; padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; } 
-        .btn-orders-list { color: white; background: #20c997; padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; } 
-        .btn-logout { color: #fff; text-decoration: none; background: #dc3545; padding: 10px 15px; border-radius: 6px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; } 
-        
+        .btn-report { 
+            color: #212529; 
+            background: #ffc107;
+            padding: 10px 15px; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            font-weight: 600; 
+            border: none; 
+            cursor: pointer; 
+        } 
+        .btn-orders-list { 
+            color: white; 
+            background: #20c997;
+            padding: 10px 15px; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            font-weight: 600; 
+            border: none; 
+            cursor: pointer; 
+        } 
+        .btn-logout { 
+            color: #fff; 
+            text-decoration: none;
+            background: #dc3545; 
+            padding: 10px 15px; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            font-weight: 600; 
+            border: none; 
+            cursor: pointer;
+        }  
         /* Düzen */ 
-        .container { max-width: 1600px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr; gap: 30px; } 
-        @media (min-width: 1100px) { .container.two-columns { grid-template-columns: 1fr 3fr; } } 
-        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid #0d6efd; margin-bottom: 25px; } 
-        .card.success-theme { border-top-color: #198754; } 
-        .card.warning-theme { border-top-color: #ffc107; } 
-        h3 { margin-bottom: 25px; color: #495057; border-bottom: 2px solid #e9ecef; padding-bottom: 12px; font-size: 18px; } 
-        .form-group { margin-bottom: 18px; } 
-        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; } 
-        input, select, textarea { width: 100%; padding: 10px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 14px; outline: none; } 
-        input:focus, select:focus, textarea:focus { border-color: #0d6efd; } 
-        textarea { resize: vertical; min-height: 60px; } 
-        .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; font-size: 15px; background: #198754; } 
-        .order-btn { width: 100%; padding: 12px; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; font-size: 14px; background: #0d6efd; margin-top: 10px; } 
-        .btn-add-to-list { width: 100%; padding: 12px; background: #6f42c1; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; } 
-        
-        .order-basket-container { margin-top: 15px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; } 
-        .basket-title { font-size: 14px; font-weight: 700; color: #495057; margin-bottom: 10px; display: flex; justify-content: space-between; } 
-        .basket-list { list-style: none; max-height: 150px; overflow-y: auto; margin-bottom: 10px; } 
-        .basket-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 6px 10px; border-radius: 4px; border: 1px solid #e9ecef; margin-bottom: 6px; font-size: 13px; } 
-        .btn-remove-basket-item { background: none; border: none; color: #dc3545; font-weight: bold; cursor: pointer; font-size: 14px; } 
-        .toggle-panel-btn { width: 100%; padding: 12px; background: #fd7e14; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer; margin-bottom: 15px; text-align: center; display: block; } 
-        .toggle-panel-btn:hover { background: #e06d0f; } 
-        .sliding-panel { display: none; margin-top: 10px; } 
-        
+        .container { 
+            max-width: 1600px; 
+            margin: 40px auto; 
+            padding: 0 20px; 
+            display: grid; 
+            grid-template-columns: 1fr;
+            gap: 30px; 
+        } 
+        @media (min-width: 1100px) {  
+            .container.two-columns { 
+                grid-template-columns: 1fr 3fr;
+            }  
+        }  
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 4px solid #0d6efd; 
+            margin-bottom: 25px; 
+        } 
+        .card.success-theme { 
+            border-top-color: #198754; 
+        } 
+        .card.warning-theme { 
+            border-top-color: #ffc107;
+        } 
+        h3 { 
+            margin-bottom: 25px; 
+            color: #495057; 
+            border-bottom: 2px solid #e9ecef; 
+            padding-bottom: 12px; 
+            font-size: 18px;
+        }  
+        .form-group { 
+            margin-bottom: 18px; 
+        } 
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            font-weight: 600; 
+            font-size: 13px;
+        } 
+        input, select, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border: 2px solid #dee2e6; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            outline: none;
+        } 
+        input:focus, select:focus, textarea:focus { 
+            border-color: #0d6efd; 
+        } 
+        textarea { 
+            resize: vertical; 
+            min-height: 60px; 
+        }  
+        .submit-btn { 
+            width: 100%;
+            padding: 14px; 
+            border: none; 
+            border-radius: 6px; 
+            color: white; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 15px; 
+            background: #198754;
+        } 
+        .order-btn { 
+            width: 100%; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 6px; 
+            color: white; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 14px;
+            background: #0d6efd; 
+            margin-top: 10px; 
+        }  
+        .btn-add-to-list { 
+            width: 100%; 
+            padding: 12px; 
+            background: #6f42c1; 
+            color: white; 
+            border: none; 
+            border-radius: 6px;
+            font-weight: bold; 
+            font-size: 14px; 
+            cursor: pointer; 
+        } 
+        .order-basket-container { 
+            margin-top: 15px; 
+            background: #f8f9fa; 
+            border: 1px solid #dee2e6; 
+            border-radius: 6px;
+            padding: 15px; 
+        } 
+        .basket-title { 
+            font-size: 14px; 
+            font-weight: 700; 
+            color: #495057; 
+            margin-bottom: 10px; 
+            display: flex; 
+            justify-content: space-between;
+        } 
+        .basket-list { 
+            list-style: none; 
+            max-height: 150px; 
+            overflow-y: auto; 
+            margin-bottom: 10px; 
+        } 
+        .basket-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            background: white; 
+            padding: 6px 10px; 
+            border-radius: 4px; 
+            border: 1px solid #e9ecef; 
+            margin-bottom: 6px; 
+            font-size: 13px; 
+        } 
+        .btn-remove-basket-item { 
+            background: none;
+            border: none; 
+            color: #dc3545; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 14px; 
+        } 
+        .toggle-panel-btn { 
+            width: 100%; 
+            padding: 12px; 
+            background: #fd7e14;
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            font-size: 15px; 
+            cursor: pointer; 
+            margin-bottom: 15px; 
+            text-align: center; 
+            display: block;
+        } 
+        .toggle-panel-btn:hover { 
+            background: #e06d0f; 
+        } 
+        .sliding-panel { 
+            display: none; 
+            margin-top: 10px;
+        }  
         /* Filtreler */ 
-        .filter-wrapper { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; } 
-        .search-container { flex: 2; min-width: 250px; } 
-        .date-filter-container { flex: 1; min-width: 200px; display: flex; gap: 8px; } 
-        .search-input, .date-input { width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 15px; outline: none; height: 48px; } 
-        .btn-clear-date { padding: 0 15px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; } 
-        
-        .depot-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; padding: 10px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; } 
-        .btn-depot-filter { padding: 8px 14px; border: 2px solid #ced4da; background: white; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: #495057; } 
-        .btn-depot-filter:hover { background: #e9ecef; } 
-        .btn-depot-filter.active { background: #0d6efd; color: white; border-color: #0d6efd; box-shadow: 0 3px 8px rgba(13,110,253,0.2); } 
-        
+        .filter-wrapper { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 15px; 
+            margin-bottom: 15px; 
+        } 
+        .search-container { 
+            flex: 2;
+            min-width: 250px; 
+        } 
+        .date-filter-container { 
+            flex: 1; 
+            min-width: 200px; 
+            display: flex; 
+            gap: 8px; 
+        } 
+        .search-input, .date-input { 
+            width: 100%;
+            padding: 12px; 
+            border: 2px solid #dee2e6; 
+            border-radius: 6px; 
+            font-size: 15px; 
+            outline: none; 
+            height: 48px; 
+        } 
+        .btn-clear-date { 
+            padding: 0 15px;
+            background: #6c757d; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 14px; 
+        }  
+        .depot-filter-bar { 
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 8px; 
+            margin-bottom: 20px; 
+            padding: 10px; 
+            background: #f8f9fa; 
+            border-radius: 8px; 
+            border: 1px solid #e9ecef;
+        } 
+        .btn-depot-filter { 
+            padding: 8px 14px; 
+            border: 2px solid #ced4da; 
+            background: white; 
+            border-radius: 6px; 
+            font-size: 13px; 
+            font-weight: 600; 
+            cursor: pointer;
+            transition: all 0.2s ease; 
+            color: #495057; 
+        } 
+        .btn-depot-filter:hover { 
+            background: #e9ecef; 
+        } 
+        .btn-depot-filter.active { 
+            background: #0d6efd; 
+            color: white; 
+            border-color: #0d6efd;
+            box-shadow: 0 3px 8px rgba(13,110,253,0.2); 
+        } 
         /* Envanter Tablosu */ 
-        .materials-table { width: 100%; border-collapse: collapse; } 
-        .materials-table th, .materials-table td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 14px; } 
-        .materials-table th { background: #f8f9fa; color: #495057; font-weight: 600; } 
-        .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; text-align: center; } 
-        .status-safe { background-color: #d1e7dd; color: #0f5132; } 
-        .status-critical { background-color: #f8d7da; color: #842029; } 
-        .depot-tag { background: #e2f0fe; color: #0d6efd; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; } 
-        .date-tag { display: block; font-size: 11px; color: #6c757d; margin-top: 2px; font-weight: normal; } 
-        .skt-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; } 
-        .skt-ok { background: #e2f0fe; color: #0d6efd; } 
-        .skt-expired { background: #f8d7da; color: #dc3545; } 
-        .skt-none { color: #aaa; font-style: italic; } 
-        .total-row { background-color: #e2f0fe; font-weight: bold; border-top: 2px solid #0d6efd !important; } 
-        .total-row td { padding: 15px 10px; font-size: 15px; color: #1e3a8a; } 
-        
-        .action-btns { display: flex; gap: 4px; flex-wrap: wrap; } 
-        .action-btn { padding: 6px 10px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer; font-size: 12px; white-space: nowrap; } 
-        .btn-add-stock { background-color: #0d6efd; } 
-        .btn-add-stock:hover { background-color: #0b5ed7; } 
-        .btn-drop-stock { background-color: #ffc107; color: #212529; } 
-        .btn-drop-stock:hover { background-color: #ffca2c; } 
-        .btn-waste-stock { background-color: #fd7e14; color: white; } 
-        .btn-waste-stock:hover { background-color: #e06d0f; } 
-        .btn-del-stock { background-color: #dc3545; } 
-        .btn-del-stock:hover { background-color: #bb2d3b; } 
-        .btn-edit-stock { background-color: #0dcaf0; color: #212529; } 
-        .btn-edit-stock:hover { background-color: #31d2f2; } 
-        
+        .materials-table { 
+            width: 100%; 
+            border-collapse: collapse;
+        } 
+        .materials-table th, .materials-table td { 
+            padding: 12px 10px; 
+            text-align: left; 
+            border-bottom: 1px solid #dee2e6; 
+            font-size: 14px;
+        } 
+        .materials-table th { 
+            background: #f8f9fa; 
+            color: #495057; 
+            font-weight: 600; 
+        }  
+        .status-badge { 
+            padding: 5px 10px; 
+            border-radius: 20px;
+            font-size: 12px; 
+            font-weight: bold; 
+            display: inline-block; 
+            text-align: center; 
+        } 
+        .status-safe { 
+            background-color: #d1e7dd; 
+            color: #0f5132; 
+        } 
+        .status-critical { 
+            background-color: #f8d7da;
+            color: #842029; 
+        }  
+        .depot-tag { 
+            background: #e2f0fe; 
+            color: #0d6efd; 
+            padding: 3px 8px; 
+            border-radius: 4px; 
+            font-size: 12px; 
+            font-weight: 600;
+        } 
+        .date-tag { 
+            display: block; 
+            font-size: 11px; 
+            color: #6c757d; 
+            margin-top: 2px; 
+            font-weight: normal; 
+        }  
+        .skt-badge { 
+            padding: 4px 8px;
+            border-radius: 4px; 
+            font-size: 12px; 
+            font-weight: bold; 
+            display: inline-block; 
+        } 
+        .skt-ok { 
+            background: #e2f0fe; 
+            color: #0d6efd; 
+        } 
+        .skt-expired { 
+            background: #f8d7da;
+            color: #dc3545; 
+        } 
+        .skt-none { 
+            color: #aaa; 
+            font-style: italic; 
+        } 
+        .total-row { 
+            background-color: #e2f0fe; 
+            font-weight: bold;
+            border-top: 2px solid #0d6efd !important; 
+        } 
+        .total-row td { 
+            padding: 15px 10px; 
+            font-size: 15px; 
+            color: #1e3a8a;
+        } 
+        .action-btns { 
+            display: flex; 
+            gap: 4px; 
+            flex-wrap: wrap; 
+        } 
+        .action-btn { 
+            padding: 6px 10px; 
+            border: none; 
+            border-radius: 4px;
+            color: white; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 12px; 
+            white-space: nowrap; 
+        } 
+        .btn-add-stock { 
+            background-color: #0d6efd; 
+        } 
+        .btn-add-stock:hover { 
+            background-color: #0b5ed7;
+        } 
+        .btn-drop-stock { 
+            background-color: #ffc107; 
+            color: #212529; 
+        } 
+        .btn-drop-stock:hover { 
+            background-color: #ffca2c; 
+        } 
+        .btn-waste-stock { 
+            background-color: #fd7e14; 
+            color: white;
+        } 
+        .btn-waste-stock:hover { 
+            background-color: #e06d0f; 
+        } 
+        .btn-del-stock { 
+            background-color: #dc3545; 
+        } 
+        .btn-del-stock:hover { 
+            background-color: #bb2d3b;
+        } 
         /* Modallar */ 
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 20px; } 
-        .modal-content { background: white; padding: 30px; border-radius: 10px; width: 100%; max-width: 1100px; max-height: 85vh; overflow-y: auto; } 
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f3f5; padding-bottom: 10px; } 
-        .close-modal { font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; } 
-        .modal-actions-bar { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px; } 
-        .btn-print-report { background-color: #0dcaf0; color: #212529; border: none; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; } 
-        .btn-clear-all-reports, .btn-clear-all-orders { background-color: #dc3545; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: none; } 
-        
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.5); 
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px; 
+        } 
+        .modal-content { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            width: 100%;
+            max-width: 1100px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+        } 
+        .modal-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f1f3f5; 
+            padding-bottom: 10px; 
+        } 
+        .close-modal { 
+            font-size: 28px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: #aaa;
+        }  
+        .modal-actions-bar { 
+            display: flex; 
+            justify-content: flex-end; 
+            gap: 10px; 
+            margin-bottom: 15px; 
+        } 
+        .btn-print-report { 
+            background-color: #0dcaf0; 
+            color: #212529;
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 6px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        } 
+        .btn-clear-all-reports, .btn-clear-all-orders { 
+            background-color: #dc3545;
+            color: white; 
+            border: none; 
+            padding: 10px 16px; 
+            border-radius: 6px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            display: none;
+        }  
         /* Geri Al Butonu */ 
-        .btn-undo { background-color: #20c997; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; } 
-        .btn-undo:hover { background-color: #198754; } 
-        table.report-table { width: 100%; border-collapse: collapse; } 
-        table.report-table th, table.report-table td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 14px; } 
-        table.report-table th { background: #f8f9fa; } 
-        .badge-order { background: #bfdbfe; color: #1e40af; padding: 3px 6px; border-radius: 4px; font-weight: bold; } 
-        .btn-report-del { background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; } 
-        
+        .btn-undo { 
+            background-color: #20c997; 
+            color: white; 
+            border: none; 
+            padding: 5px 10px; 
+            border-radius: 4px;
+            font-size: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        } 
+        .btn-undo:hover { 
+            background-color: #198754; 
+        } 
+        table.report-table { 
+            width: 100%; 
+            border-collapse: collapse;
+        } 
+        table.report-table th, table.report-table td { 
+            padding: 12px; 
+            text-align: left; 
+            border-bottom: 1px solid #dee2e6; 
+            font-size: 14px;
+        } 
+        table.report-table th { 
+            background: #f8f9fa; 
+        } 
+        .badge-order { 
+            background: #bfdbfe; 
+            color: #1e40af; 
+            padding: 3px 6px; 
+            border-radius: 4px; 
+            font-weight: bold;
+        }  
+        .btn-report-del { 
+            background: #dc3545; 
+            color: white; 
+            border: none; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 11px; 
+            cursor: pointer;
+            font-weight: bold; 
+        } 
         /* Stok Giriş/Düzenleme Özel Modalı */ 
-        .stock-modal-card { background: white; padding: 25px; border-radius: 8px; max-width: 450px; width: 100%; border-top: 4px solid #0d6efd; box-shadow: 0 5px 20px rgba(0,0,0,0.2); } 
-        .stock-modal-title { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px; } 
-        .stock-modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; } 
-        .btn-sm-save { background: #198754; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; } 
-        .btn-sm-cancel { background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; } 
-        
+        .stock-modal-card { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 8px; 
+            max-width: 450px;
+            width: 100%; 
+            border-top: 4px solid #0d6efd; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2); 
+        } 
+        .stock-modal-title { 
+            font-size: 16px; 
+            font-weight: bold; 
+            color: #333;
+            margin-bottom: 15px; 
+            border-bottom: 1px solid #eee; 
+            padding-bottom: 8px; 
+        } 
+        .stock-modal-buttons { 
+            display: flex; 
+            justify-content: flex-end; 
+            gap: 10px; 
+            margin-top: 15px;
+        } 
+        .btn-sm-save { 
+            background: #198754; 
+            color: white; 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            cursor: pointer;
+        } 
+        .btn-sm-cancel { 
+            background: #6c757d; 
+            color: white; 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            cursor: pointer;
+        } 
         @media print { 
             body * { visibility: hidden; } 
-            .modal { position: absolute; left: 0; top: 0; width: 100%; background: white; display: block !important; padding: 0; } 
-            .modal-content { max-height: none; overflow: visible; box-shadow: none; padding: 0; } 
-            .close-modal, .modal-actions-bar, .btn-report-del, .btn-undo, th:last-child, td:last-child { display: none !important; } 
+            .modal { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%;
+                background: white; 
+                display: block !important; 
+                padding: 0; 
+            } 
+            .modal-content { 
+                max-height: none; 
+                overflow: visible; 
+                box-shadow: none; 
+                padding: 0;
+            } 
+            .close-modal, .modal-actions-bar, .btn-report-del, .btn-undo, th:last-child, td:last-child { 
+                display: none !important;
+            } 
         } 
     </style>
 </head>
 <body>
-    <nav> 
-        <div class="nav-left"> 
-            <h2>BAHÇELİEVLER MEMORİAL CT</h2> 
-            <div class="live-clock" id="liveClockDisplay">📅 Yükleniyor...</div> 
+<nav> 
+    <div class="nav-left"> 
+        <h2>BAHÇELİEVLER MEMORİAL CT</h2> 
+        <div class="live-clock" id="liveClockDisplay">📅 Yükleniyor...</div> 
+    </div> 
+    <div class="nav-right"> 
+        <button class="btn-skt-alert" id="sktAlertButton" onclick="openSktUrgentModal()">⚠️ SKT Yaklaşanlar</button> 
+        <span class="user-badge" id="roleBadge">👤 Rol:</span> 
+        <button class="btn-orders-list" id="openOrdersBtn">📦 Verilen Siparişler</button> 
+        <button class="btn-report" id="openReportBtn">📊 İşlem Geçmişi (Rapor)</button> 
+        <button id="logoutBtn" class="btn-logout">Çıkış Yap</button> 
+    </div>
+</nav>
+
+<div class="modal" id="sktUrgentModal"> 
+    <div class="modal-content" style="border-top: 4px solid #dc3545; max-width: 900px;"> 
+        <div class="modal-header"> 
+            <h2 style="color: #dc3545;">⚠️ Son Kullanma Tarihi Yaklaşan Kritik Ürünler (&le; 1 Gün)</h2> 
+            <span class="close-modal" onclick="closeSktUrgentModal()">&times;</span> 
         </div> 
-        <div class="nav-right"> 
-            <button class="btn-skt-alert" id="sktAlertButton" onclick="openSktUrgentModal()">⚠️ SKT Yaklaşanlar</button> 
-            <span class="user-badge" id="roleBadge">👤 Rol:</span> 
-            <button class="btn-orders-list" id="openOrdersBtn">📦 Verilen Siparişler</button> 
-            <button class="btn-report" id="openReportBtn">📊 İşlem Geçmişi (Rapor)</button> 
-            <button id="logoutBtn" class="btn-logout">Çıkış Yap</button> 
-        </div>
-    </nav>
-
-    <div class="modal" id="sktUrgentModal"> 
-        <div class="modal-content" style="border-top: 4px solid #dc3545; max-width: 900px;"> 
-            <div class="modal-header"> 
-                <h2 style="color: #dc3545;">⚠️ Son Kullanma Tarihi Yaklaşan Kritik Ürünler (≤ 1 Gün)</h2> 
-                <span class="close-modal" onclick="closeSktUrgentModal()">&times;</span> 
-            </div> 
-            <div style="margin-bottom: 15px; font-size: 13px; color: #666;"> 
-                Aşağıdaki listede son kullanma tarihine bugün dahil 1 gün kalan veya süresi dolmak üzere olan malzemeler listelenmektedir. 
-            </div> 
-            <table class="report-table"> 
-                <thead> 
-                    <tr style="background: #f8d7da; color: #842029;"> 
-                        <th>Malzeme Adı</th> 
-                        <th>Bulunduğu Depo</th> 
-                        <th>Mevcut Stok Miktarı</th> 
-                        <th>Kalan Süre</th> 
-                        <th>Son Kullanma Tarihi</th> 
-                    </tr> 
-                </thead> 
-                <tbody id="sktUrgentTableBody"></tbody> 
-            </table> 
-            <div style="margin-top: 20px; text-align: right;"> 
-                <button class="btn-sm-cancel" onclick="closeSktUrgentModal()" style="background: #dc3545;">Kapat</button> 
-            </div> 
-        </div>
+        <div style="margin-bottom: 15px; font-size: 13px; color: #666;"> 
+            Aşağıdaki listede son kullanma tarihine bugün dahil 1 gün kalan veya süresi dolmak üzere olan malzemeler listelenmektedir.
+        </div> 
+        <table class="report-table"> 
+            <thead> 
+                <tr style="background: #f8d7da; color: #842029;"> 
+                    <th>Malzeme Adı</th> 
+                    <th>Bulunduğu Depo</th> 
+                    <th>Mevcut Stok Miktarı</th> 
+                    <th>Kalan Süre</th> 
+                    <th>Son Kullanma Tarihi</th> 
+                </tr> 
+            </thead> 
+            <tbody id="sktUrgentTableBody"></tbody> 
+        </table> 
+        <div style="margin-top: 20px; text-align: right;"> 
+            <button class="btn-sm-cancel" onclick="closeSktUrgentModal()" style="background: #dc3545;">Kapat</button> 
+        </div> 
     </div>
+</div>
 
-    <div class="modal" id="stockActionModal"> 
-        <div class="stock-modal-card"> 
-            <div class="stock-modal-title" id="actionModalTitle">📥 Stok Giriş İşlemi</div> 
-            <form id="stockActionForm"> 
-                <div class="form-group" id="partySktGroup" style="display:none;"> 
-                    <label style="color:#d63384; font-weight:bold;">⚠️ Ürünün Son Kullanma Tarihi (Takvimden Seçin)</label> 
-                    <input type="date" id="actionModalSkt"> 
+<div class="modal" id="stockActionModal"> 
+    <div class="stock-modal-card"> 
+        <div class="stock-modal-title" id="actionModalTitle">📥 Stok Giriş İşlemi</div> 
+        <form id="stockActionForm"> 
+            <div class="form-group" id="partySktGroup" style="display:none;"> 
+                <label style="color:#d63384; font-weight:bold;">⚠️ Ürünün Son Kullanma Tarihi (Takvimden Seçin)</label> 
+                <input type="date" id="actionModalSkt"> 
+            </div> 
+            <div class="form-group"> 
+                <label id="actionQtyLabel">Giriş Yapılacak Miktar</label> 
+                <input type="number" id="actionModalQty" step="0.01" min="0.01" required placeholder="Miktarı yazın"> 
+            </div> 
+            <div class="stock-modal-buttons"> 
+                <button type="button" class="btn-sm-cancel" onclick="closeStockActionModal()">İptal</button> 
+                <button type="submit" class="btn-sm-save">Onayla ve Kaydet</button> 
+            </div> 
+        </form> 
+    </div>
+</div>
+
+<div class="container" id="mainContainer"> 
+    <div id="addProductColumn"> 
+        <div class="card"> 
+            <h3>✨ Yeni Ürün Tanımla</h3> 
+            <form id="addForm"> 
+                <div class="form-group"> 
+                    <label>Ürün Adı</label> 
+                    <input type="text" id="newProdName" placeholder="Örn: Ayçiçek Yağı, Un, Dana Kıyma" required> 
                 </div> 
                 <div class="form-group"> 
-                    <label id="actionQtyLabel">Giriş Yapılacak Miktar</label> 
-                    <input type="number" id="actionModalQty" step="0.01" min="0.01" required placeholder="Miktarı yazın"> 
-                </div> 
-                <div class="stock-modal-buttons"> 
-                    <button type="button" class="btn-sm-cancel" onclick="closeStockActionModal()">İptal</button> 
-                    <button type="submit" class="btn-sm-save">Onayla ve Kaydet</button> 
-                </div> 
-            </form> 
-        </div>
-    </div>
-
-    <div class="container" id="mainContainer"> 
-        <div id="addProductColumn"> 
-            <div class="card"> 
-                <h3 id="formTitle">✨ Yeni Ürün Tanımla</h3> 
-                <form id="addForm"> 
-                    <input type="hidden" id="editProductKey" value=""> 
-                    <div class="form-group"> 
-                        <label>Ürün Adı</label> 
-                        <input type="text" id="newProdName" placeholder="Örn: Ayçiçek Yağı, Un, Dana Kıyma" required> 
-                    </div> 
-                    <div class="form-group"> 
-                        <label>Gireceği Depo Alanı</label> 
-                        <select id="newProdDepot"> 
-                            <option value="KURU GIDA">KURU GIDA</option> 
-                            <option value="ŞARKÜTERİ">ŞARKÜTERİ</option> 
-                            <option value="ET +4">ET +4</option> 
-                            <option value="SEBZE +4">SEBZE +4</option> 
-                            <option value="SEBZE -18">SEBZE -18</option> 
-                            <option value="TATLI +4">TATLI +4</option> 
-                            <option value="TATLI -18">TATLI -18</option> 
-                        </select> 
-                    </div> 
-                    <div class="form-group"> 
-                        <label>Ölçü Birimi</label> 
-                        <select id="newProdUnit"> 
-                            <option value="KG">Kilogram (KG)</option> 
-                            <option value="Litre">Litre (L)</option> 
-                            <option value="Adet">Adet</option> 
-                            <option value="Koli">Koli</option> 
-                        </select> 
-                    </div> 
-                    <div class="form-group" id="initialQtyGroup"> 
-                        <label>Başlangıç Stok Miktarı</label> 
-                        <input type="number" id="newProdQty" step="0.01" min="0" value="0" required> 
-                    </div> 
-                    <div class="form-group"> 
-                        <label>Kritik Eşik Sınırı</label> 
-                        <input type="number" id="newProdLimit" step="0.01" min="0" value="0" required> 
-                    </div> 
-                    <div class="form-group" id="sktFieldGroup"> 
-                        <label>Son Kullanma Tarihi (SKT)</label> 
-                        <input type="date" id="newProdSkt"> 
-                    </div> 
-                    <button type="submit" class="submit-btn" id="submitBtnForm">Sisteme Ürün Ekle</button> 
-                    <button type="button" class="btn-sm-cancel" id="cancelEditBtn" style="display:none; width:100%; margin-top:10px;" onclick="cancelFormEdit()">Düzenlemeyi İptal Et</button> 
-                </form> 
-            </div> 
-            
-            <button class="toggle-panel-btn" onclick="toggleOrderPanel()">📦 Sipariş Oluştur</button> 
-            <div class="card warning-theme sliding-panel" id="orderPanelCard"> 
-                <h3>📧 Malzeme Talep Formu (E-Posta)</h3> 
-                <div class="form-group"> 
-                    <label>Sipariş Verilecek Malzeme (Sistemden)</label> 
-                    <select id="orderProductSelect"> 
-                        <option value="">-- Depodaki Ürünlerden Seçin --</option> 
+                    <label>Gireceği Depo Alanı</label> 
+                    <select id="newProdDepot"> 
+                        <option value="KURU GIDA">KURU GIDA</option> 
+                        <option value="ŞARKÜTERİ">ŞARKÜTERİ</option> 
+                        <option value="ET +4">ET +4</option> 
+                        <option value="SEBZE +4">SEBZE +4</option> 
+                        <option value="SEBZE -18">SEBZE -18</option> 
+                        <option value="TATLI +4">TATLI +4</option> 
+                        <option value="TATLI -18">TATLI -18</option> 
                     </select> 
                 </div> 
                 <div class="form-group"> 
-                    <label>Sipariş Miktarı</label> 
-                    <input type="number" id="orderQty" step="0.01" min="0.01" placeholder="Miktar giriniz"> 
+                    <label>Ölçü Birimi</label> 
+                    <select id="newProdUnit"> 
+                        <option value="KG">Kilogram (KG)</option> 
+                        <option value="Litre">Litre (L)</option> 
+                        <option value="Adet">Adet</option> 
+                        <option value="Koli">Koli</option> 
+                    </select> 
                 </div> 
-                <button type="button" class="btn-add-to-list" onclick="addItemToBasket()">➕ Seçilen Malzemeyi Listeye Ekle</button> 
-                
-                <div class="order-basket-container"> 
-                    <div class="basket-title"> 
-                        <span>📋 Sipariş Edilecek Malzeme Listesi</span> 
-                        <span id="basketCount">(0 Ürün)</span> 
+                <div class="form-group"> 
+                    <label>Başlangıç Stok Miktarı</label> 
+                    <input type="number" id="newProdQty" step="0.01" min="0" value="0" required> 
+                </div> 
+                <div class="form-group"> 
+                    <label>Kritik Eşik Sınırı</label> 
+                    <input type="number" id="newProdLimit" step="0.01" min="0" value="0" required> 
+                </div> 
+                <div class="form-group"> 
+                    <label>Son Kullanma Tarihi (SKT)</label> 
+                    <input type="date" id="newProdSkt"> 
+                </div> 
+                <button type="submit" class="submit-btn">Sisteme Ürün Ekle</button> 
+            </form> 
+        </div> 
+        <button class="toggle-panel-btn" onclick="toggleOrderPanel()">📦 Sipariş Oluştur</button> 
+        <div class="card warning-theme sliding-panel" id="orderPanelCard"> 
+            <h3>📧 Malzeme Talep Formu (E-Posta)</h3> 
+            <div class="form-group"> 
+                <label>Sipariş Verilecek Malzeme (Sistemden)</label> 
+                <select id="orderProductSelect"> 
+                    <option value="">-- Depodaki Ürünlerden Seçin --</option> 
+                </select> 
+            </div> 
+            <div class="form-group"> 
+                <label>Sipariş Miktarı</label> 
+                <input type="number" id="orderQty" step="0.01" min="0.01" placeholder="Miktar giriniz"> 
+            </div>  
+            <button type="button" class="btn-add-to-list" onclick="addItemToBasket()">➕ Seçilen Malzemeyi Listeye Ekle</button> 
+            <div class="order-basket-container"> 
+                <div class="basket-title"> 
+                    <span>📋 Sipariş Edilecek Malzeme Listesi</span> 
+                    <span id="basketCount">(0 Ürün)</span> 
+                </div> 
+                <ul class="basket-list" id="basketListVisual"></ul> 
+                <form id="orderForm"> 
+                    <div class="form-group"> 
+                        <label>Bildirilecek Yönetici E-Posta Adresi</label> 
+                        <input type="email" id="orderEmail" value="bahcelievlermemorialct@gmail.com" readonly style="background-color: #e9ecef; font-weight: bold; color: #495057;"> 
                     </div> 
-                    <ul class="basket-list" id="basketListVisual"></ul> 
-                    <form id="orderForm"> 
-                        <div class="form-group"> 
-                            <label>Bildirilecek Yönetici E-Posta Adresi</label> 
-                            <input type="email" id="orderEmail" value="bahcelievlermemorialct@gmail.com" readonly style="background-color: #e9ecef; font-weight: bold; color: #495057;"> 
-                        </div> 
-                        <div class="form-group"> 
-                            <label>Sipariş Notu / Özel Talep (Opsiyonel)</label> 
-                            <textarea id="orderNotes" placeholder="Örn: Acil ihtiyaçtır, sabah servisine yetişmesi gerekiyor..."></textarea> 
-                        </div> 
-                        <button type="submit" class="order-btn">Tüm Listeyi Sipariş Ver ve Mail Gönder</button> 
-                    </form> 
-                </div> 
+                    <div class="form-group"> 
+                        <label>Sipariş Notu / Özel Talep (Opsiyonel)</label> 
+                        <textarea id="orderNotes" placeholder="Örn: Acil ihtiyaçtır, sabah servisine yetişmesi gerekiyor..."></textarea> 
+                    </div> 
+                    <button type="submit" class="order-btn">Tüm Listeyi Sipariş Ver ve Mail Gönder</button> 
+                </form> 
             </div> 
         </div> 
-
-        <div class="card success-theme"> 
-            <h3>📦 Detaylı Depo Envanter ve Canlı İşlem Paneli</h3> 
-            <div class="filter-wrapper"> 
-                <div class="search-container"> 
-                    <input type="text" id="searchInput" class="search-input" placeholder="🔍 Malzeme adına göre listede hızlı arama yapın..."> 
-                </div> 
-                <div class="date-filter-container"> 
-                    <input type="date" id="dateFilterInput" class="date-input"> 
-                    <button class="btn-clear-date" onclick="clearDateFilter()">❌ Temizle</button> 
-                </div> 
+    </div> 
+    
+    <div class="card success-theme"> 
+        <h3>📦 Detaylı Depo Envanter ve Canlı İşlem Paneli</h3>  
+        <div class="filter-wrapper"> 
+            <div class="search-container"> 
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 Malzeme adına göre listede hızlı arama yapın..."> 
             </div> 
-            
-            <div class="depot-filter-bar"> 
-                <button class="btn-depot-filter active" id="btnDepotAll" onclick="filterByDepot('HEPSİ')">HEPSİ</button> 
-                <button class="btn-depot-filter" onclick="filterByDepot('KURU GIDA')">KURU GIDA</button> 
-                <button class="btn-depot-filter" onclick="filterByDepot('ŞARKÜTERİ')">ŞARKÜTERİ</button> 
-                <button class="btn-depot-filter" onclick="filterByDepot('ET +4')">ET +4</button> 
-                <button class="btn-depot-filter" onclick="filterByDepot('SEBZE +4')">SEBZE +4</button> 
-                <button class="btn-depot-filter" onclick="filterByDepot('SEBZE -18')">SEBZE -18</button> 
-                <button class="btn-depot-filter" onclick="filterByDepot('TATLI +4')">TATLI +4</button> 
-                <button class="btn-depot-filter" onclick="filterByDepot('TATLI -18')">TATLI -18</button> 
+            <div class="date-filter-container"> 
+                <input type="date" id="dateFilterInput" class="date-input"> 
+                <button class="btn-clear-date" onclick="clearDateFilter()">❌ Temizle</button> 
             </div> 
-            
-            <table class="materials-table"> 
-                <thead> 
-                    <tr> 
-                        <th>Malzeme Adı</th> 
-                        <th>Bulunduğu Depo</th> 
-                        <th>Mevcut Stok</th> 
-                        <th>Kritik Sınır</th> 
-                        <th>Son Kullanma Tarihi</th> 
-                        <th>Stok Durumu</th> 
-                        <th>Hızlı İşlemler</th> 
-                    </tr> 
-                </thead> 
-                <tbody id="liveMaterialsBody"></tbody> 
-                <tfoot id="tableTotalFooter"></tfoot> 
-            </table> 
-        </div>
+        </div> 
+        <div class="depot-filter-bar"> 
+            <button class="btn-depot-filter active" id="btnDepotAll" onclick="filterByDepot('HEPSİ')">HEPSİ</button> 
+            <button class="btn-depot-filter" onclick="filterByDepot('KURU GIDA')">KURU GIDA</button> 
+            <button class="btn-depot-filter" onclick="filterByDepot('ŞARKÜTERİ')">ŞARKÜTERİ</button> 
+            <button class="btn-depot-filter" onclick="filterByDepot('ET +4')">ET +4</button> 
+            <button class="btn-depot-filter" onclick="filterByDepot('SEBZE +4')">SEBZE +4</button> 
+            <button class="btn-depot-filter" onclick="filterByDepot('SEBZE -18')">SEBZE -18</button> 
+            <button class="btn-depot-filter" onclick="filterByDepot('TATLI +4')">TATLI +4</button> 
+            <button class="btn-depot-filter" onclick="filterByDepot('TATLI -18')">TATLI -18</button> 
+        </div> 
+        <table class="materials-table"> 
+            <thead> 
+                <tr> 
+                    <th>Malzeme Adı</th> 
+                    <th>Bulunduğu Depo</th> 
+                    <th>Mevcut Stok</th> 
+                    <th>Kritik Sınır</th> 
+                    <th>Son Kullanma Tarihi</th> 
+                    <th>Stok Durumu</th> 
+                    <th>Hızlı İşlemler</th> 
+                </tr> 
+            </thead> 
+            <tbody id="liveMaterialsBody"></tbody> 
+            <tfoot id="tableTotalFooter"></tfoot> 
+        </table> 
     </div>
+</div>
 
-    <div class="modal" id="reportModal"> 
-        <div class="modal-content"> 
-            <div class="modal-header"> 
-                <h2>📋 Tarih ve Saatli Depo İşlem Rapor Geçmişi</h2> 
-                <span class="close-modal" id="closeReportBtn">&times;</span> 
-            </div> 
-            <div class="modal-actions-bar"> 
-                <button class="btn-print-report" onclick="window.print()">🖨️ Raporu Yazdır</button> 
-                <button id="clearAllReportsBtn" class="btn-clear-all-reports" onclick="clearAllReports()">🗑️ Tüm Geçmişi Temizle (Toplu Sil)</button> 
-            </div> 
-            <table class="report-table"> 
-                <thead> 
-                    <tr> 
-                        <th>Tarih / Saat</th> 
-                        <th>İşlemi Yapan</th> 
-                        <th>Ürün Adı</th> 
-                        <th>İşlem Türü</th> 
-                        <th>Miktar / Birim</th> 
-                        <th>Yönetim</th> 
-                    </tr> 
-                </thead> 
-                <tbody id="reportTableBody"></tbody> 
-            </table> 
-        </div>
+<div class="modal" id="reportModal"> 
+    <div class="modal-content"> 
+        <div class="modal-header"> 
+            <h2>📋 Tarih ve Saatli Depo İşlem Rapor Geçmişi</h2> 
+            <span class="close-modal" id="closeReportBtn">&times;</span> 
+        </div> 
+        <div class="modal-actions-bar"> 
+            <button class="btn-print-report" onclick="window.print()">🖨️ Raporu Yazdır</button> 
+            <button id="clearAllReportsBtn" class="btn-clear-all-reports" onclick="clearAllReports()">🗑️ Tüm Geçmişi Temizle (Toplu Sil)</button> 
+        </div> 
+        <table class="report-table"> 
+            <thead> 
+                <tr> 
+                    <th>Tarih / Saat</th> <th>İşlemi Yapan</th> <th>Ürün Adı</th> <th>İşlem Türü</th> <th>Miktar / Birim</th> <th>Yönetim</th> </tr> 
+            </thead> 
+            <tbody id="reportTableBody"></tbody> 
+        </table> 
     </div>
+</div>
 
-    <div class="modal" id="ordersListModal"> 
-        <div class="modal-content" style="border-top: 4px solid #20c997;"> 
-            <div class="modal-header"> 
-                <h2>📦 Gönderilen E-Posta Sipariş Listesi Geçmişi</h2> 
-                <span class="close-modal" id="closeOrdersBtn">&times;</span> 
-            </div> 
-            <div class="modal-actions-bar"> 
-                <button class="btn-print-report" onclick="window.print()">🖨️ Listeyi Yazdır</button> 
-                <button id="clearAllOrdersBtn" class="btn-clear-all-orders" onclick="clearAllOrders()">🗑️ Sipariş Listesini Temizle</button> 
-            </div> 
-            <table class="report-table"> 
-                <thead> 
-                    <tr> 
-                        <th>Sipariş Tarihi</th> 
-                        <th>Siparişi Veren</th> 
-                        <th>Ürün Adı</th> 
-                        <th>Miktar</th> 
-                        <th>Notlar</th> 
-                        <th id="orderActionHeader" style="display:none;">Yönetim</th> 
-                    </tr> 
-                </thead> 
-                <tbody id="ordersTableBody"></tbody> 
-            </table> 
-        </div>
+<div class="modal" id="ordersListModal"> 
+    <div class="modal-content" style="border-top: 4px solid #20c997;"> 
+        <div class="modal-header"> 
+            <h2>📦 Gönderilen E-Posta Sipariş Listesi Geçmişi</h2> 
+            <span class="close-modal" id="closeOrdersBtn">&times;</span> 
+        </div> 
+        <div class="modal-actions-bar"> 
+            <button class="btn-print-report" onclick="window.print()">🖨️ Listeyi Yazdır</button> 
+            <button id="clearAllOrdersBtn" class="btn-clear-all-orders" onclick="clearAllOrders()">🗑️ Sipariş Listesini Temizle</button> 
+        </div> 
+        <table class="report-table"> 
+            <thead> 
+                <tr> 
+                    <th>Sipariş Tarihi</th> <th>Siparişi Veren</th> <th>Ürün Adı</th> <th>Miktar</th> <th>Notlar</th> <th id="orderActionHeader" style="display:none;">Yönetim</th> </tr> 
+            </thead> 
+            <tbody id="ordersTableBody"></tbody> 
+        </table> 
     </div>
+</div>
 
-    <script> 
-        if(localStorage.getItem('isLoggedIn') !== 'true') { 
-            window.location.replace('login.html'); 
+<script> 
+    if(localStorage.getItem('isLoggedIn') !== 'true') { 
+        window.location.replace('login.html');
+    }  
+    
+    emailjs.init("LzIhLTNYH47AasrBj");  
+    
+    const currentRole = (localStorage.getItem('userRole') || 'YÖNETİCİ').toUpperCase(); 
+    document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`; 
+    const mainContainer = document.getElementById('mainContainer');
+    const addProductColumn = document.getElementById('addProductColumn'); 
+    
+    if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') { 
+        if(addProductColumn) { addProductColumn.remove(); } 
+        mainContainer.classList.remove('two-columns');
+    } else { 
+        mainContainer.classList.add('two-columns'); 
+    } 
+    
+    window.toggleOrderPanel = function() { 
+        const panel = document.getElementById('orderPanelCard'); 
+        if(!panel) return;
+        panel.style.display = (panel.style.display === 'block') ? 'none' : 'block'; 
+    }; 
+    
+    function startLiveClock() { 
+        const clockElement = document.getElementById('liveClockDisplay');
+        setInterval(() => { 
+            const now = new Date(); 
+            const dateStr = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' }); 
+            const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); 
+            clockElement.textContent = `📅 ${dateStr} | 🕒 ${timeStr}`; 
+        }, 1000);
+    } 
+    startLiveClock(); 
+    
+    const firebaseConfig = { databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/" }; 
+    firebase.initializeApp(firebaseConfig); 
+    const db = firebase.database(); 
+    let inventory = [];
+    let activeDepotFilter = 'HEPSİ'; 
+    let orderBasket = []; 
+    let currentModalProduct = null; 
+    let currentModalAction = ""; 
+    let isNewPartyWithSkt = false;
+    
+    db.ref('depo_stok').on('value', (snapshot) => { 
+        const rawData = snapshot.val(); 
+        inventory = []; 
+        if (rawData) { 
+            Object.keys(rawData).forEach(key => { 
+                let item = rawData[key]; 
+                if(!item.dbKey || item.dbKey.includes('undefined')) { 
+                    item.dbKey = key; 
+                } 
+                inventory.push(item); 
+            }); 
         } 
-        
-        emailjs.init("LzIhLTNYH47AasrBj"); 
-        
-        const currentRole = (localStorage.getItem('userRole') || 'YÖNETİCİ').toUpperCase(); 
-        document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`; 
-        
-        const mainContainer = document.getElementById('mainContainer'); 
-        const addProductColumn = document.getElementById('addProductColumn'); 
-        
-        if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') { 
-            if(addProductColumn) { addProductColumn.remove(); } 
-            mainContainer.classList.remove('two-columns'); 
-        } else { 
-            mainContainer.classList.add('two-columns'); 
-        } 
-        
-        window.toggleOrderPanel = function() { 
-            const panel = document.getElementById('orderPanelCard'); 
-            if(!panel) return; 
-            panel.style.display = (panel.style.display === 'block') ? 'none' : 'block'; 
-        }; 
-        
-        function startLiveClock() { 
-            const clockElement = document.getElementById('liveClockDisplay'); 
-            setInterval(() => { 
+        checkExpiredProducts(rawData); 
+        updateOrderProductDropdown(); 
+        updateSktAlertBtnState();  
+        renderUi(); 
+    });
+    
+    function getTodayDateString() { 
+        const now = new Date(); 
+        const offset = now.getTimezoneOffset();
+        const localNow = new Date(now.getTime() - (offset * 60 * 1000)); 
+        return localNow.toISOString().split('T')[0]; 
+    } 
+    
+    function checkExpiredProducts(rawData) { 
+        if (!rawData) return;
+        const todayStr = getTodayDateString(); 
+        Object.keys(rawData).forEach((key) => { 
+            const item = rawData[key]; 
+            if (item.skt && item.skt < todayStr) { 
                 const now = new Date(); 
-                const dateStr = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' }); 
-                const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); 
-                clockElement.textContent = `📅 ${dateStr} | 🕒 ${timeStr}`; 
-            }, 1000); 
-        } 
-        startLiveClock(); 
-
-        const firebaseConfig = { databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/" }; 
-        firebase.initializeApp(firebaseConfig); 
-        const db = firebase.database(); 
-
-        let inventory = []; 
-        let activeDepotFilter = 'HEPSİ'; 
-        let orderBasket = []; 
-        let currentModalProduct = null; 
-        let currentModalAction = ""; 
-        let isNewPartyWithSkt = false; 
-        let originalDropdownState = []; 
-
-        db.ref('depo_stok').on('value', (snapshot) => { 
-            const rawData = snapshot.val(); 
-            inventory = []; 
-            if (rawData) { 
-                Object.keys(rawData).forEach(key => { 
-                    let item = rawData[key]; 
-                    if(!item.dbKey || item.dbKey.includes('undefined')) { 
-                        item.dbKey = key; 
-                    } 
-                    inventory.push(item); 
-                }); 
-            } 
-            
-            // Maddde 3: Dropdown yapısı için ilk yükleme durumunu kaydet
-            if (originalDropdownState.length === 0 && inventory.length > 0) { 
-                originalDropdownState = [...inventory].sort((a,b) => a.name.localeCompare(b.name, 'tr')); 
-            } 
-            
-            // Madde 2: Otomatik silme yerine onay mekanizmasını tetikle
-            checkExpiredProducts(rawData); 
-            updateOrderProductDropdown(); 
-            updateSktAlertBtnState(); 
-            renderUi(); 
-        }); 
-
-        function getTodayDateString() { 
-            const now = new Date(); 
-            const offset = now.getTimezoneOffset(); 
-            const localNow = new Date(now.getTime() - (offset * 60 * 1000)); 
-            return localNow.toISOString().split('T')[0]; 
-        } 
-
-        // Madde 2: "Depodan Kaldır İzniyle" Onay Mekanizması
-        function checkExpiredProducts(rawData) { 
-            if (!rawData) return; 
-            const todayStr = getTodayDateString(); 
-            
-            Object.keys(rawData).forEach((key) => { 
-                const item = rawData[key]; 
-                // Zaten bu oturumda kullanıcı tarafından "Atla/İptal" denmişse tekrar sorma
-                if (item.skt && item.skt < todayStr && item.skt_onay_durumu !== 'atlandi') { 
-                    if (confirm(`⚠️ DİKKAT! "${item.name}" ürününün Son Kullanma Tarihi (${item.skt.split('-').reverse().join('.')}) geçmiştir.\n\nBu ürün DEPODAN KALDIR İZNİYLE silinsin mi?`)) { 
-                        const now = new Date(); 
-                        db.ref('depo_rapor').push({ 
-                            time: now.toLocaleString('tr-TR'), 
-                            rawTime: now.toISOString(), 
-                            user: 'SİSTEM (ONAYLI)', 
-                            product: item.name, 
-                            type: 'SKT OTOMATİK SİLME', 
-                            qty: `${item.quantity} ${item.unit}`, 
-                            backupKey: key, 
-                            backupDepot: item.depot || 'KURU GIDA', 
-                            backupUnit: item.unit || 'Adet', 
-                            backupLimit: item.criticalLimit || 0, 
-                            backupSkt: item.skt 
-                        }); 
-                        db.ref('depo_stok/' + key).remove(); 
-                    } else { 
-                        // Kullanıcı iptal ederse veritabanına geçici bir bayrak atarak sonsuz döngüyü engelle
-                        db.ref('depo_stok/' + key + '/skt_onay_durumu').set('atlandi'); 
-                    } 
-                } 
-            }); 
-        } 
-
-        function updateSktAlertBtnState() { 
-            const btn = document.getElementById('sktAlertButton'); 
-            if(!btn) return; 
-            const todayStr = getTodayDateString(); 
-            let urgentCount = 0; 
-            inventory.forEach(item => { 
-                if(item.skt && !item.skt.includes('undefined')) { 
-                    let todayTime = new Date(todayStr).getTime(); 
-                    let sktTime = new Date(item.skt).getTime(); 
-                    let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24)); 
-                    if(diffDays >= 0 && diffDays <= 1) { 
-                        urgentCount++; 
-                    } 
-                } 
-            }); 
-            if(urgentCount > 0) { 
-                btn.textContent = `⚠️ SKT Kritik (${urgentCount} Ürün)`; 
-                btn.style.display = "block"; 
-            } else { 
-                btn.style.display = "none"; 
-            } 
-        } 
-
-        window.openSktUrgentModal = function() { 
-            const modal = document.getElementById('sktUrgentModal'); 
-            const tbody = document.getElementById('sktUrgentTableBody'); 
-            if(!modal || !tbody) return; 
-            tbody.innerHTML = ""; 
-            const todayStr = getTodayDateString(); 
-            let addedCount = 0; 
-            inventory.forEach(item => { 
-                if(item.skt && !item.skt.includes('undefined')) { 
-                    let todayTime = new Date(todayStr).getTime(); 
-                    let sktTime = new Date(item.skt).getTime(); 
-                    let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24)); 
-                    if(diffDays >= 0 && diffDays <= 1) { 
-                        addedCount++; 
-                        const sParts = item.skt.split('-'); 
-                        let timeLabel = diffDays === 0 ? "🚨 BUGÜN SON!" : "⏳ 1 Gün Kaldı!"; 
-                        const tr = document.createElement('tr'); 
-                        tr.innerHTML = ` 
-                            <td><strong>${item.name}</strong></td> 
-                            <td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td> 
-                            <td><strong style="color:#dc3545;">${item.quantity} ${item.unit}</strong></td> 
-                            <td><span class="badge-order" style="background:#f8d7da; font-weight:bold; color:#dc3545;">${timeLabel}</span></td> 
-                            <td><span class="skt-badge skt-expired" style="text-decoration:none; color: #dc3545;">📅 ${sParts[2]}.${sParts[1]}.${sParts[0]}</span></td> 
-                        `; 
-                        tbody.appendChild(tr); 
-                    } 
-                } 
-            }); 
-            if(addedCount === 0) { 
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:green; padding:20px; font-weight:bold;">🟢 Şu anda son kullanma tarihi kritik seviyede olan bir ürün bulunmuyor.</td></tr>`; 
-            } 
-            modal.style.display = "flex"; 
-        }; 
-
-        window.closeSktUrgentModal = function() { 
-            document.getElementById('sktUrgentModal').style.display = "none"; 
-        }; 
-
-        // Madde 3: Dropdown Elemanlarının İlk Haliyle Korunması
-        function updateOrderProductDropdown() { 
-            const selectEl = document.getElementById('orderProductSelect'); 
-            if(!selectEl) return; 
-            const currentSelected = selectEl.value; 
-            selectEl.innerHTML = '<option value="">-- Depodaki Ürünlerden Seçin --</option>'; 
-            
-            const listToUse = originalDropdownState.length > 0 ? originalDropdownState : [...inventory].sort((a,b) => a.name.localeCompare(b.name, 'tr')); 
-            listToUse.forEach(item => { 
-                const liveItem = inventory.find(i => i.dbKey === item.dbKey) || item; 
-                const opt = document.createElement('option'); 
-                let labelText = liveItem.name; 
-                if(liveItem.skt && !liveItem.skt.includes('undefined')) { 
-                    const p = liveItem.skt.split('-'); 
-                    labelText += ` (SKT: ${p[2]}.${p[1]}.${p[0]})`; 
-                } 
-                opt.value = liveItem.dbKey || liveItem.name; 
-                opt.textContent = `${labelText} (Mevcut: ${liveItem.quantity} ${liveItem.unit})`; 
-                selectEl.appendChild(opt); 
-            }); 
-            if(currentSelected) selectEl.value = currentSelected; 
-        } 
-
-        window.addItemToBasket = function() { 
-            const selectEl = document.getElementById('orderProductSelect'); 
-            const qtyInput = document.getElementById('orderQty'); 
-            const prodKey = selectEl.value; 
-            const qty = parseFloat(qtyInput.value); 
-            if(!prodKey) { 
-                alert("Lütfen listeden bir malzeme seçin!"); 
-                return; 
-            } 
-            if(isNaN(qty) || qty <= 0) { 
-                alert("Lütfen geçerli bir sipariş miktarı girin!"); 
-                return; 
-            } 
-            const item = inventory.find(i => (i.dbKey === prodKey || i.name === prodKey)); 
-            if(!item) return; 
-            const displayName = (item.skt && !item.skt.includes('undefined')) ? `${item.name} (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})` : item.name; 
-            const existingIndex = orderBasket.findIndex(b => b.key === (item.dbKey || item.name)); 
-            if(existingIndex > -1) { 
-                orderBasket[existingIndex].qty = parseFloat((orderBasket[existingIndex].qty + qty).toFixed(2)); 
-            } else { 
-                orderBasket.push({ key: (item.dbKey || item.name), name: displayName, qty: qty, unit: item.unit }); 
-            } 
-            qtyInput.value = ""; 
-            selectEl.value = ""; 
-            renderBasketVisual(); 
-        }; 
-
-        window.removeItemFromBasket = function(index) { 
-            orderBasket.splice(index, 1); 
-            renderBasketVisual(); 
-        }; 
-
-        function renderBasketVisual() { 
-            const ul = document.getElementById('basketListVisual'); 
-            const countSpan = document.getElementById('basketCount'); 
-            if(!ul || !countSpan) return; 
-            ul.innerHTML = ""; 
-            countSpan.textContent = `(${orderBasket.length} Ürün)`; 
-            if(orderBasket.length === 0) { 
-                ul.innerHTML = '<li style="text-align:center; color:#aaa; font-size:12px; padding:10px;">Liste boş. Yukarıdan ürün ekleyin.</li>'; 
-                return; 
-            } 
-            orderBasket.forEach((item, index) => { 
-                const li = document.createElement('li'); 
-                li.className = "basket-item"; 
-                li.innerHTML = ` 
-                    <span>📦 <b>${item.name}</b></span> 
-                    <span>${item.qty} ${item.unit} <button class="btn-remove-basket-item" onclick="removeItemFromBasket(${index})">×</button></span> 
-                `; 
-                ul.appendChild(li); 
-            }); 
-        } 
-
-        function renderUi() { 
-            const tbody = document.getElementById('liveMaterialsBody'); 
-            const tfoot = document.getElementById('tableTotalFooter'); 
-            if(!tbody) return; 
-            const filterText = document.getElementById('searchInput').value.toLowerCase(); 
-            const selectedDate = document.getElementById('dateFilterInput').value; 
-            tbody.innerHTML = ''; 
-            tfoot.innerHTML = ''; 
-            const todayStr = getTodayDateString(); 
-            
-            let filteredInventory = inventory.filter(item => { 
-                let matchesSearch = item.name.toLowerCase().includes(filterText); 
-                let matchesDate = selectedDate ? (item.lastUpdatedDate === selectedDate) : true; 
-                let matchesDepot = (activeDepotFilter === 'HEPSİ' || item.depot === activeDepotFilter); 
-                return matchesSearch && matchesDepot && matchesDate; 
-            }); 
-            
-            if(filteredInventory.length === 0) { 
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#888; padding:20px;">Seçili kriterlere uygun malzeme bulunamadı.</td></tr>'; 
-                return; 
-            } 
-            
-            let totalsByUnit = {}; 
-            filteredInventory.forEach((item) => { 
-                if(item.criticalLimit === undefined) item.criticalLimit = 0; 
-                let itemUnit = item.unit || "Adet"; 
-                let itemQty = parseFloat(item.quantity) || 0; 
-                if(!totalsByUnit[itemUnit]) { 
-                    totalsByUnit[itemUnit] = 0; 
-                } 
-                totalsByUnit[itemUnit] += itemQty; 
-                
-                let statusHtml = ""; 
-                if(item.quantity > item.criticalLimit) { 
-                    statusHtml = `<span class="status-badge status-safe">Safe (Güvenli)</span>`; 
-                } else { 
-                    statusHtml = `<span class="status-badge status-critical">Critical (Kritik Eşik)</span>`; 
-                } 
-                
-                let sktHtml = `<span class="skt-badge skt-none">Yok</span>`; 
-                if(item.skt && !item.skt.includes('undefined')) { 
-                    const parts = item.skt.split('-'); 
-                    const formattedSkt = `${parts[2]}.${parts[1]}.${parts[0]}`; 
-                    if(item.skt < todayStr) { 
-                        sktHtml = `<span class="skt-badge skt-expired">📅 ${formattedSkt} (Süresi Doldu)</span>`; 
-                    } else { 
-                        sktHtml = `<span class="skt-badge skt-ok">📅 ${formattedSkt}</span>`; 
-                    } 
-                } 
-                
-                let actionButtonsHtml = ""; 
-                // Madde 1: Hızlı işlemler sekmesine Düzenle (.btn-edit-stock) butonu eklendi
-                if(currentRole === 'YÖNETİCİ' || currentRole === 'DEPO') { 
-                    actionButtonsHtml = ` 
-                        <button class="action-btn btn-add-stock" onclick="openStockActionModal('${item.dbKey}', 'GİRİŞ')">Stok Giriş</button> 
-                        <button class="action-btn btn-drop-stock" onclick="openStockActionModal('${item.dbKey}', 'DÜŞÜŞ')">Stok Düş</button> 
-                        <button class="action-btn btn-waste-stock" onclick="openStockActionModal('${item.dbKey}', 'İMHA')">İmha Et</button> 
-                        <button class="action-btn btn-edit-stock" onclick="populateFormForEdit('${item.dbKey}')">Düzenle</button> 
-                        <button class="action-btn btn-del-stock" onclick="deleteEntireProduct('${item.dbKey}')">Kayıt Sil</button> 
-                    `; 
-                } else if(currentRole === 'ÜRETİM') { 
-                    actionButtonsHtml = ` 
-                        <button class="action-btn btn-drop-stock" onclick="openStockActionModal('${item.dbKey}', 'DÜŞÜŞ')">Stok Düş</button> 
-                        <button class="action-btn btn-waste-stock" onclick="openStockActionModal('${item.dbKey}', 'İMHA')">İmha Et</button> 
-                    `; 
-                } else { 
-                    actionButtonsHtml = `<i style="color:#aaa; font-size:12px;">Yetki Yok</i>`; 
-                } 
-                
-                const tr = document.createElement('tr'); 
-                tr.innerHTML = ` 
-                    <td><strong>${item.name}</strong><span class="date-tag">Son İşlem: ${item.lastUpdated || '-'}</span></td> 
-                    <td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td> 
-                    <td><strong style="font-size:15px;">${item.quantity}</strong> <small>${itemUnit}</small></td> 
-                    <td>${item.criticalLimit} <small>${itemUnit}</small></td> 
-                    <td>${sktHtml}</td> 
-                    <td>${statusHtml}</td> 
-                    <td><div class="action-btns">${actionButtonsHtml}</div></td> 
-                `; 
-                tbody.appendChild(tr); 
-            }); 
-            
-            let tfootHtml = `<tr class="total-row"><td colspan="2" style="text-align:right;">TOPLAM MEVCUT STOKLAR:</td><td colspan="5">`; 
-            Object.keys(totalsByUnit).forEach((unit, idx) => { 
-                if(idx > 0) tfootHtml += " | "; 
-                tfootHtml += `<span><b>${totalsByUnit[unit].toFixed(2)}</b> ${unit}</span>`; 
-            }); 
-            tfootHtml += `</td></tr>`; 
-            tfoot.innerHTML = tfootHtml; 
-        } 
-
-        window.filterByDepot = function(depotName) { 
-            activeDepotFilter = depotName; 
-            document.querySelectorAll('.btn-depot-filter').forEach(btn => { 
-                btn.classList.remove('active'); 
-                if(btn.textContent === depotName) btn.classList.add('active'); 
-            }); 
-            if(depotName === 'HEPSİ') { 
-                document.getElementById('btnDepotAll').classList.add('active'); 
-            } 
-            renderUi(); 
-        }; 
-
-        window.clearDateFilter = function() { 
-            document.getElementById('dateFilterInput').value = ""; 
-            renderUi(); 
-        }; 
-
-        document.getElementById('searchInput').addEventListener('input', renderUi); 
-        document.getElementById('dateFilterInput').addEventListener('change', renderUi); 
-
-        // Madde 1: Formu düzenleme moduna getiren tetikleyici fonksiyon
-        window.populateFormForEdit = function(dbKey) { 
-            const item = inventory.find(i => i.dbKey === dbKey); 
-            if(!item) return; 
-            document.getElementById('editProductKey').value = dbKey; 
-            document.getElementById('newProdName').value = item.name; 
-            document.getElementById('newProdDepot').value = item.depot || 'KURU GIDA'; 
-            document.getElementById('newProdUnit').value = item.unit || 'KG'; 
-            document.getElementById('newProdLimit').value = item.criticalLimit || 0; 
-            if(item.skt) { 
-                document.getElementById('newProdSkt').value = item.skt; 
-            } else { 
-                document.getElementById('newProdSkt').value = ""; 
-            } 
-            document.getElementById('formTitle').textContent = "✏️ Ürün Bilgilerini Düzenle"; 
-            document.getElementById('submitBtnForm').textContent = "Değişiklikleri Kaydet"; 
-            document.getElementById('submitBtnForm').style.background = "#0dcaf0"; 
-            document.getElementById('submitBtnForm').style.color = "#212529"; 
-            document.getElementById('initialQtyGroup').style.display = "none"; 
-            document.getElementById('cancelEditBtn').style.display = "block"; 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
-        }; 
-
-        window.cancelFormEdit = function() { 
-            document.getElementById('editProductKey').value = ""; 
-            document.getElementById('addForm').reset(); 
-            document.getElementById('formTitle').textContent = "✨ Yeni Ürün Tanımla"; 
-            document.getElementById('submitBtnForm').textContent = "Sisteme Ürün Ekle"; 
-            document.getElementById('submitBtnForm').style.background = "#198754"; 
-            document.getElementById('submitBtnForm').style.color = "white"; 
-            document.getElementById('initialQtyGroup').style.display = "block"; 
-            document.getElementById('cancelEditBtn').style.display = "none"; 
-        }; 
-
-        document.getElementById('addForm').addEventListener('submit', (e) => { 
-            e.preventDefault(); 
-            const editKey = document.getElementById('editProductKey').value; 
-            const pName = document.getElementById('newProdName').value.trim(); 
-            const pDepot = document.getElementById('newProdDepot').value; 
-            const pUnit = document.getElementById('newProdUnit').value; 
-            const pLimit = parseFloat(document.getElementById('newProdLimit').value) || 0; 
-            const pSkt = document.getElementById('newProdSkt').value; 
-            const nowStr = new Date().toLocaleString('tr-TR'); 
-            
-            if(editKey) { 
-                db.ref('depo_stok/' + editKey).update({ 
-                    name: pName, 
-                    depot: pDepot, 
-                    unit: pUnit, 
-                    criticalLimit: pLimit, 
-                    skt: pSkt, 
-                    lastUpdated: nowStr 
-                }).then(() => { 
-                    alert("Ürün başarıyla güncellendi."); 
-                    cancelFormEdit(); 
-                }); 
-            } else { 
-                const pQty = parseFloat(document.getElementById('newProdQty').value) || 0; 
-                const newRef = db.ref('depo_stok').push(); 
-                const todayDate = getTodayDateString(); 
-                newRef.set({ 
-                    dbKey: newRef.key, 
-                    name: pName, 
-                    depot: pDepot, 
-                    unit: pUnit, 
-                    quantity: pQty, 
-                    criticalLimit: pLimit, 
-                    skt: pSkt, 
-                    lastUpdated: nowStr, 
-                    lastUpdatedDate: todayDate 
-                }).then(() => { 
-                    db.ref('depo_rapor').push({ 
-                        time: nowStr, 
-                        rawTime: new Date().toISOString(), 
-                        user: currentRole, 
-                        product: pName, 
-                        type: 'YENİ ÜRÜN TANIMLAMA', 
-                        qty: `${pQty} ${pUnit}` 
-                    }); 
-                    alert("Yeni ürün envantere eklendi."); 
-                    document.getElementById('addForm').reset(); 
-                }); 
-            } 
-        }); 
-
-        window.deleteEntireProduct = function(dbKey) { 
-            if(currentRole !== 'YÖNETİCİ' && currentRole !== 'DEPO') return; 
-            const item = inventory.find(i => i.dbKey === dbKey); 
-            if(!item) return; 
-            if(confirm(`"${item.name}" ürününü ve tüm stok geçmişini kalıcı olarak silmek istediğinize emin misiniz?`)) { 
-                const nowStr = new Date().toLocaleString('tr-TR'); 
                 db.ref('depo_rapor').push({ 
-                    time: nowStr, 
-                    rawTime: new Date().toISOString(), 
-                    user: currentRole, 
-                    product: item.name, 
-                    type: 'ÜRÜN TAMAMEN SİLİNDİ', 
-                    qty: `${item.quantity} ${item.unit}` 
-                }); 
-                db.ref('depo_stok/' + dbKey).remove().then(() => alert("Ürün envanterden silindi.")); 
-            } 
-        }; 
-
-        window.openStockActionModal = function(dbKey, actionType) { 
-            currentModalProduct = inventory.find(i => i.dbKey === dbKey); 
-            if(!currentModalProduct) return; 
-            currentModalAction = actionType; 
-            isNewPartyWithSkt = false; 
-            
-            const titleEl = document.getElementById('actionModalTitle'); 
-            const qtyLabel = document.getElementById('actionQtyLabel'); 
-            const sktGroup = document.getElementById('partySktGroup'); 
-            const qtyInput = document.getElementById('actionModalQty'); 
-            const sktInput = document.getElementById('actionModalSkt'); 
-            
-            qtyInput.value = ""; 
-            sktInput.value = ""; 
-            
-            if(actionType === 'GİRİŞ') { 
-                titleEl.textContent = `📥 Stok Girişi: ${currentModalProduct.name}`; 
-                qtyLabel.textContent = "Giriş Yapılacak Miktar"; 
-                if(currentModalProduct.skt) { 
-                    sktGroup.style.display = "none"; 
-                } else { 
-                    sktGroup.style.display = "block"; 
-                    isNewPartyWithSkt = true; 
-                } 
-            } else if(actionType === 'DÜŞÜŞ') { 
-                titleEl.textContent = `📤 Stok Düşüşü: ${currentModalProduct.name}`; 
-                qtyLabel.textContent = "Düşülecek Miktar (Mevcut: " + currentModalProduct.quantity + ")"; 
-                sktGroup.style.display = "none"; 
-            } else if(actionType === 'İMHA') { 
-                titleEl.textContent = `🗑️ Ürün İmhası: ${currentModalProduct.name}`; 
-                qtyLabel.textContent = "İmha Edilecek Miktar (Mevcut: " + currentModalProduct.quantity + ")"; 
-                sktGroup.style.display = "none"; 
-            } 
-            document.getElementById('stockActionModal').style.display = "flex"; 
-        }; 
-
-        window.closeStockActionModal = function() { 
-            document.getElementById('stockActionModal').style.display = "none"; 
-        }; 
-
-        document.getElementById('stockActionForm').addEventListener('submit', (e) => { 
-            e.preventDefault(); 
-            if(!currentModalProduct) return; 
-            const inputQty = parseFloat(document.getElementById('actionModalQty').value); 
-            const inputSkt = document.getElementById('actionModalSkt').value; 
-            
-            if(isNaN(inputQty) || inputQty <= 0) { 
-                alert("Geçerli bir miktar giriniz!"); 
-                return; 
-            } 
-            
-            let currentQty = parseFloat(currentModalProduct.quantity) || 0; 
-            let newQty = currentQty; 
-            const now = new Date(); 
-            const nowStr = now.toLocaleString('tr-TR'); 
-            const todayDate = getTodayDateString(); 
-            
-            if(currentModalAction === 'GİRİŞ') { 
-                if(isNewPartyWithSkt && inputSkt) { 
-                    const newRef = db.ref('depo_stok').push(); 
-                    newRef.set({ 
-                        dbKey: newRef.key, 
-                        name: currentModalProduct.name, 
-                        depot: currentModalProduct.depot || 'KURU GIDA', 
-                        unit: currentModalProduct.unit || 'KG', 
-                        quantity: inputQty, 
-                        criticalLimit: currentModalProduct.criticalLimit || 0, 
-                        skt: inputSkt, 
-                        lastUpdated: nowStr, 
-                        lastUpdatedDate: todayDate 
-                    }).then(() => { 
-                        db.ref('depo_rapor').push({ 
-                            time: nowStr, 
-                            rawTime: now.toISOString(), 
-                            user: currentRole, 
-                            product: currentModalProduct.name, 
-                            type: 'YENI PARTI GİRİŞİ (SKT)', 
-                            qty: `${inputQty} ${currentModalProduct.unit}` 
-                        }); 
-                        alert("Farklı SKT'li yeni parti başarıyla oluşturuldu."); 
-                        closeStockActionModal(); 
-                    }); 
-                    return; 
-                } else { 
-                    newQty = parseFloat((currentQty + inputQty).toFixed(2)); 
-                } 
-            } else { 
-                if(inputQty > currentQty) { 
-                    alert("Hata: Depoda bu miktarda ürün yok! En fazla " + currentQty + " düşüş yapabilirsiniz."); 
-                    return; 
-                } 
-                newQty = parseFloat((currentQty - inputQty).toFixed(2)); 
-            } 
-            
-            let updatePayload = { quantity: newQty, lastUpdated: nowStr, lastUpdatedDate: todayDate }; 
-            // Eğer daha önceden 'atlandi' bayrağı varsa stok hareketi gördüğü için bunu sıfırlayalım ki SKT kontrolü taze kalsın
-            if(currentModalProduct.skt_onay_durumu) {
-                updatePayload.skt_onay_durumu = null;
-            }
-
-            db.ref('depo_stok/' + currentModalProduct.dbKey).update(updatePayload).then(() => { 
-                db.ref('depo_rapor').push({ 
-                    time: nowStr, 
+                    time: now.toLocaleString('tr-TR'), 
                     rawTime: now.toISOString(), 
-                    user: currentRole, 
-                    product: currentModalProduct.name, 
-                    type: currentModalAction, 
-                    qty: `${inputQty} ${currentModalProduct.unit}` 
+                    user: 'SİSTEM', 
+                    product: item.name, 
+                    type: 'SKT OTOMATİK SİLME', 
+                    qty: `${item.quantity} ${item.unit}`, 
+                    backupKey: key, 
+                    backupDepot: item.depot || 'KURU GIDA', 
+                    backupUnit: item.unit || 'Adet', 
+                    backupLimit: item.criticalLimit || 0, 
+                    backupSkt: item.skt 
                 }); 
-                alert("İşlem başarıyla kaydedildi."); 
-                closeStockActionModal(); 
-            }); 
+                db.ref('depo_stok/' + key).remove(); 
+            } 
+        });
+    } 
+    
+    function updateSktAlertBtnState() { 
+        const btn = document.getElementById('sktAlertButton'); 
+        if(!btn) return; 
+        const todayStr = getTodayDateString(); 
+        let urgentCount = 0;
+        inventory.forEach(item => { 
+            if(item.skt && !item.skt.includes('undefined')) { 
+                let todayTime = new Date(todayStr).getTime(); 
+                let sktTime = new Date(item.skt).getTime(); 
+                let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24)); 
+                if(diffDays >= 0 && diffDays <= 1) { 
+                    urgentCount++; 
+                } 
+            } 
+        });
+        if(urgentCount > 0) { 
+            btn.textContent = `⚠️ SKT Kritik (${urgentCount} Ürün)`; 
+            btn.style.display = "block"; 
+        } else { 
+            btn.style.display = "none";
+        } 
+    } 
+    
+    window.openSktUrgentModal = function() { 
+        const modal = document.getElementById('sktUrgentModal'); 
+        const tbody = document.getElementById('sktUrgentTableBody'); 
+        if(!modal || !tbody) return;
+        tbody.innerHTML = ""; 
+        const todayStr = getTodayDateString(); 
+        let addedCount = 0;
+        inventory.forEach(item => { 
+            if(item.skt && !item.skt.includes('undefined')) { 
+                let todayTime = new Date(todayStr).getTime(); 
+                let sktTime = new Date(item.skt).getTime(); 
+                let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24)); 
+                if(diffDays >= 0 && diffDays <= 1) { 
+                    addedCount++; 
+                    const sParts = item.skt.split('-'); 
+                    let timeLabel = diffDays === 0 ? "🚨 BUGÜN SON!" : "⏳ 1 Gün Kaldı!"; 
+                    const tr = document.createElement('tr'); 
+                    tr.innerHTML = ` 
+                        <td><strong>${item.name}</strong></td> 
+                        <td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td> 
+                        <td><strong style="color:#dc3545;">${item.quantity} ${item.unit}</strong></td> 
+                        <td><span class="badge-order" style="background:#f8d7da; font-weight:bold; color:#dc3545;">${timeLabel}</span></td> 
+                        <td><span class="skt-badge skt-expired" style="text-decoration:none; color: #dc3545;">📅 ${sParts[2]}.${sParts[1]}.${sParts[0]}</span></td> `; 
+                    tbody.appendChild(tr); 
+                } 
+            } 
+        });
+        if(addedCount === 0) { 
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:green; padding:20px; font-weight:bold;">🟢 Şu anda son kullanma tarihi kritik seviyede olan bir ürün bulunmuyor.</td></tr>`;
+        } 
+        modal.style.display = "flex"; 
+    }; 
+    
+    window.closeSktUrgentModal = function() { 
+        document.getElementById('sktUrgentModal').style.display = "none"; 
+    }; 
+    
+    function updateOrderProductDropdown() { 
+        const selectEl = document.getElementById('orderProductSelect');
+        if(!selectEl) return; 
+        const currentSelected = selectEl.value; 
+        selectEl.innerHTML = '<option value="">-- Depodaki Ürünlerden Seçin --</option>';
+        let sortedInv = [...inventory].sort((a,b) => a.name.localeCompare(b.name, 'tr')); 
+        sortedInv.forEach(item => { 
+            const opt = document.createElement('option'); 
+            let labelText = item.name; 
+            if(item.skt && !item.skt.includes('undefined')) { 
+                const p = item.skt.split('-'); 
+                labelText += ` (SKT: ${p[2]}.${p[1]}.${p[0]})`; 
+            } 
+            opt.value = item.dbKey || item.name; 
+            opt.textContent = `${labelText} (Mevcut: ${item.quantity} ${item.unit})`; 
+            selectEl.appendChild(opt); 
+        });
+        if(currentSelected) selectEl.value = currentSelected; 
+    } 
+    
+    window.addItemToBasket = function() { 
+        const selectEl = document.getElementById('orderProductSelect'); 
+        const qtyInput = document.getElementById('orderQty');
+        const prodKey = selectEl.value; 
+        const qty = parseFloat(qtyInput.value); 
+        if(!prodKey) { 
+            alert("Lütfen listeden bir malzeme seçin!"); 
+            return;
+        } 
+        if(isNaN(qty) || qty <= 0) { 
+            alert("Lütfen geçerli bir sipariş miktarı girin!"); 
+            return;
+        } 
+        const item = inventory.find(i => (i.dbKey === prodKey || i.name === prodKey)); 
+        if(!item) return;
+        const displayName = (item.skt && !item.skt.includes('undefined')) ? `${item.name} (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})` : item.name;
+        const existingIndex = orderBasket.findIndex(b => b.key === (item.dbKey || item.name)); 
+        if(existingIndex > -1) { 
+            orderBasket[existingIndex].qty = parseFloat((orderBasket[existingIndex].qty + qty).toFixed(2));
+        } else { 
+            orderBasket.push({ key: (item.dbKey || item.name), name: displayName, qty: qty, unit: item.unit }); 
+        } 
+        qtyInput.value = "";
+        selectEl.value = ""; 
+        renderBasketVisual(); 
+    }; 
+    
+    window.removeItemFromBasket = function(index) { 
+        orderBasket.splice(index, 1); 
+        renderBasketVisual(); 
+    }; 
+    
+    function renderBasketVisual() { 
+        const ul = document.getElementById('basketListVisual');
+        const countSpan = document.getElementById('basketCount'); 
+        if(!ul || !countSpan) return; 
+        ul.innerHTML = ""; 
+        countSpan.textContent = `(${orderBasket.length} Ürün)`;
+        if(orderBasket.length === 0) { 
+            ul.innerHTML = '<li style="text-align:center; color:#aaa; font-size:12px; padding:10px;">Liste boş. Yukarıdan ürün ekleyin.</li>'; 
+            return;
+        } 
+        orderBasket.forEach((item, index) => { 
+            const li = document.createElement('li'); 
+            li.className = "basket-item"; 
+            li.innerHTML = ` <span>📦 <b>${item.name}</b></span> <span>${item.qty} ${item.unit} <button class="btn-remove-basket-item" onclick="removeItemFromBasket(${index})">&times;</button></span> `; 
+            ul.appendChild(li); 
+        });
+    } 
+    
+    function renderUi() { 
+        const tbody = document.getElementById('liveMaterialsBody'); 
+        const tfoot = document.getElementById('tableTotalFooter'); 
+        if(!tbody) return; 
+        const filterText = document.getElementById('searchInput').value.toLowerCase();
+        const selectedDate = document.getElementById('dateFilterInput').value; 
+        tbody.innerHTML = ''; 
+        tfoot.innerHTML = '';  
+        const todayStr = getTodayDateString();
+        let filteredInventory = inventory.filter(item => { 
+            let matchesSearch = item.name.toLowerCase().includes(filterText); 
+            let matchesDate = selectedDate ? (item.lastUpdatedDate === selectedDate) : true; 
+            let matchesDepot = (activeDepotFilter === 'HEPSİ' || item.depot === activeDepotFilter); 
+            return matchesSearch && matchesDepot && matchesDate; 
+        });
+        if(filteredInventory.length === 0) { 
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#888; padding:20px;">Seçili kriterlere uygun malzeme bulunamadı.</td></tr>'; 
+            return;
+        } 
+        let totalsByUnit = {}; 
+        filteredInventory.forEach((item) => { 
+            if(item.criticalLimit === undefined) item.criticalLimit = 0;  
+            let itemUnit = item.unit || "Adet"; 
+            let itemQty = parseFloat(item.quantity) || 0; 
+            if(!totalsByUnit[itemUnit]) { totalsByUnit[itemUnit] = 0; } 
+            totalsByUnit[itemUnit] += itemQty; 
+            let statusHtml = ""; 
+            if(item.quantity > item.criticalLimit) {  
+                statusHtml = `<span class="status-badge status-safe">🟢 Güvenli</span>`; 
+            } else {  
+                statusHtml = `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`; 
+            } 
+            let displayDate = "---"; 
+            if(item.lastUpdatedDate) { 
+                const parts = item.lastUpdatedDate.split('-'); 
+                if(parts.length === 3) displayDate = `${parts[2]}.${parts[1]}.${parts[0]}`; 
+            } 
+            let sktHtml = `<span class="skt-badge skt-none">Belirtilmedi</span>`; 
+            if(item.skt) { 
+                if(item.skt.includes('undefined')) { 
+                    sktHtml = `<span class="skt-badge skt-expired" style="background:#fff3cd; color:#856404;">⚠️ Geçersiz Format</span>`; 
+                } else { 
+                    const sParts = item.skt.split('-');
+                    if(item.skt < todayStr) { 
+                        sktHtml = `<span class="skt-badge skt-expired">❌ ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>`; 
+                    } else { 
+                        sktHtml = `<span class="skt-badge skt-ok">📅 ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>`;
+                    } 
+                } 
+            } 
+            let itemUniqueId = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
+            let buttonsHtml = ''; 
+            if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') { 
+                buttonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>`;
+            } else if (currentRole === 'DEPO') { 
+                buttonsHtml = ` <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button> `;
+            } else {  
+                buttonsHtml = ` <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button> <button class="action-btn btn-del-stock" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button> `;
+            } 
+            const tr = document.createElement('tr'); 
+            tr.innerHTML = ` 
+                <td><strong>${item.name}</strong><span class="date-tag">Gnc: ${displayDate}</span></td> 
+                <td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td> 
+                <td><strong>${item.quantity} ${item.unit}</strong></td> 
+                <td><strong>${item.criticalLimit} ${item.unit}</strong></td> 
+                <td>${sktHtml}</td> 
+                <td>${statusHtml}</td> 
+                <td class="action-btns">${buttonsHtml}</td> `; 
+            tbody.appendChild(tr); 
         }); 
-
-        document.getElementById('orderForm').addEventListener('submit', (e) => { 
-            e.preventDefault(); 
-            if(orderBasket.length === 0) { 
-                alert("Sepetiniz boş! Önce yukarıdan listeye malzeme ekleyin."); 
+        let totalStrings = [];
+        for (const [unit, sum] of Object.entries(totalsByUnit)) { 
+            totalStrings.push(`${sum.toFixed(2)} ${unit}`); 
+        }  
+        const footTr = document.createElement('tr'); 
+        footTr.className = "total-row";
+        footTr.innerHTML = ` <td colspan="2" style="text-align: right;">🧮 FİLTRELENEN TOPLAM:</td> <td colspan="5">${totalStrings.join(' | ')}</td> `; 
+        tfoot.appendChild(footTr);
+    } 
+    
+    window.openStockModal = function(uniqueId, action) { 
+        const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId)); 
+        if(!item) return;
+        currentModalProduct = item; 
+        currentModalAction = action; 
+        isNewPartyWithSkt = false; 
+        const modal = document.getElementById('stockActionModal'); 
+        const title = document.getElementById('actionModalTitle');
+        const qtyLabel = document.getElementById('actionQtyLabel'); 
+        const sktGroup = document.getElementById('partySktGroup');  
+        document.getElementById('stockActionForm').reset(); 
+        sktGroup.style.display = "none";
+        if(action === 'in') { 
+            title.textContent = `📥 ${item.name} - Stok Ekleme`; 
+            qtyLabel.textContent = `Giriş Yapılacak Miktar (${item.unit})`;
+            const changeSkt = confirm(`Mevcut Satır: ${item.name}\n\nBu giriş için Son Kullanma Tarihini güncellemek veya yeni tarih atamak istiyor musunuz?\n\n(Tarih belirlemek için 'Tamam'a, mevcut tarihe sadece miktar eklemek için 'İptal'e basın)`);
+            if(changeSkt) { 
+                isNewPartyWithSkt = true; 
+                sktGroup.style.display = "block"; 
+                title.textContent = `✨ ${item.name} - Stok Girişi & SKT Atama`;
+            } 
+        } else if(action === 'out') { 
+            title.textContent = `📤 ${item.name} - Stok Düşme`; 
+            qtyLabel.textContent = `Düşülecek Miktar (${item.unit})`;
+        } else if(action === 'waste') { 
+            title.textContent = `💥 ${item.name} - İmha / Fire`; 
+            qtyLabel.textContent = `İmha Edilecek Miktar (${item.unit})`;
+        } 
+        modal.style.display = "flex"; 
+    }; 
+    
+    window.closeStockActionModal = function() { 
+        document.getElementById('stockActionModal').style.display = "none"; 
+        currentModalProduct = null; 
+    };
+    
+    document.getElementById('stockActionForm').addEventListener('submit', function(e) { 
+        e.preventDefault(); 
+        if(!currentModalProduct) return; 
+        const item = currentModalProduct; 
+        const qty = parseFloat(document.getElementById('actionModalQty').value); 
+        let reportLabel = currentModalAction === 'in' ? 'GİRİŞ' : (currentModalAction === 'out' ? 'ÇIKIŞ' : 'İMHA'); 
+        if(isNaN(qty) || qty <= 0) { 
+            alert("Geçerli bir miktar giriniz!"); 
+            return; 
+        } 
+        let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, ""); 
+        if (currentModalAction === 'in' && isNewPartyWithSkt) { 
+            const newSktVal = document.getElementById('actionModalSkt').value; 
+            if(!newSktVal || newSktVal.includes('undefined')) { 
+                alert("Lütfen takvimden geçerli bir Son Kullanma Tarihi seçin!"); 
                 return; 
             } 
-            const notes = document.getElementById('orderNotes').value.trim(); 
-            const now = new Date(); 
-            const timeStr = now.toLocaleString('tr-TR'); 
-            
-            let emailText = `BAHÇELİEVLER MEMORİAL CT - MALZEME TALEP FORMU\n`; 
-            emailText += `Siparişi Veren Rol: ${currentRole}\n`; 
-            emailText += `Tarih / Saat: ${timeStr}\n`; 
-            emailText += `-------------------------------------------\n\n`; 
-            
-            orderBasket.forEach((item, idx) => { 
-                emailText += `${idx+1}) Malzeme: ${item.name} | Talep Miktarı: ${item.qty} ${item.unit}\n`; 
-            }); 
-            if(notes) { 
-                emailText += `\nÖzel Not / Talep:\n${notes}\n`; 
-            } 
-            emailText += `\n-------------------------------------------\nBu e-posta Canlı Stok Takip Sistemi tarafından otomatik üretilmiştir.`; 
-            
-            const templateParams = { 
-                to_email: "bahcelievlermemorialct@gmail.com", 
-                from_name: `Sistem (${currentRole})`, 
-                message: emailText 
-            }; 
-            
-            emailjs.send("service_y2g6ncl", "template_6086q6i", templateParams).then(() => { 
-                orderBasket.forEach(item => { 
-                    db.ref('depo_siparisler').push({ 
-                        time: timeStr, 
-                        rawTime: now.toISOString(), 
-                        user: currentRole, 
-                        product: item.name, 
-                        qty: `${item.qty} ${item.unit}`, 
-                        notes: notes || '-' 
-                    }); 
-                }); 
-                alert("Malzeme sipariş talebi başarıyla yönetici e-posta adresine gönderildi ve sisteme kaydedildi!"); 
+            let baseCleanName = item.name.replace(/[.#$\[\]]/g, ""); 
+            let targetKey = baseCleanName + "_" + newSktVal;  
+            let matchExisting = inventory.find(i => i.dbKey === targetKey); 
+            let finalQty = matchExisting ? parseFloat((matchExisting.quantity + qty).toFixed(2)) : qty; 
+            db.ref('depo_stok/' + targetKey).set({ 
+                dbKey: targetKey, 
+                name: item.name, 
+                depot: item.depot, 
+                unit: item.unit, 
+                quantity: finalQty, 
+                criticalLimit: item.criticalLimit, 
+                skt: newSktVal, 
+                lastUpdatedDate: getTodayDateString() 
+            });
+            db.ref('depo_rapor').push({ 
+                time: new Date().toLocaleString('tr-TR'), 
+                rawTime: new Date().toISOString(), 
+                user: currentRole, 
+                product: item.name, 
+                type: 'STOK + SKT GİRİŞİ', 
+                qty: `${qty} ${item.unit}` 
+            });
+            closeStockActionModal(); 
+            return; 
+        } 
+        let newQty = currentModalAction === 'in' ? parseFloat((item.quantity + qty).toFixed(2)) : parseFloat((item.quantity - qty).toFixed(2));
+        if(newQty < 0) newQty = 0;   
+        db.ref('depo_stok/' + itemUniqueKey + '/quantity').set(newQty); 
+        db.ref('depo_stok/' + itemUniqueKey + '/lastUpdatedDate').set(getTodayDateString());
+        db.ref('depo_rapor').push({ 
+            time: new Date().toLocaleString('tr-TR'), 
+            rawTime: new Date().toISOString(), 
+            user: currentRole, 
+            product: `${item.name}`, 
+            type: reportLabel, 
+            qty: `${qty} ${item.unit}` 
+        }); 
+        closeStockActionModal(); 
+    });
+    
+    const orderFormEl = document.getElementById('orderForm'); 
+    if(orderFormEl) { 
+        orderFormEl.addEventListener('submit', function(e) { 
+            e.preventDefault(); 
+            if(orderBasket.length === 0) { 
+                alert("Sipariş göndermek için önce listeye en az 1 ürün eklemelisiniz!"); 
+                return; 
+            }  
+            const targetMail = document.getElementById('orderEmail').value; 
+            const notes = document.getElementById('orderNotes').value.trim() || "Yok"; 
+            if(confirm(`Listede bulunan ${orderBasket.length} farklı malzemeyi e-posta olarak göndermek istiyor musunuz?`)) { 
+                const nowStr = new Date().toLocaleString('tr-TR'); 
+                const timestampIso = new Date().toISOString(); 
+                let basketTextFormat = orderBasket.map(b => `• ${b.name} -> Miktar: ${b.qty} ${b.unit}`).join('\n'); 
+                let flatProductsNames = orderBasket.map(b => b.name).join(', '); 
+                let flatQuantities = orderBasket.map(b => `${b.qty} ${b.unit}`).join(', '); 
+                const emailParams = { 
+                    name: "Bahçelievler Memorial CT Canlı Stok Sistemi", 
+                    email: targetMail, 
+                    to_email: targetMail, 
+                    product_name: flatProductsNames, 
+                    quantity: flatQuantities, 
+                    order_notes: `--- SİPARİŞ LİSTESİ ---\n${basketTextFormat}\n\nEkstra Talep Notu: ${notes}`, 
+                    sender_role: currentRole, 
+                    order_date: nowStr 
+                };
+                emailjs.send("service_wt1igmj", "template_ydhkoa6", emailParams) .then(() => { 
+                    alert(`✅ BAŞARILI! Sipariş listesi e-posta olarak iletildi.`); 
+                }) .catch((err) => { 
+                    alert(`❌ HATA ALINDI!\nSunucu Mesajı: ${JSON.stringify(err)}`); 
+                });
+                orderBasket.forEach(bItem => { 
+                    db.ref('depo_siparisler').push({ time: nowStr, rawTime: timestampIso, user: currentRole, product: bItem.name, qty: `${bItem.qty} ${bItem.unit}`, notes: notes }); 
+                    db.ref('depo_rapor').push({ time: nowStr, rawTime: timestampIso, user: currentRole, product: bItem.name, type: 'TALEP GÖNDERİLDİ', qty: `${bItem.qty} ${bItem.unit}` }); 
+                });
                 orderBasket = []; 
                 renderBasketVisual(); 
-                document.getElementById('orderNotes').value = ""; 
-            }, (err) => { 
-                alert("Mail gönderim hatası: " + JSON.stringify(err)); 
-            }); 
-        }); 
-
-        const reportModal = document.getElementById('reportModal'); 
-        const ordersListModal = document.getElementById('ordersListModal'); 
-
-        document.getElementById('openReportBtn').addEventListener('click', () => { 
-            if(currentRole === 'YÖNETİCİ') { 
-                document.getElementById('clearAllReportsBtn').style.display = 'inline-block'; 
+                orderFormEl.reset(); 
+                document.getElementById('orderEmail').value = "bahcelievlermemorialct@gmail.com"; 
+                document.getElementById('orderPanelCard').style.display = 'none';  
             } 
-            db.ref('depo_rapor').once('value', (snapshot) => { 
-                const data = snapshot.val(); 
-                const tbody = document.getElementById('reportTableBody'); 
-                tbody.innerHTML = ''; 
-                if(!data) { 
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888; padding:15px;">Henüz bir işlem geçmişi bulunmuyor.</td></tr>'; 
-                    reportModal.style.display = 'flex'; 
-                    return; 
-                } 
-                let reportArray = Object.entries(data).sort((a,b) => new Date(b[1].rawTime) - new Date(a[1].rawTime)); 
-                reportArray.forEach(([fbKey, rep]) => { 
-                    let undoCellHtml = ''; 
+        });
+    } 
+    
+    window.filterByDepot = function(depotName) { 
+        activeDepotFilter = depotName; 
+        const buttons = document.querySelectorAll('.btn-depot-filter'); 
+        buttons.forEach(btn => { 
+            btn.classList.toggle('active', btn.textContent === depotName); 
+        });
+        renderUi(); 
+    }; 
+    
+    window.clearDateFilter = function() { 
+        document.getElementById('dateFilterInput').value = ''; 
+        renderUi(); 
+    }; 
+    
+    document.getElementById('dateFilterInput').addEventListener('change', renderUi); 
+    document.getElementById('searchInput').addEventListener('input', renderUi); 
+    const addFormEl = document.getElementById('addForm');
+    if(addFormEl) { 
+        addFormEl.addEventListener('submit', function(e) { 
+            e.preventDefault(); 
+            let name = document.getElementById('newProdName').value.trim(); 
+            const depot = document.getElementById('newProdDepot').value; 
+            const unit = document.getElementById('newProdUnit').value; 
+            const qty = parseFloat(document.getElementById('newProdQty').value) || 0; 
+            const limit = parseFloat(document.getElementById('newProdLimit').value) || 0; 
+            const sktVal = document.getElementById('newProdSkt').value;  
+            let baseClean = name.replace(/[.#$\[\]]/g, ""); 
+            let targetKey = (sktVal && !sktVal.includes('undefined')) ? (baseClean + "_" + sktVal) : baseClean; 
+            if(inventory.some(item => (item.dbKey === targetKey))) {  
+                alert("Aynı isim ve aynı SKT tarihine sahip ürün zaten sistemde var! Sağ taraftaki tablodan + Ekle butonuyla miktar artırabilirsiniz.");  
+                return;  
+            } 
+            db.ref('depo_stok/' + targetKey).set({  
+                dbKey: targetKey, 
+                name: name,  
+                depot: depot,  
+                unit: unit,  
+                quantity: qty,  
+                criticalLimit: limit,  
+                skt: sktVal || null,  
+                lastUpdatedDate: getTodayDateString() 
+            }); 
+            db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${name}`, type: 'YENİ ÜRÜN', qty: `${qty} ${unit}` });
+            addFormEl.reset(); 
+        }); 
+    } 
+    
+    window.deleteProductDirect = function(uniqueId) { 
+        const item = inventory.find(i => i.dbKey === uniqueId);
+        if(!item) { 
+            if(confirm("Bu kayıt veritabanından zorunlu olarak silinsin mi?")) { 
+                db.ref('depo_stok/' + uniqueId).remove();
+            } 
+            return; 
+        } 
+        if(confirm(`"${item.name}" ürününü depodan kalıcı olarak silmek istediğinize emin misiniz? (İstediğinizde İşlem Geçmişinden geri alabilirsiniz)`)) { 
+            const now = new Date();
+            db.ref('depo_rapor').push({ 
+                time: now.toLocaleString('tr-TR'), 
+                rawTime: now.toISOString(), 
+                user: currentRole, 
+                product: item.name, 
+                type: 'ÜRÜN SİLİNDİ', 
+                qty: `${item.quantity} ${item.unit}`, 
+                backupKey: item.dbKey || uniqueId, 
+                backupDepot: item.depot || 'KURU GIDA', 
+                backupUnit: item.unit || 'Adet', 
+                backupLimit: item.criticalLimit || 0, 
+                backupSkt: item.skt || null 
+            });
+            db.ref('depo_stok/' + uniqueId).remove(); 
+        } 
+    }; 
+    
+    window.undoDeletedProduct = function(reportFbKey, prodName, bKey, bDepot, bUnit, bQtyStr, bLimit, bSkt) { 
+        if(confirm(`"${prodName}" ürününü sildiğiniz miktarla birlikte depoya geri yüklemek istiyor musiniz?`)) {  
+            let parsedQty = parseFloat(bQtyStr) || 0; 
+            let targetKey = (bKey && bKey !== 'undefined') ? bKey : prodName.replace(/[.#$\[\]]/g, "");
+            db.ref('depo_stok/' + targetKey).set({ 
+                dbKey: targetKey, 
+                name: prodName, 
+                depot: bDepot || 'KURU GIDA', 
+                unit: bUnit || 'Adet', 
+                quantity: parsedQty, 
+                criticalLimit: parseFloat(bLimit) || 0, 
+                skt: (bSkt && bSkt !== 'null' && bSkt !== 'undefined') ? bSkt : null, 
+                lastUpdatedDate: getTodayDateString() 
+            });
+            db.ref('depo_rapor/' + reportFbKey).remove().then(() => { 
+                alert("✓ Ürün başarıyla depoya geri yüklendi!"); 
+                document.getElementById('openReportBtn').click(); 
+            });
+        } 
+    }; 
+    
+    const reportModal = document.getElementById('reportModal'); 
+    const ordersListModal = document.getElementById('ordersListModal');
+    
+    document.getElementById('openReportBtn').addEventListener('click', () => { 
+        db.ref('depo_rapor').once('value', (snapshot) => { 
+            const tbody = document.getElementById('reportTableBody'); 
+            const clearAllBtn = document.getElementById('clearAllReportsBtn'); 
+            tbody.innerHTML = '';  
+            if(currentRole === 'YÖNETİCİ') { 
+                clearAllBtn.style.display = 'block'; 
+            } else { 
+                clearAllBtn.style.display = 'none'; 
+            } 
+            let modalReports = snapshot.val() ? Object.entries(snapshot.val()) : []; 
+            if(modalReports.length === 0) { 
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">Kayıt bulunamadı.</td></tr>`; 
+            } else { 
+                modalReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime)); 
+                modalReports.forEach(([fbKey, rep]) => { 
+                    let actionButtonsHtml = '';  
+                    if((rep.type === 'ÜRÜN SİLİNDİ' || rep.type === 'SKT OTOMATİK SİLME') && rep.backupKey) { 
+                        actionButtonsHtml += `<button class="btn-undo" onclick="undoDeletedProduct('${fbKey}', '${rep.product}', '${rep.backupKey}', '${rep.backupDepot}', '${rep.backupUnit}', '${rep.qty}', '${rep.backupLimit}', '${rep.backupSkt}')">&sube; Geri Al</button> `;
+                    }  
                     if(currentRole === 'YÖNETİCİ') { 
-                        undoCellHtml = `<td><button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button></td>`; 
+                        actionButtonsHtml += `<button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button>`;
                     } 
-                    if(rep.type === 'SKT OTOMATİK SİLME') { 
-                        if(currentRole === 'YÖNETİCİ') { 
-                            undoCellHtml = `<td><button class="btn-undo" onclick="undoExpiredDelete('${fbKey}')">Geri Yükle</button> <button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button></td>`; 
-                        } 
-                        rep.type = `<span style="color:#dc3545; font-weight:bold;">🚨 SKT GEÇTİ</span>`; 
-                    } 
-                    let trStyle = ""; 
-                    if(rep.type === 'İMHA') trStyle = 'style="background:#fff3cd;"'; 
-                    let trHtml = `<tr ${trStyle}><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order">${rep.type}</span></td><td><strong>${rep.qty}</strong></td>${undoCellHtml}</tr>`; 
-                    tbody.innerHTML += trHtml; 
+                    tbody.innerHTML += ` 
+                        <tr> 
+                            <td>${rep.time}</td> 
+                            <td><b>${rep.user}</b></td> 
+                            <td>${rep.product}</td> 
+                            <td><span class="badge-order" style="${rep.type.includes('SİLİNDİ') ? 'background:#f8d7da; color:#721c24;' : ''}">${rep.type}</span></td> 
+                            <td><strong>${rep.qty}</strong></td> 
+                            <td>${actionButtonsHtml || '---'}</td> 
+                        </tr>`; 
                 }); 
-                reportModal.style.display = 'flex'; 
-            }); 
+            } 
+            reportModal.style.display = 'flex'; 
         }); 
-
-        window.undoExpiredDelete = function(fbKey) { 
-            if(currentRole !== 'YÖNETİCİ') return; 
-            db.ref('depo_rapor/' + fbKey).once('value', (snapshot) => { 
-                const rep = snapshot.val(); 
-                if(!rep) return; 
-                if(confirm(`"${rep.product}" ürününü geri yüklemek ve depoya dahil etmek istiyor musunuz?`)) { 
-                    let qtyNum = parseFloat(rep.qty) || 0; 
-                    db.ref('depo_stok/' + rep.backupKey).set({ 
-                        dbKey: rep.backupKey, 
-                        name: rep.product, 
-                        depot: rep.backupDepot, 
-                        unit: rep.backupUnit, 
-                        quantity: qtyNum, 
-                        criticalLimit: rep.backupLimit, 
-                        skt: rep.backupSkt, 
-                        lastUpdated: new Date().toLocaleString('tr-TR'), 
-                        lastUpdatedDate: getTodayDateString() 
-                    }).then(() => { 
-                        db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click()); 
-                    }); 
-                } 
-            }); 
-        }; 
-
-        window.deleteReportRow = function(fbKey) { 
-            if(currentRole !== 'YÖNETİCİ') return; 
-            if(confirm("Bu işlem geçmişi kaydı listeden silinsin mi? (Stok miktarı etkilenmez)")) { 
-                db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click()); 
-            } 
-        }; 
-
-        window.clearAllReports = function() { 
-            if(currentRole !== 'YÖNETİCİ') return; 
-            if(confirm("DİKKAT! Tüm tarihli depo işlem geçmişi raporunu kalıcı olarak temizlemek istediğinize emin misiniz?")) { 
-                db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click()); 
-            } 
-        }; 
-
-        document.getElementById('openOrdersBtn').addEventListener('click', () => { 
+    }); 
+    
+    window.deleteReportRow = function(fbKey) { 
+        if(currentRole !== 'YÖNETİCİ') return;
+        if(confirm("Bu işlem kaydı geçmişten silinsin mi? (Bu işlem envanteri etkilemez)")) { 
+            db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click()); 
+        } 
+    };
+    
+    window.clearAllReports = function() { 
+        if(currentRole !== 'YÖNETİCİ') { 
+            alert("Yetkiniz yok!"); 
+            return;
+        } 
+        if(confirm("Tüm işlem geçmişi raporunu kalıcı olarak silmek istediğinize emin misiniz?")) { 
+            db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click()); 
+        } 
+    };
+    
+    document.getElementById('openOrdersBtn').addEventListener('click', () => { 
+        db.ref('depo_siparisler').once('value', (snapshot) => { 
+            const tbody = document.getElementById('ordersTableBody'); 
+            const headerAction = document.getElementById('orderActionHeader'); 
+            const clearAllBtn = document.getElementById('clearAllOrdersBtn'); 
+            tbody.innerHTML = '';  
             if(currentRole === 'YÖNETİCİ') { 
-                document.getElementById('clearAllOrdersBtn').style.display = 'inline-block'; 
-                document.getElementById('orderActionHeader').style.display = 'table-cell'; 
+                headerAction.style.display = 'table-cell'; 
+                clearAllBtn.style.display = 'block'; 
+            } else { 
+                headerAction.style.display = 'none'; 
+                clearAllBtn.style.display = 'none'; 
             } 
-            db.ref('depo_siparisler').once('value', (snapshot) => { 
-                const data = snapshot.val(); 
-                const tbody = document.getElementById('ordersTableBody'); 
-                tbody.innerHTML = ''; 
-                if(!data) { 
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888; padding:15px;">Henüz gönderilmiş bir sipariş bulunmuyor.</td></tr>'; 
-                    ordersListModal.style.display = 'flex'; 
-                    return; 
-                } 
-                let modalOrders = Object.entries(data).sort((a,b) => new Date(b[1].rawTime) - new Date(a[1].rawTime)); 
+            let modalOrders = snapshot.val() ? Object.entries(snapshot.val()) : []; 
+            if(modalOrders.length === 0) { 
+                tbody.innerHTML = `<tr><td colspan="${currentRole === 'YÖNETİCİ' ? 6 : 5}" style="text-align:center; color:#888;">Henüz verilmiş bir sipariş bulunmamaktadır.</td></tr>`; 
+            } else { 
+                modalOrders.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime)); 
                 modalOrders.forEach(([fbKey, ord]) => { 
                     let deleteCellHtml = ''; 
                     if(currentRole === 'YÖNETİCİ') { 
@@ -1093,38 +1459,34 @@
                     } 
                     tbody.innerHTML += `<tr><td>${ord.time}</td><td><b>${ord.user}</b></td><td>${ord.product}</td><td><strong>${ord.qty}</strong></td><td><i style="color:#666;">${ord.notes}</i></td>${deleteCellHtml}</tr>`; 
                 }); 
-                ordersListModal.style.display = 'flex'; 
-            }); 
-        }); 
-
-        window.deleteOrderRow = function(fbKey) { 
-            if(currentRole !== 'YÖNETİCİ') return; 
-            if(confirm("Bu sipariş kaydı listeden silinsin mi?")) { 
-                db.ref('depo_siparisler/' + fbKey).remove().then(() => document.getElementById('openOrdersBtn').click()); 
             } 
-        }; 
-
-        window.clearAllOrders = function() { 
-            if(currentRole !== 'YÖNETİCİ') { alert("Yetkiniz yok!"); return; } 
-            if(confirm("DİKKAT! Verilen tüm siparişlerin geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) { 
-                db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click()); 
-            } 
-        }; 
-
-        document.getElementById('closeReportBtn').addEventListener('click', () => reportModal.style.display = 'none'); 
-        document.getElementById('closeOrdersBtn').addEventListener('click', () => ordersListModal.style.display = 'none'); 
-
-        window.onclick = function(event) { 
-            if (event.target == reportModal) reportModal.style.display = "none"; 
-            if (event.target == ordersListModal) ordersListModal.style.display = "none"; 
-            if (event.target == document.getElementById('stockActionModal')) closeStockActionModal(); 
-            if (event.target == document.getElementById('sktUrgentModal')) closeSktUrgentModal(); 
-        }; 
-
-        document.getElementById('logoutBtn').addEventListener('click', () => { 
-            localStorage.clear(); 
-            window.location.replace('login.html'); 
+            ordersListModal.style.display = 'flex'; 
         }); 
-    </script>
+    });
+    
+    window.deleteOrderRow = function(fbKey) { 
+        if(currentRole !== 'YÖNETİCİ') return; 
+        if(confirm("Bu sipariş kaydı listeden silinsin mi?")) { 
+            db.ref('depo_siparisler/' + fbKey).remove().then(() => document.getElementById('openOrdersBtn').click());
+        } 
+    }; 
+    
+    window.clearAllOrders = function() { 
+        if(currentRole !== 'YÖNETİCİ') { 
+            alert("Yetkiniz yok!"); 
+            return;
+        } 
+        if(confirm("DİKKAT! Verilen tüm siparişlerin geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) { 
+            db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click()); 
+        } 
+    };
+    
+    document.getElementById('closeReportBtn').addEventListener('click', () => reportModal.style.display = 'none'); 
+    document.getElementById('closeOrdersBtn').addEventListener('click', () => ordersListModal.style.display = 'none'); 
+    document.getElementById('logoutBtn').addEventListener('click', () => { 
+        localStorage.removeItem('isLoggedIn'); 
+        window.location.replace('login.html'); 
+    });
+</script>
 </body>
 </html>
