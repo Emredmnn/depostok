@@ -90,6 +90,7 @@
         .total-row { background-color: #e2f0fe; font-weight: bold; border-top: 2px solid #0d6efd !important; }
         .total-row td { padding: 15px 10px; font-size: 15px; color: #1e3a8a; }
         
+        /* Orijinal "Ekle / Düş" Temalı Butonlar */
         .action-btns { display: flex; gap: 4px; flex-wrap: wrap; }
         .action-btn { padding: 6px 10px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer; font-size: 12px; white-space: nowrap; }
         .btn-add-stock { background-color: #0d6efd; }
@@ -123,7 +124,7 @@
         
         .btn-report-del { background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
         
-        /* Stok Giriş/İşlem Özel Modalı */
+        /* Hızlı Ekle/Düş/İmha Özel Modalı */
         .stock-modal-card { background: white; padding: 25px; border-radius: 8px; max-width: 450px; width: 100%; border-top: 4px solid #0d6efd; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
         .stock-modal-title { font-size: 16px; font-weight: bold; color: #333; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
         .stock-modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
@@ -153,6 +154,7 @@
         </div>
     </nav>
 
+    <!-- SKT Kritik Uyarı Modalı -->
     <div class="modal" id="sktUrgentModal">
         <div class="modal-content" style="border-top: 4px solid #dc3545; max-width: 900px;">
             <div class="modal-header">
@@ -180,16 +182,17 @@
         </div>
     </div>
 
+    <!-- Hızlı Hacimsel Stok İşlemleri Modalı (Ekle / Düş / İmha Olarak Güncellendi) -->
     <div class="modal" id="stockActionModal">
         <div class="stock-modal-card">
-            <div class="stock-modal-title" id="actionModalTitle">📥 Stok Giriş İşlemi</div>
+            <div class="stock-modal-title" id="actionModalTitle">📥 Stok Ekleme İşlemi</div>
             <form id="stockActionForm">
                 <div class="form-group" id="partySktGroup" style="display:none;">
                     <label style="color:#d63384; font-weight:bold;">⚠️ Ürünün Son Kullanma Tarihi (Takvimden Seçin)</label>
                     <input type="date" id="actionModalSkt">
                 </div>
                 <div class="form-group">
-                    <label id="actionQtyLabel">Giriş Yapılacak Miktar</label>
+                    <label id="actionQtyLabel">Eklenecek Miktar</label>
                     <input type="number" id="actionModalQty" step="0.01" min="0.01" required placeholder="Miktarı yazın">
                 </div>
                 <div class="stock-modal-buttons">
@@ -200,6 +203,7 @@
         </div>
     </div>
 
+    <!-- Ürün Kartı Düzenleme Modalı (Mevcut Stok Seçeneği Korundu) -->
     <div class="modal" id="editProductModal">
         <div class="stock-modal-card" style="border-top: 4px solid #ffc107; max-width: 500px;">
             <div class="stock-modal-title">✏️ Malzeme Bilgilerini Düzenle</div>
@@ -231,6 +235,10 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label style="color:#0d6efd; font-weight:bold;">📦 Mevcut Stok Miktarı</label>
+                    <input type="number" id="editProdQty" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
                     <label>Kritik Eşik Sınırı</label>
                     <input type="number" id="editProdLimit" step="0.01" min="0" required>
                 </div>
@@ -247,6 +255,7 @@
     </div>
 
     <div class="container" id="mainContainer">
+        <!-- Sol Sütun: Ürün Ekleme ve Sipariş Yapısı -->
         <div id="addProductColumn">
             <div class="card">
                 <h3>✨ Yeni Ürün Tanımla</h3>
@@ -328,6 +337,7 @@
             </div>
         </div>
 
+        <!-- Sağ Sütun: Canlı Tablo Listesi -->
         <div class="card success-theme">
             <h3>📦 Detaylı Depo Envanter ve Canlı İşlem Paneli</h3>
             <div class="filter-wrapper">
@@ -369,6 +379,7 @@
         </div>
     </div>
 
+    <!-- Rapor Geçmişi Modalı -->
     <div class="modal" id="reportModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -395,6 +406,7 @@
         </div>
     </div>
 
+    <!-- Verilen Siparişler Geçmişi Modalı -->
     <div class="modal" id="ordersListModal">
         <div class="modal-content" style="border-top: 4px solid #20c997;">
             <div class="modal-header">
@@ -704,17 +716,18 @@
                 }
 
                 let actionButtonsHtml = "";
+                // Buton İsimleri "Ekle" ve "Düş" Olarak uyarlandı
                 if(currentRole === 'YÖNETİCİ' || currentRole === 'DEPO') {
                     actionButtonsHtml = `
-                        <button class="action-btn btn-add-stock" onclick="openStockActionModal('${item.dbKey}', 'GİRİŞ')">📥 Giriş</button>
-                        <button class="action-btn btn-drop-stock" onclick="openStockActionModal('${item.dbKey}', 'ÇIKIŞ')">📤 Çıkış</button>
+                        <button class="action-btn btn-add-stock" onclick="openStockActionModal('${item.dbKey}', 'EKLE')">📥 Ekle</button>
+                        <button class="action-btn btn-drop-stock" onclick="openStockActionModal('${item.dbKey}', 'DÜŞ')">📤 Düş</button>
                         <button class="action-btn btn-waste-stock" onclick="openStockActionModal('${item.dbKey}', 'İMHA')">☣️ İmha</button>
                         <button class="action-btn btn-edit-stock" onclick="openEditProductModal('${item.dbKey}')">✏️ Düzenle</button>
                         <button class="action-btn btn-del-stock" onclick="deleteStockItem('${item.dbKey}')">🗑️ Sil</button>
                     `;
                 } else if(currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
                     actionButtonsHtml = `
-                        <button class="action-btn btn-drop-stock" onclick="openStockActionModal('${item.dbKey}', 'ÇIKIŞ')">📤 Çıkış Miktarı Eksilt</button>
+                        <button class="action-btn btn-drop-stock" onclick="openStockActionModal('${item.dbKey}', 'DÜŞ')">📤 Düş Miktarı Eksilt</button>
                     `;
                 }
 
@@ -736,7 +749,7 @@
             tfoot.innerHTML = `<tr class="total-row"><td colspan="2">Filtrelenmiş Toplam Listelenen Stok:</td><td colspan="5">${totalStrings.join(' | ')}</td></tr>`;
         }
 
-        // YENİ EKLEMELER: ÜRÜN KARTI DÜZENLEME FONKSİYONLARI
+        // ÜRÜN KARTI DÜZENLEME FONKSİYONLARI (Mevcut Stok Seçeneği Dahil)
         window.openEditProductModal = function(dbKey) {
             const item = inventory.find(i => i.dbKey === dbKey);
             if (!item) return;
@@ -745,6 +758,7 @@
             document.getElementById('editProdName').value = item.name || '';
             document.getElementById('editProdDepot').value = item.depot || 'KURU GIDA';
             document.getElementById('editProdUnit').value = item.unit || 'Adet';
+            document.getElementById('editProdQty').value = item.quantity || 0;
             document.getElementById('editProdLimit').value = item.criticalLimit || 0;
             document.getElementById('editProdSkt').value = item.skt || '';
 
@@ -766,41 +780,58 @@
             const updatedName = document.getElementById('editProdName').value.trim().toUpperCase();
             const updatedDepot = document.getElementById('editProdDepot').value;
             const updatedUnit = document.getElementById('editProdUnit').value;
+            const updatedQty = parseFloat(document.getElementById('editProdQty').value) || 0;
             const updatedLimit = parseFloat(document.getElementById('editProdLimit').value) || 0;
             const updatedSkt = document.getElementById('editProdSkt').value || "";
 
             if(!updatedName) { alert("Ürün adı boş olamaz!"); return; }
+
+            const oldItem = inventory.find(i => i.dbKey === dbKey);
+            const isStockChanged = oldItem && parseFloat(oldItem.quantity) !== updatedQty;
 
             const now = new Date();
             const updates = {
                 name: updatedName,
                 depot: updatedDepot,
                 unit: updatedUnit,
+                quantity: updatedQty,
                 criticalLimit: updatedLimit,
                 skt: updatedSkt,
                 lastUpdatedDate: getTodayDateString()
             };
 
             db.ref('depo_stok/' + dbKey).update(updates).then(() => {
-                // Değişikliği işlem geçmişine rapor olarak ekle
+                let reportType = 'ÜRÜN DÜZENLEME';
+                let reportQtyStr = '---';
+                
+                if (isStockChanged) {
+                    reportType = 'ÜRÜN DÜZENLEME (STOK GÜNCELLENDİ)';
+                    reportQtyStr = `${oldItem.quantity} -> ${updatedQty} ${updatedUnit}`;
+                }
+
                 db.ref('depo_rapor').push({
                     time: now.toLocaleString('tr-TR'),
                     rawTime: now.toISOString(),
                     user: localStorage.getItem('username') || 'BİLİNMEYEN',
                     product: updatedName,
-                    type: 'ÜRÜN DÜZENLEME',
-                    qty: `---`
+                    type: reportType,
+                    qty: reportQtyStr,
+                    backupKey: dbKey,
+                    backupDepot: updatedDepot,
+                    backupUnit: updatedUnit,
+                    backupLimit: updatedLimit,
+                    backupSkt: updatedSkt
                 });
 
                 closeEditProductModal();
-                alert("Ürün kartı bilgileri başarıyla revize edildi!");
+                alert("Ürün kartı bilgileri ve stok durumu başarıyla revize edildi!");
             }).catch(error => {
                 console.error("Güncelleme hatası: ", error);
                 alert("Güncelleme yapılırken veritabanı hatası oluştu.");
             });
         });
 
-        // Hacimsel Stok Değişim Modalları (Giriş / Çıkış / İmha Girişleri)
+        // Hacimsel Stok Değişim Modalları (Ekle / Düş / İmha Girişleri Olarak Düzenlendi)
         window.openStockActionModal = function(dbKey, actionType) {
             currentModalProduct = inventory.find(i => i.dbKey === dbKey);
             if(!currentModalProduct) return;
@@ -813,11 +844,12 @@
             
             sktInput.value = ""; partyGroup.style.display = "none";
             
-            if(actionType === 'GİRİŞ') {
-                titleEl.innerHTML = `📥 [${currentModalProduct.name}] İçin Stok Girişi`;
+            // Orijinal ilk form yapısına göre etiketler uyarlanmıştır
+            if(actionType === 'EKLE') {
+                titleEl.innerHTML = `📥 [${currentModalProduct.name}] İçin Stok Ekleme`;
                 qtyLabelEl.innerHTML = "Eklenecek Miktar (" + (currentModalProduct.unit || 'Adet') + ")";
-            } else if(actionType === 'ÇIKIŞ') {
-                titleEl.innerHTML = `📤 [${currentModalProduct.name}] Depo Çıkış İşlemi`;
+            } else if(actionType === 'DÜŞ') {
+                titleEl.innerHTML = `📤 [${currentModalProduct.name}] Stok Düşme İşlemi`;
                 qtyLabelEl.innerHTML = "Eksiltilecek Miktar (" + (currentModalProduct.unit || 'Adet') + ")";
             } else if(actionType === 'İMHA') {
                 titleEl.innerHTML = `☣️ [${currentModalProduct.name}] Fire / İmha Girişi`;
@@ -842,9 +874,10 @@
             let currentQty = parseFloat(currentModalProduct.quantity) || 0;
             let newQty = currentQty;
 
-            if(currentModalAction === 'GİRİŞ') {
+            // Mantıksal kontroller EKLE ve DÜŞ kelimelerine uyarlandı
+            if(currentModalAction === 'EKLE') {
                 newQty = parseFloat((currentQty + qtyVal).toFixed(2));
-            } else if(currentModalAction === 'ÇIKIŞ' || currentModalAction === 'İMHA') {
+            } else if(currentModalAction === 'DÜŞ' || currentModalAction === 'İMHA') {
                 if(qtyVal > currentQty) {
                     alert(`HATA: Depoda sadece ${currentQty} ${currentModalProduct.unit} var. Talep edilen miktar mevcut stoku aşamaz!`);
                     return;
@@ -863,7 +896,7 @@
                     rawTime: now.toISOString(),
                     user: activeUser,
                     product: currentModalProduct.name,
-                    type: currentModalAction,
+                    type: currentModalAction, // EKLE veya DÜŞ yazar
                     qty: `${qtyVal} ${currentModalProduct.unit}`,
                     backupKey: currentModalProduct.dbKey,
                     backupDepot: currentModalProduct.depot || 'KURU GIDA',
@@ -1009,7 +1042,8 @@
                     const sortedReports = Object.entries(data).sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
                     sortedReports.forEach(([fbKey, rep]) => {
                         let undoCellHtml = '';
-                        if(currentRole === 'YÖNETİCİ' && (rep.type === 'ÇIKIŞ' || rep.type === 'GİRİŞ' || rep.type === 'İMHA' || rep.type === 'KULLANICI MANUEL SİLME' || rep.type === 'SKT OTOMATİK SİLME')) {
+                        // Rapor kontrol koşulları EKLE ve DÜŞ olarak güncellendi
+                        if(currentRole === 'YÖNETİCİ' && (rep.type === 'DÜŞ' || rep.type === 'EKLE' || rep.type === 'İMHA' || rep.type === 'KULLANICI MANUEL SİLME' || rep.type === 'SKT OTOMATİK SİLME' || rep.type === 'ÜRÜN DÜZENLEME (STOK GÜNCELLENDİ)')) {
                             undoCellHtml = `<button class="btn-undo" onclick="undoReportAction('${fbKey}')">Geri Al</button> <button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Sil</button>`;
                         } else if(currentRole === 'YÖNETİCİ') {
                             undoCellHtml = `<button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Sil</button>`;
@@ -1054,6 +1088,15 @@
                                 document.getElementById('openReportBtn').click();
                             });
                         });
+                    } else if(rep.type === 'ÜRÜN DÜZENLEME (STOK GÜNCELLENDİ)') {
+                        if(!rep.qty.includes('->')) return;
+                        let oldQty = parseFloat(rep.qty.split('->')[0].trim());
+                        db.ref('depo_stok/' + rep.backupKey).update({ quantity: oldQty, lastUpdatedDate: getTodayDateString() }).then(() => {
+                            db.ref('depo_rapor/' + fbKey).remove().then(() => {
+                                alert("Stok düzenleme işlemi geri alındı, eski miktara dönüldü!");
+                                document.getElementById('openReportBtn').click();
+                            });
+                        });
                     } else {
                         db.ref('depo_stok/' + rep.backupKey).once('value', (stockSnap) => {
                             const currentStock = stockSnap.val();
@@ -1061,8 +1104,10 @@
                             let qtyVal = parseFloat(rep.qty) || 0;
                             let currentQty = parseFloat(currentStock.quantity) || 0;
                             let restoredQty = currentQty;
-                            if(rep.type === 'GİRİŞ') { restoredQty = parseFloat((currentQty - qtyVal).toFixed(2)); }
-                            else if(rep.type === 'ÇIKIŞ' || rep.type === 'İMHA') { restoredQty = parseFloat((currentQty + qtyVal).toFixed(2)); }
+                            
+                            // Geri alma mekanizması yeni terminolojiye (EKLE/DÜŞ) göre kurgulandı
+                            if(rep.type === 'EKLE') { restoredQty = parseFloat((currentQty - qtyVal).toFixed(2)); }
+                            else if(rep.type === 'DÜŞ' || rep.type === 'İMHA') { restoredQty = parseFloat((currentQty + qtyVal).toFixed(2)); }
                             if(restoredQty < 0) restoredQty = 0;
                             
                             db.ref('depo_stok/' + rep.backupKey).update({ quantity: restoredQty, lastUpdatedDate: getTodayDateString() }).then(() => {
