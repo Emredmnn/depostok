@@ -90,7 +90,7 @@
         .total-row { background-color: #e2f0fe; font-weight: bold; border-top: 2px solid #0d6efd !important; }
         .total-row td { padding: 15px 10px; font-size: 15px; color: #1e3a8a; }
         
-        /* Orijinal "Ekle / Düş" Temalı Butonlar */
+        /* Butonlar */
         .action-btns { display: flex; gap: 4px; flex-wrap: wrap; }
         .action-btn { padding: 6px 10px; border: none; border-radius: 4px; color: white; font-weight: bold; cursor: pointer; font-size: 12px; white-space: nowrap; }
         .btn-add-stock { background-color: #0d6efd; }
@@ -114,7 +114,6 @@
         .btn-print-report { background-color: #0dcaf0; color: #212529; border: none; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; }
         .btn-clear-all-reports, .btn-clear-all-orders { background-color: #dc3545; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: none; }
         
-        /* Geri Al Butonu */
         .btn-undo { background-color: #20c997; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; }
         .btn-undo:hover { background-color: #198754; }
         table.report-table { width: 100%; border-collapse: collapse; }
@@ -154,15 +153,11 @@
         </div>
     </nav>
 
-    <!-- SKT Kritik Uyarı Modalı -->
     <div class="modal" id="sktUrgentModal">
         <div class="modal-content" style="border-top: 4px solid #dc3545; max-width: 900px;">
             <div class="modal-header">
                 <h2 style="color: #dc3545;">⚠️ Son Kullanma Tarihi Yaklaşan Kritik Ürünler (≤ 1 Gün)</h2>
                 <span class="close-modal" onclick="closeSktUrgentModal()">&times;</span>
-            </div>
-            <div style="margin-bottom: 15px; font-size: 13px; color: #666;">
-                Aşağıdaki listede son kullanma tarihine bugün dahil 1 gün kalan veya süresi dolmak üzere olan malzemeler listelenmektedir.
             </div>
             <table class="report-table">
                 <thead>
@@ -182,15 +177,29 @@
         </div>
     </div>
 
-    <!-- Hızlı Hacimsel Stok İşlemleri Modalı (Ekle / Düş / İmha Olarak Güncellendi) -->
+    <div class="modal" id="addProductSktModal">
+        <div class="stock-modal-card" style="border-top: 4px solid #198754; max-width: 480px;">
+            <div class="stock-modal-title">📅 Yeni Malzeme Giriş Onayı & SKT Belirleme</div>
+            <div style="font-size: 13px; color: #495057; margin-bottom: 15px; line-height: 1.4;">
+                Eklemekte olduğunuz <strong id="lblNewProdModalName" style="color:#0d6efd;">-</strong> ürünü için lütfen aşağıdaki bilgileri doğrulayıp son kullanma tarihini giriniz.
+            </div>
+            <form id="addProductSktForm">
+                <div class="form-group">
+                    <label style="color:#198754; font-weight:bold;">Son Kullanma Tarihi (SKT)</label>
+                    <input type="date" id="newProdModalSkt" required>
+                </div>
+                <div class="stock-modal-buttons">
+                    <button type="button" class="btn-sm-cancel" onclick="closeAddProductSktModal()">İptal Et</button>
+                    <button type="submit" class="btn-sm-save" style="background:#198754;">Onayla ve Depoya Ekle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="modal" id="stockActionModal">
         <div class="stock-modal-card">
             <div class="stock-modal-title" id="actionModalTitle">📥 Stok Ekleme İşlemi</div>
             <form id="stockActionForm">
-                <div class="form-group" id="partySktGroup" style="display:none;">
-                    <label style="color:#d63384; font-weight:bold;">⚠️ Ürünün Son Kullanma Tarihi (Takvimden Seçin)</label>
-                    <input type="date" id="actionModalSkt">
-                </div>
                 <div class="form-group">
                     <label id="actionQtyLabel">Eklenecek Miktar</label>
                     <input type="number" id="actionModalQty" step="0.01" min="0.01" required placeholder="Miktarı yazın">
@@ -203,7 +212,6 @@
         </div>
     </div>
 
-    <!-- Ürün Kartı Düzenleme Modalı (Mevcut Stok Seçeneği Korundu) -->
     <div class="modal" id="editProductModal">
         <div class="stock-modal-card" style="border-top: 4px solid #ffc107; max-width: 500px;">
             <div class="stock-modal-title">✏️ Malzeme Bilgilerini Düzenle</div>
@@ -255,7 +263,6 @@
     </div>
 
     <div class="container" id="mainContainer">
-        <!-- Sol Sütun: Ürün Ekleme ve Sipariş Yapısı -->
         <div id="addProductColumn">
             <div class="card">
                 <h3>✨ Yeni Ürün Tanımla</h3>
@@ -292,10 +299,6 @@
                     <div class="form-group">
                         <label>Kritik Eşik Sınırı</label>
                         <input type="number" id="newProdLimit" step="0.01" min="0" value="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Son Kullanma Tarihi (SKT)</label>
-                        <input type="date" id="newProdSkt">
                     </div>
                     <button type="submit" class="submit-btn">Sisteme Ürün Ekle</button>
                 </form>
@@ -337,7 +340,6 @@
             </div>
         </div>
 
-        <!-- Sağ Sütun: Canlı Tablo Listesi -->
         <div class="card success-theme">
             <h3>📦 Detaylı Depo Envanter ve Canlı İşlem Paneli</h3>
             <div class="filter-wrapper">
@@ -379,7 +381,6 @@
         </div>
     </div>
 
-    <!-- Rapor Geçmişi Modalı -->
     <div class="modal" id="reportModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -406,7 +407,6 @@
         </div>
     </div>
 
-    <!-- Verilen Siparişler Geçmişi Modalı -->
     <div class="modal" id="ordersListModal">
         <div class="modal-content" style="border-top: 4px solid #20c997;">
             <div class="modal-header">
@@ -434,14 +434,12 @@
     </div>
 
     <script>
-        // Giriş Kontrolü
         if(localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.replace('login.html');
         }
 
         emailjs.init("LzIhLTNYH47AasrBj");
 
-        // Rol ve Yetkilendirme Arayüz Yönetimi
         const currentRole = (localStorage.getItem('userRole') || 'YÖNETİCİ').toUpperCase();
         document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`;
         
@@ -460,7 +458,6 @@
             panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
         };
 
-        // Canlı Saat Akışı
         function startLiveClock() {
             const clockElement = document.getElementById('liveClockDisplay');
             setInterval(() => {
@@ -472,7 +469,6 @@
         }
         startLiveClock();
 
-        // Firebase Yapılandırması
         const firebaseConfig = { databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -482,8 +478,11 @@
         let orderBasket = [];
         let currentModalProduct = null;
         let currentModalAction = "";
+        
+        // Geçici Ürün Ekleme Nesnesi (Modal Onay Süreci İçin)
+        let tempProductToSave = null;
 
-        // Ana Veritabanı Dinleyicisi (Real-Time listener)
+        // Ana Veritabanı Dinleyicisi
         db.ref('depo_stok').on('value', (snapshot) => {
             const rawData = snapshot.val();
             inventory = [];
@@ -509,7 +508,6 @@
             return localNow.toISOString().split('T')[0];
         }
 
-        // SKT Süresi Dolanları Otomatik Temizleme Fonksiyonu
         function checkExpiredProducts(rawData) {
             if (!rawData) return;
             const todayStr = getTodayDateString();
@@ -535,7 +533,6 @@
             });
         }
 
-        // SKT Uyarı Buton Durumu Güncelleme
         function updateSktAlertBtnState() {
             const btn = document.getElementById('sktAlertButton');
             if(!btn) return;
@@ -597,12 +594,16 @@
             document.getElementById('sktUrgentModal').style.display = "none";
         };
 
+        // Sipariş Talep Listesi Açılır Kutusunun Güncellenmesi (Sadece İlk Kurulum/Ana Malzemeler Listelenir)
         function updateOrderProductDropdown() {
             const selectEl = document.getElementById('orderProductSelect');
             if(!selectEl) return;
             const currentSelected = selectEl.value;
             selectEl.innerHTML = '<option value="">-- Depodaki Ürünlerden Seçin --</option>';
-            let sortedInv = [...inventory].sort((a,b) => a.name.localeCompare(b.name, 'tr'));
+            
+            // KURAL: 'isAddOnProduct' bayrağı TRUE OLANLAR (Yeni ekleme butonuyla girilenler) talep formunda listelenmez.
+            let sortedInv = [...inventory].filter(item => !item.isAddOnProduct).sort((a,b) => a.name.localeCompare(b.name, 'tr'));
+            
             sortedInv.forEach(item => {
                 const opt = document.createElement('option');
                 let labelText = item.name;
@@ -617,7 +618,6 @@
             if(currentSelected) selectEl.value = currentSelected;
         }
 
-        // Sepet Mantığı
         window.addItemToBasket = function() {
             const selectEl = document.getElementById('orderProductSelect');
             const qtyInput = document.getElementById('orderQty');
@@ -665,7 +665,7 @@
             });
         }
 
-        // Arayüz Çıktı Tablosunu Listeleme (Render UI)
+        // Arayüz Çıktı Tablosunu Listeleme (Ayrı satır/parti mantığı destekli)
         function renderUi() {
             const tbody = document.getElementById('liveMaterialsBody');
             const tfoot = document.getElementById('tableTotalFooter');
@@ -675,6 +675,9 @@
             tbody.innerHTML = ''; tfoot.innerHTML = '';
             
             const todayStr = getTodayDateString();
+            
+            // Tüm ürünleri filtreleme kriterlerine göre süzüyoruz.
+            // Satır birleştirme yapılmadığı için her giriş panelde kendi SKT'siyle bağımsız yer kaplar.
             let filteredInventory = inventory.filter(item => {
                 let matchesSearch = item.name.toLowerCase().includes(filterText);
                 let matchesDate = selectedDate ? (item.lastUpdatedDate === selectedDate) : true;
@@ -716,7 +719,6 @@
                 }
 
                 let actionButtonsHtml = "";
-                // Buton İsimleri "Ekle" ve "Düş" Olarak uyarlandı
                 if(currentRole === 'YÖNETİCİ' || currentRole === 'DEPO') {
                     actionButtonsHtml = `
                         <button class="action-btn btn-add-stock" onclick="openStockActionModal('${item.dbKey}', 'EKLE')">📥 Ekle</button>
@@ -749,7 +751,7 @@
             tfoot.innerHTML = `<tr class="total-row"><td colspan="2">Filtrelenmiş Toplam Listelenen Stok:</td><td colspan="5">${totalStrings.join(' | ')}</td></tr>`;
         }
 
-        // ÜRÜN KARTI DÜZENLEME FONKSİYONLARI (Mevcut Stok Seçeneği Dahil)
+        // Ürün Düzenleme Penceresi
         window.openEditProductModal = function(dbKey) {
             const item = inventory.find(i => i.dbKey === dbKey);
             if (!item) return;
@@ -771,10 +773,7 @@
 
         document.getElementById('editProductForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            if(currentRole !== 'YÖNETİCİ' && currentRole !== 'DEPO') {
-                alert("Bu işlemi yapmak için yetkiniz yok!");
-                return;
-            }
+            if(currentRole !== 'YÖNETİCİ' && currentRole !== 'DEPO') { alert("Yetkiniz yok!"); return; }
 
             const dbKey = document.getElementById('editProdKey').value;
             const updatedName = document.getElementById('editProdName').value.trim().toUpperCase();
@@ -791,47 +790,33 @@
 
             const now = new Date();
             const updates = {
-                name: updatedName,
-                depot: updatedDepot,
-                unit: updatedUnit,
-                quantity: updatedQty,
-                criticalLimit: updatedLimit,
-                skt: updatedSkt,
+                name: updatedName, depot: updatedDepot, unit: updatedUnit,
+                quantity: updatedQty, criticalLimit: updatedLimit, skt: updatedSkt,
                 lastUpdatedDate: getTodayDateString()
             };
 
             db.ref('depo_stok/' + dbKey).update(updates).then(() => {
                 let reportType = 'ÜRÜN DÜZENLEME';
                 let reportQtyStr = '---';
-                
                 if (isStockChanged) {
                     reportType = 'ÜRÜN DÜZENLEME (STOK GÜNCELLENDİ)';
                     reportQtyStr = `${oldItem.quantity} -> ${updatedQty} ${updatedUnit}`;
                 }
 
                 db.ref('depo_rapor').push({
-                    time: now.toLocaleString('tr-TR'),
-                    rawTime: now.toISOString(),
+                    time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(),
                     user: localStorage.getItem('username') || 'BİLİNMEYEN',
-                    product: updatedName,
-                    type: reportType,
-                    qty: reportQtyStr,
-                    backupKey: dbKey,
-                    backupDepot: updatedDepot,
-                    backupUnit: updatedUnit,
-                    backupLimit: updatedLimit,
-                    backupSkt: updatedSkt
+                    product: updatedName, type: reportType, qty: reportQtyStr,
+                    backupKey: dbKey, backupDepot: updatedDepot, backupUnit: updatedUnit,
+                    backupLimit: updatedLimit, backupSkt: updatedSkt
                 });
 
                 closeEditProductModal();
-                alert("Ürün kartı bilgileri ve stok durumu başarıyla revize edildi!");
-            }).catch(error => {
-                console.error("Güncelleme hatası: ", error);
-                alert("Güncelleme yapılırken veritabanı hatası oluştu.");
-            });
+                alert("Malzeme bilgileri başarıyla revize edildi!");
+            }).catch(err => alert("Hata: " + err.message));
         });
 
-        // Hacimsel Stok Değişim Modalları (Ekle / Düş / İmha Girişleri Olarak Düzenlendi)
+        // Hızlı Hacimsel Stok İşlem Modalları (Ekle / Düş / İmha)
         window.openStockActionModal = function(dbKey, actionType) {
             currentModalProduct = inventory.find(i => i.dbKey === dbKey);
             if(!currentModalProduct) return;
@@ -839,12 +824,7 @@
             
             const titleEl = document.getElementById('actionModalTitle');
             const qtyLabelEl = document.getElementById('actionQtyLabel');
-            const partyGroup = document.getElementById('partySktGroup');
-            const sktInput = document.getElementById('actionModalSkt');
             
-            sktInput.value = ""; partyGroup.style.display = "none";
-            
-            // Orijinal ilk form yapısına göre etiketler uyarlanmıştır
             if(actionType === 'EKLE') {
                 titleEl.innerHTML = `📥 [${currentModalProduct.name}] İçin Stok Ekleme`;
                 qtyLabelEl.innerHTML = "Eklenecek Miktar (" + (currentModalProduct.unit || 'Adet') + ")";
@@ -874,7 +854,6 @@
             let currentQty = parseFloat(currentModalProduct.quantity) || 0;
             let newQty = currentQty;
 
-            // Mantıksal kontroller EKLE ve DÜŞ kelimelerine uyarlandı
             if(currentModalAction === 'EKLE') {
                 newQty = parseFloat((currentQty + qtyVal).toFixed(2));
             } else if(currentModalAction === 'DÜŞ' || currentModalAction === 'İMHA') {
@@ -892,17 +871,11 @@
 
             db.ref('depo_stok/' + currentModalProduct.dbKey).update(updates).then(() => {
                 db.ref('depo_rapor').push({
-                    time: now.toLocaleString('tr-TR'),
-                    rawTime: now.toISOString(),
-                    user: activeUser,
-                    product: currentModalProduct.name,
-                    type: currentModalAction, // EKLE veya DÜŞ yazar
-                    qty: `${qtyVal} ${currentModalProduct.unit}`,
-                    backupKey: currentModalProduct.dbKey,
-                    backupDepot: currentModalProduct.depot || 'KURU GIDA',
-                    backupUnit: currentModalProduct.unit || 'Adet',
-                    backupLimit: currentModalProduct.criticalLimit || 0,
-                    backupSkt: currentModalProduct.skt || ''
+                    time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(),
+                    user: activeUser, product: currentModalProduct.name, type: currentModalAction,
+                    qty: `${qtyVal} ${currentModalProduct.unit}`, backupKey: currentModalProduct.dbKey,
+                    backupDepot: currentModalProduct.depot || 'KURU GIDA', backupUnit: currentModalProduct.unit || 'Adet',
+                    backupLimit: currentModalProduct.criticalLimit || 0, backupSkt: currentModalProduct.skt || ''
                 });
                 closeStockActionModal();
             }).catch(err => alert("Hata oluştu: " + err.message));
@@ -916,23 +889,18 @@
             if(confirm(`[${item.name}] isimli ürünü ve tüm stok kartını kalıcı olarak silmek istediğinize emin misiniz?`)) {
                 const now = new Date();
                 db.ref('depo_rapor').push({
-                    time: now.toLocaleString('tr-TR'),
-                    rawTime: now.toISOString(),
-                    user: localStorage.getItem('username') || 'BİLİNMEYEN',
-                    product: item.name,
-                    type: 'KULLANICI MANUEL SİLME',
-                    qty: `${item.quantity} ${item.unit}`,
-                    backupKey: dbKey,
-                    backupDepot: item.depot || 'KURU GIDA',
-                    backupUnit: item.unit || 'Adet',
-                    backupLimit: item.criticalLimit || 0,
-                    backupSkt: item.skt || ''
+                    time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(),
+                    user: localStorage.getItem('username') || 'BİLİNMEYEN', product: item.name,
+                    type: 'KULLANICI MANUEL SİLME', qty: `${item.quantity} ${item.unit}`, backupKey: dbKey,
+                    backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet',
+                    backupLimit: item.criticalLimit || 0, backupSkt: item.skt || ''
                 });
                 db.ref('depo_stok/' + dbKey).remove().then(() => { alert("Ürün sistemden tamamen kaldırıldı."); });
             }
         };
 
-        // Sıfırdan Yeni Ürün Kartı Tanımlama
+
+        // SİSTEME YENİ ÜRÜN TANIMLAMA ADIMI - YENİ ÇALIŞMA PRENSİBİ
         document.getElementById('addForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if(currentRole !== 'YÖNETİCİ' && currentRole !== 'DEPO') { alert("Yetkiniz yok!"); return; }
@@ -942,39 +910,81 @@
             const unitSelect = document.getElementById('newProdUnit');
             const qtyInput = document.getElementById('newProdQty');
             const limitInput = document.getElementById('newProdLimit');
-            const sktInput = document.getElementById('newProdSkt');
             
             const rawName = nameInput.value.trim().toUpperCase();
             const depot = depotSelect.value;
             const unit = unitSelect.value;
             const qty = parseFloat(qtyInput.value) || 0;
             const limit = parseFloat(limitInput.value) || 0;
-            const sktValue = sktInput.value || "";
 
             if(!rawName) { alert("Lütfen geçerli bir ürün adı yazın!"); return; }
             
+            // Verileri geçici bir global nesneye saklıyoruz, asıl kayıt SKT modalı onaylandığında yapılacak
+            tempProductToSave = {
+                name: rawName,
+                depot: depot,
+                unit: unit,
+                quantity: qty,
+                criticalLimit: limit,
+                isAddOnProduct: true // KURAL: Sonradan eklenen ürünlerin sipariş formunda listelenmemesi için bayrak koyuyoruz.
+            };
+
+            // Modaldaki etiket ismini yazdırıp pencereyi tetikliyoruz
+            document.getElementById('lblNewProdModalName').textContent = rawName;
+            document.getElementById('newProdModalSkt').value = "";
+            document.getElementById('addProductSktModal').style.display = "flex";
+        });
+
+        window.closeAddProductSktModal = function() {
+            document.getElementById('addProductSktModal').style.display = "none";
+            tempProductToSave = null;
+        };
+
+        // SKT Giriş Penceresi Onay Formu Gönderimi
+        document.getElementById('addProductSktForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(!tempProductToSave) return;
+
+            const sktValue = document.getElementById('newProdModalSkt').value;
+            if(!sktValue) { alert("Lütfen son kullanma tarihi seçin!"); return; }
+
             const todayStr = getTodayDateString();
             const newRef = db.ref('depo_stok').push();
             const uniqueKey = newRef.key;
 
-            const itemData = {
-                dbKey: uniqueKey, name: rawName, depot: depot, unit: unit,
-                quantity: qty, criticalLimit: limit, skt: sktValue, lastUpdatedDate: todayStr
+            // Tamamlanmış veri seti
+            const finalItemData = {
+                dbKey: uniqueKey,
+                name: tempProductToSave.name,
+                depot: tempProductToSave.depot,
+                unit: tempProductToSave.unit,
+                quantity: tempProductToSave.quantity,
+                criticalLimit: tempProductToSave.criticalLimit,
+                skt: sktValue,
+                lastUpdatedDate: todayStr,
+                isAddOnProduct: tempProductToSave.isAddOnProduct
             };
 
-            newRef.set(itemData).then(() => {
+            newRef.set(finalItemData).then(() => {
                 const now = new Date();
                 db.ref('depo_rapor').push({
                     time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(),
                     user: localStorage.getItem('username') || 'BİLİNMEYEN',
-                    product: rawName, type: 'YENİ ÜRÜN TANIMLAMA', qty: `${qty} ${unit}`
+                    product: tempProductToSave.name, type: 'YENİ ÜRÜN TANIMLAMA', qty: `${tempProductToSave.quantity} ${tempProductToSave.unit}`
                 });
-                nameInput.value = ""; qtyInput.value = "0"; limitInput.value = "0"; sktInput.value = "";
-                alert("Yeni ürün envantere başarıyla kaydedildi!");
+                
+                // Form alanlarını sıfırlama
+                document.getElementById('newProdName').value = "";
+                document.getElementById('newProdQty').value = "0";
+                document.getElementById('newProdLimit').value = "0";
+                
+                closeAddProductSktModal();
+                alert("Ürün, SKT bilgisiyle birlikte ayrı bir parti olarak envantere eklendi!");
             }).catch(err => alert("Hata: " + err.message));
         });
 
-        // Toplu Sipariş Listesi Formu Gönderimi ve EmailJS Entegrasyonu
+
+        // Toplu Sipariş Listesi Formu Gönderimi
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if(orderBasket.length === 0) { alert("Sipariş sepetiniz boş! Lütfen önce listeye ürün ekleyin."); return; }
@@ -1007,13 +1017,12 @@
         function sendEmailNow(bodyHtml) {
             const templateParams = { to_email: "bahcelievlermemorialct@gmail.com", order_details_html: bodyHtml };
             emailjs.send('service_default', 'template_stok_talep', templateParams).then(() => {
-                alert("🚀 Harika! Sipariş listeniz yöneticinin e-posta adresine başarıyla ulaştırıldı.");
+                alert("🚀 Sipariş listeniz yöneticinin e-posta adresine başarıyla ulaştırıldı.");
                 orderBasket = []; document.getElementById('orderNotes').value = "";
                 renderBasketVisual();
             }).catch(err => { alert("E-posta gönderilirken teknik bir hata oluştu: " + JSON.stringify(err)); });
         }
 
-        // Filtreleme Dinleyicileri ve Depo Sekmeleri
         document.getElementById('searchInput').addEventListener('input', renderUi);
         document.getElementById('dateFilterInput').addEventListener('change', renderUi);
         
@@ -1031,7 +1040,7 @@
             renderUi();
         };
 
-        // Raporlama Paneli ve Geri Al (Undo) Mekanizması
+        // Raporlama Paneli
         document.getElementById('openReportBtn').addEventListener('click', () => {
             if(currentRole === 'YÖNETİCİ') { document.getElementById('clearAllReportsBtn').style.display = 'inline-block'; }
             db.ref('depo_rapor').once('value', (snapshot) => {
@@ -1042,7 +1051,6 @@
                     const sortedReports = Object.entries(data).sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
                     sortedReports.forEach(([fbKey, rep]) => {
                         let undoCellHtml = '';
-                        // Rapor kontrol koşulları EKLE ve DÜŞ olarak güncellendi
                         if(currentRole === 'YÖNETİCİ' && (rep.type === 'DÜŞ' || rep.type === 'EKLE' || rep.type === 'İMHA' || rep.type === 'KULLANICI MANUEL SİLME' || rep.type === 'SKT OTOMATİK SİLME' || rep.type === 'ÜRÜN DÜZENLEME (STOK GÜNCELLENDİ)')) {
                             undoCellHtml = `<button class="btn-undo" onclick="undoReportAction('${fbKey}')">Geri Al</button> <button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Sil</button>`;
                         } else if(currentRole === 'YÖNETİCİ') {
@@ -1057,14 +1065,14 @@
 
         window.deleteReportRow = function(fbKey) {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Bu işlem rapor kaydı listeden kalıcı olarak silinsin mi? (Stok miktarını etkilemez)")) {
+            if(confirm("Bu işlem rapor kaydı listeden kalıcı olarak silinsin mi?")) {
                 db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click());
             }
         };
 
         window.clearAllReports = function() {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("DİKKAT! Tüm tarihli işlem geçmişi rapor dökümünü kalıcı olarak temizlemek istediğinize emin misiniz?")) {
+            if(confirm("Tüm tarihli işlem geçmişi rapor dökümünü kalıcı olarak temizlemek istediğinize emin misiniz?")) {
                 db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click());
             }
         };
@@ -1084,7 +1092,7 @@
                         };
                         db.ref('depo_stok/' + rep.backupKey).set(restoreData).then(() => {
                             db.ref('depo_rapor/' + fbKey).remove().then(() => {
-                                alert("Silinen ürün depoya başarıyla geri yüklendi ve rapor kaydı temizlendi!");
+                                alert("Silinen ürün depoya başarıyla geri yüklendi!");
                                 document.getElementById('openReportBtn').click();
                             });
                         });
@@ -1093,7 +1101,7 @@
                         let oldQty = parseFloat(rep.qty.split('->')[0].trim());
                         db.ref('depo_stok/' + rep.backupKey).update({ quantity: oldQty, lastUpdatedDate: getTodayDateString() }).then(() => {
                             db.ref('depo_rapor/' + fbKey).remove().then(() => {
-                                alert("Stok düzenleme işlemi geri alındı, eski miktara dönüldü!");
+                                alert("Stok düzenleme işlemi geri alındı!");
                                 document.getElementById('openReportBtn').click();
                             });
                         });
@@ -1105,14 +1113,13 @@
                             let currentQty = parseFloat(currentStock.quantity) || 0;
                             let restoredQty = currentQty;
                             
-                            // Geri alma mekanizması yeni terminolojiye (EKLE/DÜŞ) göre kurgulandı
                             if(rep.type === 'EKLE') { restoredQty = parseFloat((currentQty - qtyVal).toFixed(2)); }
                             else if(rep.type === 'DÜŞ' || rep.type === 'İMHA') { restoredQty = parseFloat((currentQty + qtyVal).toFixed(2)); }
                             if(restoredQty < 0) restoredQty = 0;
                             
                             db.ref('depo_stok/' + rep.backupKey).update({ quantity: restoredQty, lastUpdatedDate: getTodayDateString() }).then(() => {
                                 db.ref('depo_rapor/' + fbKey).remove().then(() => {
-                                    alert("İşlem başarıyla geri alındı, stok miktarı revize edildi!");
+                                    alert("İşlem başarıyla geri alındı!");
                                     document.getElementById('openReportBtn').click();
                                 });
                             });
@@ -1122,7 +1129,7 @@
             });
         };
 
-        // Verilen Sipariş Takip Paneli
+        // Sipariş Takip Paneli
         document.getElementById('openOrdersBtn').addEventListener('click', () => {
             if(currentRole === 'YÖNETİCİ') {
                 document.getElementById('clearAllOrdersBtn').style.display = 'inline-block';
@@ -1155,7 +1162,7 @@
 
         window.clearAllOrders = function() {
             if(currentRole !== 'YÖNETİCİ') { alert("Yetkiniz yok!"); return; }
-            if(confirm("DİKKAT! Verilen tüm siparişlerin geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) {
+            if(confirm("Verilen tüm siparişlerin geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) {
                 db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click());
             }
         };
