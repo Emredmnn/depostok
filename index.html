@@ -438,6 +438,13 @@
         .btn-waste-stock:hover { 
             background-color: #e06d0f; 
         } 
+        .btn-edit-stock {
+            background-color: #0dcaf0;
+            color: #212529;
+        }
+        .btn-edit-stock:hover {
+            background-color: #31d2f2;
+        }
         .btn-del-stock { 
             background-color: #dc3545; 
         } 
@@ -679,6 +686,47 @@
     </div>
 </div>
 
+<div class="modal" id="editProductModal">
+    <div class="stock-modal-card" style="border-top: 4px solid #0dcaf0;">
+        <div class="stock-modal-title">📝 Ürün Kartı Düzenle</div>
+        <form id="editProductForm">
+            <div class="form-group">
+                <label>Ürün Adı</label>
+                <input type="text" id="editProdName" required>
+            </div>
+            <div class="form-group">
+                <label>Depo Alanı</label>
+                <select id="editProdDepot">
+                    <option value="KURU GIDA">KURU GIDA</option> 
+                    <option value="ŞARKÜTERİ">ŞARKÜTERİ</option> 
+                    <option value="ET +4">ET +4</option> 
+                    <option value="SEBZE +4">SEBZE +4</option> 
+                    <option value="SEBZE -18">SEBZE -18</option> 
+                    <option value="TATLI +4">TATLI +4</option> 
+                    <option value="TATLI -18">TATLI -18</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Ölçü Birimi</label>
+                <select id="editProdUnit">
+                    <option value="KG">Kilogram (KG)</option> 
+                    <option value="Litre">Litre (L)</option> 
+                    <option value="Adet">Adet</option> 
+                    <option value="Koli">Koli</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Kritik Eşik Sınırı</label>
+                <input type="number" id="editProdLimit" step="0.01" min="0" required>
+            </div>
+            <div class="stock-modal-buttons">
+                <button type="button" class="btn-sm-cancel" onclick="closeEditProductModal()">İptal</button>
+                <button type="submit" class="btn-sm-save" style="background:#0dcaf0; color:#212529;">Değişiklikleri Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="container" id="mainContainer"> 
     <div id="addProductColumn"> 
         <div class="card"> 
@@ -883,6 +931,7 @@
     let currentModalProduct = null; 
     let currentModalAction = ""; 
     let isNewPartyWithSkt = false;
+    let currentEditProduct = null;
     
     db.ref('depo_stok').on('value', (snapshot) => { 
         const rawData = snapshot.val(); 
@@ -1119,9 +1168,9 @@
             if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') { 
                 buttonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>`;
             } else if (currentRole === 'DEPO') { 
-                buttonsHtml = ` <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button> `;
+                buttonsHtml = ` <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button> <button class="action-btn btn-edit-stock" onclick="openEditProductModal('${itemUniqueId}')">📝 Düzenle</button> `;
             } else {  
-                buttonsHtml = ` <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button> <button class="action-btn btn-del-stock" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button> `;
+                buttonsHtml = ` <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button> <button class="action-btn btn-edit-stock" onclick="openEditProductModal('${itemUniqueId}')">📝 Düzenle</button> <button class="action-btn btn-del-stock" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button> `;
             } 
             const tr = document.createElement('tr'); 
             tr.innerHTML = ` 
@@ -1235,6 +1284,57 @@
             qty: `${qty} ${item.unit}` 
         }); 
         closeStockActionModal(); 
+    });
+
+    /* ÜRÜN KART DÜZENLEME FONKSİYONLARI */
+    window.openEditProductModal = function(uniqueId) {
+        const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId));
+        if(!item) return;
+        currentEditProduct = item;
+        
+        document.getElementById('editProdName').value = item.name;
+        document.getElementById('editProdDepot').value = item.depot || "KURU GIDA";
+        document.getElementById('editProdUnit').value = item.unit || "Adet";
+        document.getElementById('editProdLimit').value = item.criticalLimit || 0;
+        
+        document.getElementById('editProductModal').style.display = 'flex';
+    };
+
+    window.closeEditProductModal = function() {
+        document.getElementById('editProductModal').style.display = 'none';
+        currentEditProduct = null;
+    };
+
+    document.getElementById('editProductForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        if(!currentEditProduct) return;
+        
+        const newName = document.getElementById('editProdName').value.trim();
+        const newDepot = document.getElementById('editProdDepot').value;
+        const newUnit = document.getElementById('editProdUnit').value;
+        const newLimit = parseFloat(document.getElementById('editProdLimit').value) || 0;
+        
+        let itemUniqueKey = currentEditProduct.dbKey || currentEditProduct.name.replace(/[.#$\[\]]/g, "");
+        
+        db.ref('depo_stok/' + itemUniqueKey).update({
+            name: newName,
+            depot: newDepot,
+            unit: newUnit,
+            criticalLimit: newLimit,
+            lastUpdatedDate: getTodayDateString()
+        }).then(() => {
+            db.ref('depo_rapor').push({ 
+                time: new Date().toLocaleString('tr-TR'), 
+                rawTime: new Date().toISOString(), 
+                user: currentRole, 
+                product: newName, 
+                type: 'ÜRÜN DÜZENLENDİ', 
+                qty: `Limit: ${newLimit} | Brm: ${newUnit}` 
+            });
+            closeEditProductModal();
+        }).catch((err) => {
+            alert("Güncelleme sırasında hata oluştu: " + err.message);
+        });
     });
     
     const orderFormEl = document.getElementById('orderForm'); 
@@ -1356,7 +1456,7 @@
     }; 
     
     window.undoDeletedProduct = function(reportFbKey, prodName, bKey, bDepot, bUnit, bQtyStr, bLimit, bSkt) { 
-        if(confirm(`"${prodName}" ürününü sildiğiniz miktarla birlikte depoya geri yüklemek istiyor musiniz?`)) {  
+        if(confirm(`"${prodName}" ürününü sildiğiniz miktarla birlikte depoya geri yüklemek istiyor misiniz?`)) {  
             let parsedQty = parseFloat(bQtyStr) || 0; 
             let targetKey = (bKey && bKey !== 'undefined') ? bKey : prodName.replace(/[.#$\[\]]/g, "");
             db.ref('depo_stok/' + targetKey).set({ 
