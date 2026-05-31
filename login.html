@@ -8,9 +8,13 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: linear-gradient(135deg, #f4f6f9 0%, #e9ecef 100%); height: 100vh; display: flex; justify-content: center; align-items: center; }
         .login-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-top: 5px solid #0d6efd; text-align: center; }
+        
+        /* --- LOGO ALANI VE GÖRSEL TASARIM OPTİMİZASYONU --- */
         .logo-area { margin-bottom: 25px; }
+        .login-logo { max-height: 80px; width: auto; object-fit: contain; margin-bottom: 15px; border-radius: 6px; }
         .logo-area h2 { color: #0d6efd; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
         .logo-area p { color: #6c757d; font-size: 14px; font-weight: 600; }
+        
         .form-group { margin-bottom: 20px; text-align: left; position: relative; }
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #495057; }
         input[type="text"], input[type="password"] { width: 100%; padding: 12px; padding-right: 65px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
@@ -34,6 +38,7 @@
 
 <div class="login-card">
     <div class="logo-area">
+        <img src="akilli_depo_logo.jpeg.jpeg" alt="Akıllı Depo Otomasyon Sistemi Logo" class="login-logo">
         <h2>BAHÇELİEVLER MEMORİAL CT</h2>
         <p>Canlı Stok Takip Sistemi</p>
     </div>
@@ -94,7 +99,7 @@
 
         let detectedRole = "";
 
-        // Şifre ve kullanıcı adı eşleşme matrisi (Düzeltildi)
+        // Şifre ve kullanıcı adı eşleşme matrisi (Korundu)
         if ((user === "yonetici" || userInput === "yönetici") && pass === "2605") {
             detectedRole = "YÖNETİCİ";
         } else if (user === "garson" && pass === "2222") {
@@ -102,7 +107,7 @@
         } else if ((user === "uretim" || userInput === "üretim") && pass === "3333") {
             detectedRole = "ÜRETİM";
         } else if (user === "depo" && pass === "1111") {
-            detectedRole = "DEPO"; // Rol ataması DEPO olarak düzeltildi
+            detectedRole = "DEPO";
         }
 
         if (detectedRole !== "") {
