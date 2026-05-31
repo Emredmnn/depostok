@@ -7,15 +7,10 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background: linear-gradient(135deg, #f4f6f9 0%, #e9ecef 100%); height: 100vh; display: flex; justify-content: center; align-items: center; }
-        
         .login-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); width: 100%; max-width: 420px; border-top: 5px solid #0d6efd; text-align: center; }
-        
-        /* Logo ve Başlık Alanı */
-        .logo-area { margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; }
-        .system-logo { width: 90px; height: 90px; object-fit: cover; border-radius: 50%; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 2px solid #e9ecef; }
-        .logo-area h2 { color: #0d6efd; font-size: 20px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
+        .logo-area { margin-bottom: 25px; }
+        .logo-area h2 { color: #0d6efd; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
         .logo-area p { color: #6c757d; font-size: 14px; font-weight: 600; }
-        
         .form-group { margin-bottom: 20px; text-align: left; position: relative; }
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #495057; }
         input[type="text"], input[type="password"] { width: 100%; padding: 12px; padding-right: 65px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
@@ -29,7 +24,7 @@
         .remember-me-container { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; text-align: left; }
         .remember-me-container input { width: 16px; height: 16px; cursor: pointer; }
         .remember-me-container label { display: inline; margin-bottom: 0; font-size: 13px; color: #495057; cursor: pointer; user-select: none; }
-        
+
         .btn-login { width: 100%; padding: 14px; background: #0d6efd; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: background 0.2s; margin-top: 5px; }
         .btn-login:hover { background: #0b5ed7; }
         .error-msg { color: #dc3545; font-size: 13px; margin-top: 12px; font-weight: 600; display: none; }
@@ -39,11 +34,9 @@
 
 <div class="login-card">
     <div class="logo-area">
-        <img src="akilli_depo_logo.jpeg.jpeg" alt="Akıllı Depo Logo" class="system-logo">
         <h2>BAHÇELİEVLER MEMORİAL CT</h2>
         <p>Canlı Stok Takip Sistemi</p>
     </div>
-
     <form id="loginForm">
         <div class="form-group">
             <label>Kullanıcı Adı</label>
@@ -66,7 +59,7 @@
 </div>
 
 <script>
-    // Sayfa yüklendiğinde Beni Hatırla kontrolü
+    // Sayfa yüklendiğinde Beni Hatırla kontrolü yap
     document.addEventListener("DOMContentLoaded", function() {
         const savedUser = localStorage.getItem('rememberedUsername');
         if (savedUser) {
@@ -88,48 +81,39 @@
         }
     }
 
-    /* Dış kütüphaneye bağımlılığı bitiren, 
-       tarayıcının kendi içindeki yerel SHA-256 fonksiyonu */
-    async function sha256(message) {
-        const msgBuffer = new TextEncoder().encode(message);                    
-        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    // Giriş Kontrolü ve Güvenli Şifre Matrisi
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    // Giriş Kontrolü ve Belirlenen Şifre Kombinasyonları
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
+        // Türkçe karakter girişlerini yumuşatarak olası hataları önlüyoruz
         let userInput = document.getElementById('username').value.trim().toLowerCase();
         let user = userInput.replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c');
         
         const pass = document.getElementById('password').value;
         const rememberMeChecked = document.getElementById('rememberMe').checked;
 
-        // Yerel fonksiyon ile şifreyi asenkron olarak hash'liyoruz
-        const hashedPass = await sha256(pass);
-
         let detectedRole = "";
 
-        // SHA-256 Eşleşmeleri (2605, 2222, 3333, 1111)
-        if ((user === "yonetici" || userInput === "yönetici") && hashedPass === "69a19c63b469d4fa153a5e5527f739665f80b27be30058e5f5f4b005ad98a96e") {
+        // Şifre ve kullanıcı adı eşleşme matrisi (Düzeltildi)
+        if ((user === "yonetici" || userInput === "yönetici") && pass === "2605") {
             detectedRole = "YÖNETİCİ";
-        } else if (user === "garson" && hashedPass === "fdb71d3eb3811f32a76f2f360721213f380757277b07412ca6de67f8923a1ca7") {
+        } else if (user === "garson" && pass === "2222") {
             detectedRole = "GARSON";
-        } else if ((user === "uretim" || userInput === "üretim") && hashedPass === "31e84df39c1488c2327c5bfeb7a96603d27464e8eec2f854a6dc6883e60155b1") {
+        } else if ((user === "uretim" || userInput === "üretim") && pass === "3333") {
             detectedRole = "ÜRETİM";
-        } else if (user === "depo" && hashedPass === "4ba59b17278d1f2b606825c35b3648f8a846f414bf7bf656208beec46c7c40f5") {
-            detectedRole = "DEPO";
+        } else if (user === "depo" && pass === "1111") {
+            detectedRole = "DEPO"; // Rol ataması DEPO olarak düzeltildi
         }
 
         if (detectedRole !== "") {
+            // Beni hatırla seçiliyse orijinal girdiyi kaydet
             if (rememberMeChecked) {
                 localStorage.setItem('rememberedUsername', document.getElementById('username').value.trim());
             } else {
                 localStorage.removeItem('rememberedUsername');
             }
 
+            // Yetki atamasını yap ve ana panele yönlendir
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userRole', detectedRole);
             window.location.replace('index.html');
@@ -138,6 +122,5 @@
         }
     });
 </script>
-
 </body>
 </html>
