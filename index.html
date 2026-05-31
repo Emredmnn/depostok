@@ -28,7 +28,7 @@
         /* --- HEADER VE PROSTATÜS ALANI --- */
         header { 
             background: linear-gradient(135deg, #003673, #0056b3); 
-            color: white; padding: 20px; var(--border-radius); 
+            color: white; padding: 20px; 
             border-radius: var(--border-radius); box-shadow: var(--box-shadow); 
             margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;
         }
@@ -59,7 +59,7 @@
 
         @media (max-width: 992px) { .two-columns { grid-template-columns: 1fr; } }
 
-        .card { background: white; border-radius: var(--border-radius); padding: 20px; box-shadow: var(--box-shadow); border: 1px solid #eef2f5; }
+        .card { background: white; border-radius: var(--border-radius); padding: 20px; box-shadow: var(--box-shadow); border: 1px solid #eef2f5; margin-bottom: 20px; }
         .card-title { font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #003673; border-bottom: 2px solid #f0f4f8; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 
         /* --- DEPO FİLTRELEME BUTONLARI --- */
@@ -75,6 +75,8 @@
         .form-control:focus { border-color: var(--primary-color); background-color: #fff; box-shadow: 0 0 0 3px rgba(0,86,179,0.1); }
         .btn-submit { width: 100%; background: var(--success-color); color: white; border: none; padding: 11px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 10px; box-shadow: 0 2px 4px rgba(40,167,69,0.2); }
         .btn-submit:hover { background: #218838; }
+        .btn-trigger-order { width: 100%; background: #0056b3; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: var(--box-shadow); }
+        .btn-trigger-order:hover { background: #003673; }
 
         /* --- FİLTRE VE ARAMA PANELİ --- */
         .search-filter-grid { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 15px; align-items: center; }
@@ -112,6 +114,7 @@
         .btn-add-stock { background-color: var(--success-color); }
         .btn-drop-stock { background-color: #ff9800; }
         .btn-waste-stock { background-color: #795548; }
+        .btn-edit-stock { background-color: #17a2b8; }
         .btn-del-stock { background-color: var(--danger-color); }
 
         /* Alt Toplam Satırı */
@@ -119,7 +122,7 @@
         .total-row td { padding: 14px 10px; font-size: 13px; }
 
         /* --- MALZEME TALEP SEPETİ PANELİ --- */
-        .order-panel-card { background: #fff; border: 2px solid var(--primary-color); border-radius: var(--border-radius); padding: 15px; margin-bottom: 20px; box-shadow: var(--box-shadow); display: none; }
+        .order-panel-card { background: #fff; border: 2px solid var(--primary-color); border-radius: var(--border-radius); padding: 15px; margin-top: 15px; box-shadow: var(--box-shadow); display: none; }
         .basket-container { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px; margin-bottom: 12px; max-height: 200px; overflow-y: auto; }
         .basket-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; background: white; border: 1px solid #e2e8f0; border-radius: 4px; margin-bottom: 6px; font-size: 12.5px; }
         .basket-item span { display: flex; align-items: center; gap: 4px; }
@@ -127,7 +130,7 @@
         .btn-remove-basket-item:hover { color: #b91c1c; }
         .basket-row-flex { display: grid; grid-template-columns: 1fr 100px auto; gap: 8px; align-items: flex-end; margin-bottom: 12px; }
 
-        /* --- MODAL PENCERELER (AÇILIR EKRAZNLAR) --- */
+        /* --- MODAL PENCERELER (AÇILIR EKRANLAR) --- */
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display:none; justify-content:center; align-items:center; z-index:9999; padding: 15px; }
         .modal-content { background: white; border-radius: var(--border-radius); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.25s ease-out; overflow: hidden; }
         .modal-large { max-width: 850px; }
@@ -167,93 +170,95 @@
         </div>
         <div class="header-actions">
             <button class="nav-btn btn-urgent" id="sktAlertButton" onclick="openSktUrgentModal()" style="display: none;">⚠️ SKT Kritik (0 Ürün)</button>
-            <button class="nav-btn" onclick="toggleOrderPanel()">📦 Malzeme Talep Et</button>
             <button class="nav-btn" id="openReportBtn">📋 İşlem Geçmişi Raporu</button>
             <button class="nav-btn" id="openOrdersBtn">🛒 Verilen Siparişler</button>
             <button class="nav-btn btn-logout" id="logoutBtn">❌ Güvenli Çıkış</button>
         </div>
     </header>
 
-    <div class="order-panel-card" id="orderPanelCard">
-        <div class="card-title">🛒 Malzeme Talep Listesi / Sepet <span id="basketCount" style="font-size:13px; color:#666; margin-left:5px;">(0 Ürün)</span></div>
-        <form id="orderForm">
-            <div class="basket-row-flex">
-                <div>
-                    <label style="display:block; font-size:11px; font-weight:bold; margin-bottom:4px;">Malzeme Seçin:</label>
-                    <select class="form-control" id="orderProductSelect">
-                        <option value="">-- Depodaki Ürünlerden Seçin --</option>
-                    </select>
-                </div>
-                <div>
-                    <label style="display:block; font-size:11px; font-weight:bold; margin-bottom:4px;">Miktar:</label>
-                    <input type="number" step="0.01" class="form-control" id="orderQty" placeholder="Adet/Kg">
-                </div>
-                <div>
-                    <button type="button" class="btn-submit" style="margin:0; background:var(--primary-color); padding: 10px 15px;" onclick="addItemToBasket()">Ekle</button>
-                </div>
-            </div>
-
-            <div class="basket-container">
-                <ul id="basketListVisual" style="list-style: none;">
-                    <li style="text-align:center; color:#aaa; font-size:12px; padding:10px;">Liste boş. Yukarıdan ürün ekleyin.</li>
-                </ul>
-            </div>
-
-            <div class="form-group" style="display: none;">
-                <label>Hedef E-Posta:</label>
-                <input type="email" class="form-control" id="orderEmail" value="bahcelievlermemorialct@gmail.com" required>
-            </div>
-            <div class="form-group">
-                <label>Talep Notu / Ekstra İstekler:</label>
-                <input type="text" class="form-control" id="orderNotes" placeholder="Varsa teslimat notu veya detay yazın...">
-            </div>
-            <button type="submit" class="btn-submit">Siparişi Tamayla ve E-Posta Gönder 🚀</button>
-        </form>
-    </div>
-
     <div class="main-container" id="mainContainer">
         
-        <div class="card" id="addProductColumn">
-            <div class="card-title">✨ Yeni Malzeme Tanımlama</div>
-            <form id="addForm">
-                <div class="form-group">
-                    <label>Malzeme Adı:</label>
-                    <input type="text" class="form-control" id="newProdName" placeholder="Örn: SÜT 1 LT" required style="text-transform: uppercase;">
-                </div>
-                <div class="form-group">
-                    <label>Depo / Konum:</label>
-                    <select class="form-control" id="newProdDepot">
-                        <option value="KURU GIDA">KURU GIDA DEPOSU</option>
-                        <option value="SOĞUK DEPO (+4)">SOĞUK DEPO (+4)</option>
-                        <option value="DONUK DEPO (-18)">DONUK DEPO (-18)</option>
-                        <option value="KİMYASAL">KİMYASAL DEPOSU</option>
-                        <option value="SARF MALZEME">SARF MALZEME DEPOSU</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Ölçü Birimi:</label>
-                    <select class="form-control" id="newProdUnit">
-                        <option value="Adet">Adet</option>
-                        <option value="Kg">Kg</option>
-                        <option value="Litre">Litre</option>
-                        <option value="Koli">Koli</option>
-                        <option value="Paket">Paket</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Başlangıç Stok Miktarı:</label>
-                    <input type="number" step="0.01" class="form-control" id="newProdQty" value="0" required>
-                </div>
-                <div class="form-group">
-                    <label>Kritik Stok Sınırı (Limit):</label>
-                    <input type="number" step="0.01" class="form-control" id="newProdLimit" value="5" required>
-                </div>
-                <div class="form-group">
-                    <label>Son Kullanma Tarihi (SKT) <span style="color:#aaa; font-weight:normal;">(Opsiyonel)</span>:</label>
-                    <input type="date" class="form-control" id="newProdSkt">
-                </div>
-                <button type="submit" class="btn-submit">Kayıt Aç ve Envantere Ekle 💾</button>
-            </form>
+        <div id="addProductColumn">
+            <div class="card">
+                <div class="card-title">✨ Yeni Malzeme Tanımlama</div>
+                <form id="addForm">
+                    <div class="form-group">
+                        <label>Malzeme Adı:</label>
+                        <input type="text" class="form-control" id="newProdName" placeholder="Örn: SÜT 1 LT" required style="text-transform: uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label>Depo / Konum:</label>
+                        <select class="form-control" id="newProdDepot">
+                            <option value="ET +4">ET +4</option>
+                            <option value="ET -18">ET -18</option>
+                            <option value="PASTANE +4">PASTANE +4</option>
+                            <option value="PASTANE -18">PASTANE -18</option>
+                            <option value="ŞARKÜTERİ">ŞARKÜTERİ</option>
+                            <option value="KURU GIDA">KURU GIDA</option>
+                            <option value="KİMYASAL">KİMYASAL</option>
+                            <option value="SARF DEPO">SARF DEPO</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ölçü Birimi:</label>
+                        <select class="form-control" id="newProdUnit">
+                            <option value="Adet">Adet</option>
+                            <option value="Kg">Kg</option>
+                            <option value="Litre">Litre</option>
+                            <option value="Koli">Koli</option>
+                            <option value="Paket">Paket</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Başlangıç Stok Miktarı:</label>
+                        <input type="number" step="0.01" class="form-control" id="newProdQty" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kritik Stok Sınırı (Limit):</label>
+                        <input type="number" step="0.01" class="form-control" id="newProdLimit" value="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Son Kullanma Tarihi (SKT) <span style="color:#aaa; font-weight:normal;">(Opsiyonel)</span>:</label>
+                        <input type="date" class="form-control" id="newProdSkt">
+                    </div>
+                    <button type="submit" class="btn-submit">Kayıt Aç ve Envantere Ekle 💾</button>
+                </form>
+                
+                <button type="button" class="btn-trigger-order" onclick="toggleOrderPanel()">📦 Sipariş Oluştur / Malzeme Talep Et</button>
+            </div>
+
+            <div class="order-panel-card" id="orderPanelCard">
+                <div class="card-title">🛒 Malzeme Talep Listesi / Sepet <span id="basketCount" style="font-size:13px; color:#666; margin-left:5px;">(0 Ürün)</span></div>
+                <form id="orderForm">
+                    <div class="form-group">
+                        <label>Malzeme Seçin:</label>
+                        <select class="form-control" id="orderProductSelect">
+                            <option value="">-- Depodaki Ürünlerden Seçin --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Miktar:</label>
+                        <input type="number" step="0.01" class="form-control" id="orderQty" placeholder="Adet/Kg">
+                    </div>
+                    <button type="button" class="btn-submit" style="background:var(--primary-color); margin-bottom:15px;" onclick="addItemToBasket()">Sepete Ekle ➕</button>
+
+                    <div class="basket-container">
+                        <ul id="basketListVisual" style="list-style: none;">
+                            <li style="text-align:center; color:#aaa; font-size:12px; padding:10px;">Liste boş. Yukarıdan ürün ekleyin.</li>
+                        </ul>
+                    </div>
+
+                    <div class="form-group" style="display: none;">
+                        <label>Hedef E-Posta:</label>
+                        <input type="email" class="form-control" id="orderEmail" value="bahcelievlermemorialct@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Talep Notu / Ekstra İstekler:</label>
+                        <input type="text" class="form-control" id="orderNotes" placeholder="Varsa teslimat notu veya detay yazın...">
+                    </div>
+                    <button type="submit" class="btn-submit">Siparişi Tamayla ve E-Posta Gönder 🚀</button>
+                </form>
+            </div>
         </div>
 
         <div class="card">
@@ -261,11 +266,14 @@
             
             <div class="depot-filter-bar">
                 <button class="btn-depot-filter active" onclick="filterByDepot('HEPSİ')">HEPSİ</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('ET +4')">ET +4</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('ET -18')">ET -18</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('PASTANE +4')">PASTANE +4</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('PASTANE -18')">PASTANE -18</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('ŞARKÜTERİ')">ŞARKÜTERİ</button>
                 <button class="btn-depot-filter" onclick="filterByDepot('KURU GIDA')">KURU GIDA</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('SOĞUK DEPO (+4)')">SOĞUK DEPO (+4)</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('DONUK DEPO (-18)')">DONUK DEPO (-18)</button>
                 <button class="btn-depot-filter" onclick="filterByDepot('KİMYASAL')">KİMYASAL</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('SARF MALZEME')">SARF MALZEME</button>
+                <button class="btn-depot-filter" onclick="filterByDepot('SARF DEPO')">SARF DEPO</button>
             </div>
 
             <div class="search-filter-grid">
@@ -327,6 +335,42 @@
                     <div class="modal-footer-btns">
                         <button type="button" class="btn-secondary" onclick="closeStockActionModal()">İptal</button>
                         <button type="submit" class="btn-submit" style="margin:0; width:auto; padding: 10px 20px;">Onayla ve Kaydet 🚀</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="productEditModal">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#17a2b8; color:white;">
+                <h3 id="editModalTitle" style="color:white;">✏️ Malzeme Bilgilerini Düzenle</h3>
+                <button class="modal-close-btn" onclick="closeProductEditModal()" style="color:white;">&times;</button>
+            </div>
+            <form id="productEditForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Malzeme Adı:</label>
+                        <input type="text" class="form-control" id="editProdName" disabled style="background:#e9ecef;">
+                    </div>
+                    <div class="form-group">
+                        <label>Mevcut Stok Miktarı:</label>
+                        <input type="number" step="0.01" class="form-control" id="editProdQty" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kritik Stok Sınırı (Limit):</label>
+                        <input type="number" step="0.01" class="form-control" id="editProdLimit" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Son Kullanma Tarihi (SKT):</label>
+                        <input type="date" class="form-control" id="editProdSkt">
+                    </div>
+                </div>
+                <div class="modal-header" style="border-top: 1px solid #e2e8f0; border-bottom: none;">
+                    <div></div>
+                    <div class="modal-footer-btns">
+                        <button type="button" class="btn-secondary" onclick="closeProductEditModal()">İptal</button>
+                        <button type="submit" class="btn-submit" style="margin:0; width:auto; background:#17a2b8; padding: 10px 20px;">Değişiklikleri Kaydet 💾</button>
                     </div>
                 </div>
             </form>
@@ -494,7 +538,6 @@
             if (rawData) {
                 Object.keys(rawData).forEach(key => {
                     let item = rawData[key];
-                    // KORUMA: Eğer dbKey bozuk veya eksikse dinamik olarak düzelt
                     if(!item.dbKey || item.dbKey.includes('undefined')) {
                         item.dbKey = key;
                     }
@@ -758,12 +801,14 @@
                         <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button>
                         <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>
                         <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>
+                        <button class="action-btn btn-edit-stock" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>
                     `;
                 } else { // YÖNETİCİ / ADMIN
                     buttonsHtml = `
                         <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button>
                         <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>
                         <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>
+                        <button class="action-btn btn-edit-stock" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>
                         <button class="action-btn btn-del-stock" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button>
                     `;
                 }
@@ -897,6 +942,64 @@
             closeStockActionModal();
         });
 
+        // --- YENİ EKLENEN PANEL: MALZEME KOMPLE DÜZENLEME SÜREÇLERİ ---
+        window.openProductEditModal = function(uniqueId) {
+            const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId));
+            if(!item) return;
+
+            currentModalProduct = item;
+            
+            document.getElementById('editProdName').value = item.name;
+            document.getElementById('editProdQty').value = item.quantity;
+            document.getElementById('editProdLimit').value = item.criticalLimit || 0;
+            document.getElementById('editProdSkt').value = item.skt || "";
+
+            document.getElementById('productEditModal').style.display = "flex";
+        };
+
+        window.closeProductEditModal = function() {
+            document.getElementById('productEditModal').style.display = "none";
+            currentModalProduct = null;
+        };
+
+        document.getElementById('productEditForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(!currentModalProduct) return;
+
+            const item = currentModalProduct;
+            const newQty = parseFloat(document.getElementById('editProdQty').value);
+            const newLimit = parseFloat(document.getElementById('editProdLimit').value);
+            const newSkt = document.getElementById('editProdSkt').value || null;
+
+            if(isNaN(newQty) || newQty < 0 || isNaN(newLimit) || newLimit < 0) {
+                alert("Lütfen geçerli pozitif sayılar giriniz!");
+                return;
+            }
+
+            let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
+
+            // Firebase güncelleme şeması
+            const updates = {};
+            updates['depo_stok/' + itemUniqueKey + '/quantity'] = newQty;
+            updates['depo_stok/' + itemUniqueKey + '/criticalLimit'] = newLimit;
+            updates['depo_stok/' + itemUniqueKey + '/skt'] = newSkt;
+            updates['depo_stok/' + itemUniqueKey + '/lastUpdatedDate'] = getTodayDateString();
+
+            db.ref().update(updates).then(() => {
+                db.ref('depo_rapor').push({
+                    time: new Date().toLocaleString('tr-TR'),
+                    rawTime: new Date().toISOString(),
+                    user: currentRole,
+                    product: item.name,
+                    type: 'BİLGİ GÜNCELLEME',
+                    qty: `Stok: ${newQty}, Lim: ${newLimit}, SKT: ${newSkt || 'Yok'}`
+                });
+                closeProductEditModal();
+            }).catch(err => {
+                alert("Hata Oluştu: " + err.message);
+            });
+        });
+
         // --- SİPARİŞİ E-POSTA İLE BİLDİRME FORM KAYDI ---
         const orderFormEl = document.getElementById('orderForm');
         if(orderFormEl) {
@@ -980,7 +1083,7 @@
                 let targetKey = (sktVal && !sktVal.includes('undefined')) ? (baseClean + "_" + sktVal) : baseClean;
 
                 if(inventory.some(item => (item.dbKey === targetKey))) { 
-                    alert("Aynı isim ve aynı SKT tarihine sahip ürün zaten sistemde var! Sağ taraftaki tablodan + Ekle butonuyla miktar artırabilirsiniz."); 
+                    alert("Aynı isim ve aynı SKT tarihine sahip ürün zaten sistemde var! Sağ taraftaki tablodan Düzenle veya + Ekle butonuyla miktar artırabilirsiniz."); 
                     return; 
                 }
 
