@@ -175,7 +175,7 @@
 
         @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; gap: 10px; } }
 
-        /* --- ANA SÜTUNLAR VE FORM YERLEŞİMİ --- */
+        /* --- ANA SÜTUNLAR --- */
         .main-container { display: grid; grid-template-columns: 1fr; gap: 20px; }
         .two-columns { grid-template-columns: 380px 1fr; }
         .forms-stack { display: flex; flex-direction: column; gap: 20px; }
@@ -298,12 +298,12 @@
         .skt-ok { background: #e0f2fe; color: #0369a1; }
         .skt-expired { background: #fee2e2; color: #b91c1c; }
 
-        /* --- SKELETON LOADER PRE-LOAD --- */
+        /* --- SKELETON LOADER --- */
         @keyframes skeletonShimmer { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
         .skeleton-row td { padding: 15px 10px; }
         .skeleton-block { height: 14px; background: #e2e8f0; background-image: linear-gradient(90deg, #e2e8f0 0px, #cbd5e1 40px, #e2e8f0 8px); background-size: 400px 100%; background-repeat: no-repeat; animation: skeletonShimmer 1.4s infinite linear; border-radius: 4px; width: 85%; }
 
-        /* --- PLANLANAN GRUPLAMA VE ÜÇ NOKTA DROPDOWN YAPISI --- */
+        /* --- DROPDOWN MENÜ YAPISI --- */
         .action-btns { display: flex; gap: 5px; flex-wrap: nowrap; white-space: nowrap; align-items: center; position: relative; }
         .action-btn { border: none; padding: 6px 11px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.15s; color: white; display: inline-flex; align-items: center; justify-content: center; }
         .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
@@ -352,6 +352,11 @@
         .toast-error { border-left-color: var(--danger-color); }
         .toast-warning { border-left-color: var(--warning-color); }
 
+        .order-panel-card { background: var(--card-bg); border: 2px solid #00338d; border-radius: var(--border-radius); padding: 15px; margin-top: 15px; box-shadow: var(--box-shadow); display: none; }
+        .basket-container { background: var(--secondary-color); border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px; margin-bottom: 12px; max-height: 200px; overflow-y: auto; }
+        .basket-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; background: var(--card-bg); border: 1px solid var(--table-border); border-radius: 4px; margin-bottom: 6px; font-size: 12.5px; }
+        .btn-remove-basket-item { background: none; border: none; color: var(--danger-color); font-size: 16px; font-weight: bold; cursor: pointer; padding: 0 4px; }
+
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px; }
         .modal-content { background: var(--card-bg); border-radius: var(--border-radius); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.25s ease-out; overflow: hidden; border: 1px solid var(--table-border); }
         .modal-large { max-width: 850px; }
@@ -374,7 +379,7 @@
     <header>
         <div class="header-top-row">
             <div class="brand-container">
-                <img src="Gemini_Generated_Image_3sl82l3sl82l3sl8.png" alt="Logo" class="header-logo">
+                <img src="Gemini_Generated_Image_3sl82l3sl82l3sl8.png" alt="ED Yazılım Logo" class="header-logo">
                 <div class="header-title">
                     <h1>Bahçelievler Memorial CT</h1>
                     <p>Akıllı Depo Otomasyon & Canlı Stok Takip Sistemi</p>
@@ -780,18 +785,14 @@
             targetDrop.style.display = targetDrop.style.display === 'block' ? 'none' : 'block';
         };
 
-        // GLOBAL TIKLAMA FİLTRESİ (PANEL KAPATMA KONTROLLERİ)
         document.addEventListener('click', (event) => {
             document.querySelectorAll('.actions-dropdown').forEach(el => el.style.display = 'none');
-            
-            // Tıklanan yer arama kutusunun dışındaysa dropdown panelini kapat
             const selectContainer = document.getElementById('selectContainerBlock');
             if (selectContainer && !selectContainer.contains(event.target)) {
                 document.getElementById('customSelectOptionsPanel').style.display = 'none';
             }
         });
 
-        // 2. MODERN SEARCHABLE DROPDOWN - CANLI RE-RENDER MOTORU
         window.openSelectDropdown = function(event) {
             if(event) event.stopPropagation();
             document.getElementById('customSelectOptionsPanel').style.display = 'block';
@@ -820,7 +821,6 @@
                     div.className = "select-option-item";
                     div.innerHTML = `<span>📦 ${labelText}</span> <span class="qty-badge">${item.quantity} ${item.unit}</span>`;
                     
-                    // Malzeme tıklandığında inputları besleme fonksiyonu
                     div.addEventListener('click', (e) => {
                         e.stopPropagation();
                         document.getElementById('customSelectSearch').value = labelText;
@@ -967,7 +967,6 @@
         }
 
         function updateOrderProductDropdown() {
-            // Canlı veri geldiğinde arka plandaki seçim havuzunu yenile
             filterSelectOptions();
         }
 
@@ -1011,7 +1010,7 @@
                 return;
             }
             emptyBox.style.display = 'none';
-            ul.style.display = 'block'; // Yazım hatası düzeltildi!
+            ul.style.display = 'block';
             
             orderBasket.forEach((item, index) => {
                 const li = document.createElement('li');
