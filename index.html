@@ -33,7 +33,7 @@
             padding: 15px;
         }
 
-        /* --- ÜST PANEL (HEADER) DÜZENİ - GÖRSEL ARINDIRILMIŞ SADE KURUMSAL TASARIM --- */
+        /* --- ÜST PANEL (HEADER) DÜZENİ --- */
         header {
             background: #00338d;
             color: white;
@@ -43,10 +43,12 @@
             margin-bottom: 20px;
             display: flex;
             flex-direction: column;
+            min-height: 145px; /* Belirlenen kurumsal ölçü */
+            justify-content: space-between;
             gap: 15px;
         }
 
-        /* 1. Satır: Sola Yaslı Başlıklar ve Sağa Yaslı Rol/Saat */
+        /* 1. Satır: Sola Yaslı Logo + Başlıklar ve Sağa Yaslı Rol/Saat */
         .header-top-row {
             display: flex;
             justify-content: space-between;
@@ -58,8 +60,20 @@
         .brand-container {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 18px; /* Logo ve başlık arası şık boşluk */
         }
+        
+        /* SOL ÜST KÖŞEYE ENTEGRE EDİLEN LOGO STİLİ */
+        .header-logo {
+            height: 55px; /* Net okunabilirlik için ideal yükseklik */
+            width: auto;
+            object-fit: contain;
+            border-radius: 4px;
+            background: white; /* Logonun şeffaflığı ya da kontrastı için koruyucu zemin */
+            padding: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
         .header-title h1 {
             font-size: 22px;
             font-weight: 700;
@@ -97,7 +111,7 @@
             flex-wrap: wrap;
             width: 100%;
             padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.2);
+            border-top: 1px solid rgba(255,255,255,0.15);
             align-items: center;
             justify-content: flex-end;
         }
@@ -668,6 +682,51 @@
         .btn-print-system:hover {
             background: #495057;
         }
+
+        /* --- KURUMSAL YAZDIRMA (PRINT) CSS DÜZENLERİ --- */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+            }
+            header, #addProductColumn, .depot-filter-bar, .search-filter-grid, .action-btns, .action-btn, .btn-print-system {
+                display: none !important;
+            }
+            .card {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .main-container {
+                display: block !important;
+            }
+            table {
+                width: 100% !important;
+                border: 1px solid #000 !important;
+                font-size: 12px !important;
+            }
+            th, td {
+                border: 1px solid #000 !important;
+                padding: 8px !important;
+                color: black !important;
+                background: transparent !important;
+            }
+            .row-critical-alert td {
+                animation: none !important;
+                background: transparent !important;
+            }
+            .card-title {
+                font-size: 18px !important;
+                border-bottom: 2px solid #000 !important;
+                color: black !important;
+                margin-bottom: 20px !important;
+            }
+            .card-title::after {
+                content: " - RESMİ STOK RAPORU";
+            }
+        }
     </style>
 </head>
 <body>
@@ -675,6 +734,7 @@
     <header>
         <div class="header-top-row">
             <div class="brand-container">
+                <img src="akilli_depo_logo.jpeg.jpeg" alt="Logo" class="header-logo">
                 <div class="header-title">
                     <h1>Bahçelievler Memorial CT</h1>
                     <p>Akıllı Depo Otomasyon & Canlı Stok Takip Sistemi</p>
@@ -1136,7 +1196,7 @@
                         let timeLabel = diffDays === 0 ? "🚨 BUGÜN SON!" : "⏳ 1 Gün Kaldı!";
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td><strong>${item.name}</strong> ${item.lot ? `<span class="lot-tag">LOT: ${item.lot}</span>` : ''}</td>
+                            <td>mathbf{${item.name}} ${item.lot ? `<span class="lot-tag">LOT: ${item.lot}</span>` : ''}</td>
                             <td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td>
                             <td><strong style="color:#dc3545;">${item.quantity} ${item.unit}</strong></td>
                             <td><span class="badge-order" style="background:#f8d7da; font-weight:bold; color:#dc3545;">${timeLabel}</span></td>
