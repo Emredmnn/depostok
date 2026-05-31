@@ -82,14 +82,17 @@
             gap: 18px;
         }
         
+        /* LOGONUN NET, KUSURSUZ VE ORANTILI GÖRÜNMESİNİ SAĞLAYAN CSS MİMARİSİ */
         .header-logo {
-            height: 60px;
+            height: 56px;
             width: auto;
             object-fit: contain;
             border-radius: 6px;
             background: white;
-            padding: 2px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            padding: 3px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
 
         .header-title h1 {
@@ -379,7 +382,7 @@
     <header>
         <div class="header-top-row">
             <div class="brand-container">
-                <img src="Gemini_Generated_Image_3sl82l3sl82l3sl8.png" alt="ED Yazılım Logo" class="header-logo">
+                <img src="akilli_depo_logo.jpeg.jpeg" alt="Logo" class="header-logo">
                 <div class="header-title">
                     <h1>Bahçelievler Memorial CT</h1>
                     <p>Akıllı Depo Otomasyon & Canlı Stok Takip Sistemi</p>
@@ -1205,7 +1208,7 @@
                     dbKey: targetKey, name: item.name, depot: item.depot, unit: item.unit, quantity: finalQty, criticalLimit: item.criticalLimit, skt: newSktVal, lot: newLotVal || null, lastUpdatedDate: getTodayDateString()
                 });
                 db.ref('depo_rapor').push({
-                    time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'STOK + SKT GİRİŞİ', qty: `${qty} ${item.unit} (LOT: ${newLotVal || 'Yok'})`
+                    time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'STOK + SKT GİRİŞI', qty: `${qty} ${item.unit} (LOT: ${newLotVal || 'Yok'})`
                 });
                 showToast(`"${item.name}" yeni SKT partisi başarıyla depoya kaydedildi.`);
                 closeStockActionModal();
