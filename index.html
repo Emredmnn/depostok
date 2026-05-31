@@ -38,7 +38,7 @@
             gap: 15px;
         }
         
-        /* 1. Satır: Sola Yaslı Başlıklar ve Sağa Yaslı Rol/Saat */
+        /* 1. Satır: Sola Yaslı Logo + Başlıklar ve Sağa Yaslı Rol/Saat */
         .header-top-row { 
             display: flex; 
             justify-content: space-between; 
@@ -51,11 +51,22 @@
         .brand-container {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 18px;
         }
 
-        .header-title h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.5px; margin: 0; }
-        .header-title p { font-size: 13px; opacity: 0.85; margin-top: 3px; font-weight: 300; }
+        /* Başlığın soluna eklenen kurumsal logo stili */
+        .header-logo {
+            width: 75px;
+            height: 75px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+        }
+
+        .header-title h1 { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .header-title p { font-size: 13.5px; opacity: 0.85; margin-top: 4px; font-weight: 500; color: rgba(255,255,255,0.9); }
         
         .user-meta-zone { 
             display: flex; 
@@ -71,7 +82,7 @@
         .badge { font-weight: bold; }
         .live-clock { font-weight: 500; }
         
-        /* 2. Satır: BUTONLARIN SAĞ TARAFA TAŞINDIĞI ALAN */
+        /* 2. Satır: Üst Bilgilerin Altındaki Sağa Yaslı Buton Satırı */
         .header-actions-row { 
             display: flex; 
             gap: 12px; 
@@ -248,6 +259,7 @@
     <header>
         <div class="header-top-row">
             <div class="brand-container">
+                <img src="ed logo.png" onerror="this.src='ed stok logo.jpg'; this.onerror=function(){this.src='Adsız tasarım.jpg';};" alt="ED Kurumsal Logo" class="header-logo">
                 <div class="header-title">
                     <h1>Bahçelievler Memorial CT</h1>
                     <p>Akıllı Depo Otomasyon & Canlı Stok Takip Sistemi</p>
@@ -380,7 +392,7 @@
 
             <div class="search-filter-grid">
                 <div class="search-wrapper">
-                    <input type="text" class="form-control" id="searchInput" placeholder="🔍 Malzeme adı ile canlı ara...">
+                    <input type="text" class="form-control" id="searchInput" placeholder="🔍 Malzeme adı veya Lot no ile canlı ara...">
                 </div>
                 <div class="date-filter-wrapper">
                     <span style="font-size:11px; font-weight:bold; color:#666;">Güncelleme:</span>
@@ -914,7 +926,7 @@
                 }
 
                 const tr = document.createElement('tr');
-                if (isCritical) { tr.className = "row-critical-alert"; } // KRİTİK ALARM SINIFI EKLENDİ
+                if (isCritical) { tr.className = "row-critical-alert"; }
 
                 tr.innerHTML = `
                     <td>
