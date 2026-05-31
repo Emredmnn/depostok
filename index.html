@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        /* --- GENEL KURUMSAL RENK PALETİ VE DEĞİŞKENLER --- */
+        /* --- GENEL MOBİL UYUMLU MODERN TASARIM VE KURUMSAL RENK PALETİ --- */
         :root {
             --primary-blue: #00338d;
             --secondary-color: #f4f7f6;
@@ -18,17 +18,14 @@
             --success-color: #28a745;
             --danger-color: #dc3545;
             --warning-color: #ffc107;
-            --brand-orange: #ff6b00;
-            --border-radius: 10px;
-            --box-shadow: 0 4px 6px rgba(0, 51, 141, 0.05);
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 51, 141, 0.08);
             --card-bg: #ffffff;
             --table-border: #eef2f5;
             --input-bg: #fafafa;
-            --dropdown-bg: #ffffff;
-            --dropdown-hover: #f1f5f9;
         }
 
-        /* --- GECE MODU (DARK MODE) AKTİF RENKLERİ --- */
+        /* --- GECE MODU (DARK MODE) RENK TANIMLAMALARI --- */
         [data-theme="dark"] {
             --secondary-color: #0f172a;
             --text-dark: #f8fafc;
@@ -36,17 +33,15 @@
             --card-bg: #1e293b;
             --table-border: #334155;
             --input-bg: #1e293b;
-            --dropdown-bg: #1e293b;
-            --dropdown-hover: #334155;
-            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.25s ease, border-color 0.25s ease;
         }
         body {
             background-color: var(--secondary-color);
@@ -119,6 +114,7 @@
         .badge { font-weight: bold; }
         .live-clock { font-weight: 500; }
 
+        /* GECE MODU BUTONU STİLİ */
         .theme-toggle-btn {
             background: rgba(255, 255, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -179,7 +175,7 @@
             border-color: #dc3545;
         }
 
-        /* --- DASHBOARD ÖZET KARTLARI --- */
+        /* --- 1. MADDE: DASHBOARD ÖZET KARTLARI TASARIMI --- */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -196,20 +192,22 @@
             align-items: center;
             justify-content: space-between;
         }
-        .stat-card-info h3 { font-size: 11.5px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-card-info p { font-size: 24px; font-weight: 800; color: var(--text-dark); margin-top: 4px; }
-        .stat-card-icon { font-size: 24px; width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .bg-blue-soft { background: rgba(0, 51, 141, 0.06); color: #00338d; }
-        .bg-red-soft { background: rgba(220, 53, 69, 0.06); color: #dc3545; }
-        .bg-orange-soft { background: rgba(255, 152, 0, 0.06); color: var(--brand-orange); }
+        .stat-card-info h3 { font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.3px; }
+        .stat-card-info p { font-size: 24px; font-weight: 800; color: var(--text-dark); margin-top: 5px; }
+        .stat-card-icon { font-size: 26px; padding: 10px; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
+        .bg-blue-soft { background: rgba(0, 51, 141, 0.08); color: #00338d; }
+        .bg-red-soft { background: rgba(220, 53, 69, 0.08); color: #dc3545; }
+        .bg-orange-soft { background: rgba(255, 152, 0, 0.08); color: #ff9800; }
 
         @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; gap: 10px; } }
 
-        /* --- ANA DÜZEN VE SÜTUNLAR --- */
-        .main-container { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        /* --- ANA DÜZEN (İKİ SÜTUNLU YAPI) --- */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
         .two-columns { grid-template-columns: 360px 1fr; }
-
-        @media (max-width: 992px) { .two-columns { grid-template-columns: 1fr; } }
 
         .card {
             background: var(--card-bg);
@@ -220,19 +218,19 @@
             margin-bottom: 20px;
         }
         .card-title {
-            font-size: 15px;
-            font-weight: 700;
+            font-size: 16px;
+            font-weight: 600;
             margin-bottom: 15px;
             color: #00338d;
-            border-bottom: 2px solid var(--table-border);
+            border-bottom: 2px solid #ebf1fa;
             padding-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        [data-theme="dark"] .card-title { color: #f8fafc; }
+        [data-theme="dark"] .card-title { color: #f8fafc; border-bottom-color: #334155; }
 
-        /* --- AKORDEON FORM ALTYAPISI --- */
+        /* --- AKORDEON (COLLAPSE) FORM ALTYAPISI --- */
         .accordion-trigger {
             display: flex;
             align-items: center;
@@ -249,100 +247,121 @@
             margin-top: 15px;
             margin-bottom: 5px;
         }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; padding: 0 2px; }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding: 0 2px;
+        }
 
-        /* --- DEPO FİLTRELEME BAR --- */
-        .depot-filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 15px; scrollbar-width: thin; }
+        /* --- DEPO FİLTRELEME BUTONLARI --- */
+        .depot-filter-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            scrollbar-width: thin;
+        }
         .btn-depot-filter {
             background: var(--card-bg);
             color: var(--text-light);
             border: 1px solid var(--table-border);
             padding: 8px 14px;
             border-radius: 20px;
-            font-size: 12.5px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.2s;
         }
-        .btn-depot-filter:hover { background: #f1f5f9; color: #00338d; }
-        .btn-depot-filter.active { background: #00338d; color: white; border-color: #00338d; box-shadow: 0 2px 4px rgba(0, 51, 141, 0.25); }
+        .btn-depot-filter:hover {
+            background: #f1f5f9;
+            color: #00338d;
+        }
+        .btn-depot-filter.active {
+            background: #00338d;
+            color: white;
+            border-color: #00338d;
+            box-shadow: 0 2px 4px rgba(0, 51, 141, 0.25);
+        }
         [data-theme="dark"] .btn-depot-filter.active { background: #38bdf8; border-color: #38bdf8; color: #0f172a; }
 
-        /* --- INPUT VE FORMLAR --- */
+        /* --- FORMLAR VE INPUT ELEMANLARI --- */
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--text-light); }
         
         .form-control {
-            width: 100%; padding: 10px; border: 2px solid var(--table-border); border-radius: 6px;
-            font-size: 14px; outline: none; transition: all 0.2s; background-color: var(--input-bg); color: var(--text-dark);
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--table-border);
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+            background-color: var(--input-bg);
+            color: var(--text-dark);
         }
-        .form-control:focus { border-color: #00338d; box-shadow: 0 0 0 3px rgba(0, 51, 141, 0.12); }
+        .form-control:focus {
+            border-color: #00338d;
+            box-shadow: 0 0 0 3px rgba(0, 51, 141, 0.12);
+        }
         
         .basket-search-wrapper { position: relative; margin-bottom: 8px; }
-        .basket-search-control { width: 100%; padding: 10px 12px; border: 2px solid var(--table-border); border-radius: 6px; font-size: 13.5px; outline: none; background: var(--input-bg); color: var(--text-dark); }
+        .basket-search-control {
+            width: 100%; padding: 9px 10px; border: 2px solid var(--table-border); border-radius: 6px;
+            font-size: 13px; outline: none; background: var(--card-bg); color: var(--text-dark);
+        }
         
-        /* MODERN STEPPER BUTON GRUBU */
-        .stepper-input-group { display: flex; align-items: center; width: 100%; }
-        .btn-step {
-            background: var(--input-bg); border: 2px solid var(--table-border); color: var(--text-dark);
-            font-size: 18px; font-weight: bold; width: 42px; height: 42px; cursor: pointer; outline: none; transition: all 0.15s;
-        }
-        .btn-step-left { border-radius: 6px 0 0 6px; border-right: none; }
-        .btn-step-right { border-radius: 0 6px 6px 0; border-left: none; }
-        .btn-step:hover { background: var(--dropdown-hover); color: #00338d; }
-        .input-stepper-control { flex: 1; text-align: center; border-radius: 0 !important; height: 42px; }
-
-        /* PREMIUM SEPET KARTLARI */
-        .premium-basket-card {
-            display: flex; align-items: center; justify-content: space-between; background: var(--card-bg);
-            border: 1px solid var(--table-border); padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02); animation: slideDropdown 0.2s ease-out;
-        }
-        .premium-basket-card .item-info { display: flex; flex-direction: column; gap: 2px; }
-        .premium-basket-card .item-title { font-size: 13px; font-weight: 700; color: var(--text-dark); }
-        .premium-basket-card .item-qty-badge {
-            font-size: 11.5px; font-weight: bold; color: var(--brand-orange); background: rgba(255, 107, 0, 0.08);
-            padding: 1px 6px; border-radius: 4px; width: fit-content;
-        }
-        .btn-delete-basket-card {
-            background: rgba(220, 53, 69, 0.08); border: none; color: var(--danger-color);
-            width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.15s;
-        }
-        .btn-delete-basket-card:hover { background: var(--danger-color); color: white; }
-
         .btn-submit {
             width: 100%; background: var(--success-color); color: white; border: none; padding: 11px;
             border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s;
-            margin-top: 10px; box-shadow: 0 2px 4px rgba(40,167,69,0.15);
+            margin-top: 10px; box-shadow: 0 2px 4px rgba(40,167,69,0.2);
         }
         .btn-submit:hover { background: #218838; }
+        
+        .btn-trigger-order {
+            width: 100%; background: transparent; color: #00338d; border: 2px solid #00338d;
+            padding: 11px; border-radius: 6px; font-size: 13.5px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s ease; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        [data-theme="dark"] .btn-trigger-order { color: #38bdf8; border-color: #38bdf8; }
+        .btn-trigger-order:hover { background: rgba(0, 51, 141, 0.05); }
 
-        /* --- CANLI ARAMA PANELI --- */
+        /* --- FİLTRE VE ARAMA PANELİ --- */
         .search-filter-grid { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 15px; align-items: center; }
         .search-wrapper { position: relative; width: 100%; }
         .date-filter-wrapper { display: flex; align-items: center; gap: 5px; background: var(--card-bg); border: 2px solid var(--table-border); padding: 4px 8px; border-radius: 6px; }
         .date-filter-wrapper input { border: none; outline: none; font-size: 13px; color: var(--text-dark); background: transparent; cursor: pointer; }
         .btn-clear-date { background: none; border: none; color: #aaa; font-size: 16px; cursor: pointer; padding: 0 4px; }
 
-        /* --- TABLO TASARIMI --- */
+        /* --- TABLO TASARIMI VE SATIR HOVER STATE --- */
         .table-responsive { width: 100%; overflow-x: auto; border: 1px solid var(--table-border); border-radius: 6px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; background: var(--card-bg); }
-        th { background-color: var(--secondary-color); color: var(--text-light); font-weight: 600; padding: 11px 10px; border-bottom: 2px solid var(--table-border); white-space: nowrap; }
+        th { background-color: var(--secondary-color); color: var(--text-light); font-weight: 600; padding: 10px 10px; border-bottom: 2px solid var(--table-border); white-space: nowrap; }
         td { padding: 9px 10px; border-bottom: 1px solid var(--table-border); vertical-align: middle; color: var(--text-dark); }
-        tr:hover td { background-color: rgba(0, 51, 141, 0.01); }
+        tr:hover td { background-color: rgba(0, 51, 141, 0.02); }
 
-        .row-critical-alert td { background-color: rgba(220, 53, 69, 0.03) !important; animation: pulse-row-red 3s infinite ease-in-out; }
-        @keyframes pulse-row-red { 0%, 100% { background-color: rgba(220, 53, 69, 0.03); } 50% { background-color: rgba(220, 53, 69, 0.07); } }
+        /* KRİTİK STOK PULSE ALARMI */
+        .row-critical-alert td { background-color: rgba(220, 53, 69, 0.05) !important; animation: pulse-row-red 3s infinite ease-in-out; }
+        @keyframes pulse-row-red { 
+            0%, 100% { background-color: rgba(220, 53, 69, 0.04); } 
+            50% { background-color: rgba(220, 53, 69, 0.08); } 
+        }
 
-        @keyframes criticalPulseBtn { 0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6); } 70% { box-shadow: 0 0 0 5px rgba(40, 167, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); } }
+        @keyframes criticalPulseBtn {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
         .row-critical-alert .btn-add-stock { animation: criticalPulseBtn 1.5s infinite; font-weight: 800; }
 
-        /* --- EMPTY STATE TASARIMI --- */
-        .empty-state-container { text-align: center; padding: 45px 20px; color: var(--text-light); }
-        .empty-state-icon { font-size: 44px; color: var(--text-light); margin-bottom: 10px; opacity: 0.5; }
-        .empty-state-container h4 { font-size: 14.5px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        /* --- 4. MADDE: ARANAN MALZEME BULUNAMADI (EMPTY STATE) TASARIMI --- */
+        .empty-state-container {
+            text-align: center; padding: 40px 20px; color: var(--text-light);
+        }
+        .empty-state-icon { font-size: 48px; color: var(--text-light); margin-bottom: 12px; opacity: 0.6; }
+        .empty-state-container h4 { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 5px; }
         .empty-state-container p { font-size: 12.5px; }
 
         .depot-tag { background: #e2e8f0; color: #475569; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
@@ -359,64 +378,34 @@
         .skt-expired { background: #fee2e2; color: #b91c1c; }
 
         /* --- SKELETON LOADER --- */
+        @keyframes skeletonShimmer { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
         .skeleton-row td { padding: 15px 10px; }
         .skeleton-block { height: 14px; background: #e2e8f0; background-image: linear-gradient(90deg, #e2e8f0 0px, #cbd5e1 40px, #e2e8f0 8px); background-size: 400px 100%; background-repeat: no-repeat; animation: skeletonShimmer 1.4s infinite linear; border-radius: 4px; width: 85%; }
 
-        /* --- DROPDOWN AKSİYON MENÜSÜ YAPISI --- */
-        .action-btns { display: flex; gap: 5px; flex-wrap: nowrap; white-space: nowrap; align-items: center; position: relative; }
+        /* --- BUTON GRUPLAMASI VE AYRACI --- */
+        .action-btns { display: flex; gap: 4px; flex-wrap: nowrap; white-space: nowrap; align-items: center; }
+        .btn-divider { color: #cbd5e1; margin: 0 4px; font-weight: 300; font-size: 14px; user-select: none; }
+        
         .action-btn { border: none; padding: 6px 11px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.15s; color: white; display: inline-flex; align-items: center; justify-content: center; }
         .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
-        
         .btn-add-stock { background-color: var(--success-color); }
         .btn-drop-stock { background-color: #ff9800; }
         .btn-waste-stock { background-color: #795548; }
-
-        .btn-more-trigger {
-            background: transparent; color: var(--text-light); border: 1px solid var(--table-border);
-            padding: 5px 10px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center; line-height: 1; transition: all 0.15s;
-        }
-        .btn-more-trigger:hover { background: var(--secondary-color); color: var(--text-dark); border-color: var(--text-light); }
-
-        .actions-dropdown {
-            display: none; position: absolute; right: 0; top: 32px; background: var(--dropdown-bg);
-            border: 1px solid var(--table-border); border-radius: 6px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            z-index: 100; min-width: 110px; overflow: hidden; animation: slideDropdown 0.15s ease-out;
-        }
-        @keyframes slideDropdown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-edit-stock { background-color: #17a2b8; }
+        .btn-del-stock { background-color: var(--danger-color); }
         
-        .dropdown-item {
-            width: 100%; padding: 9px 12px; text-align: left; background: none; border: none;
-            font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;
-            color: var(--text-dark); transition: background 0.1s;
-        }
-        .dropdown-item:hover { background: var(--dropdown-hover); }
-        .item-edit { color: #17a2b8; }
-        .item-delete { color: var(--danger-color); }
-
         .total-row { background-color: var(--secondary-color); font-weight: bold; color: var(--text-dark); border-top: 2px solid #cbd5e1; }
         .total-row td { padding: 14px 10px; font-size: 13px; }
 
-        /* --- SİSTEMİK TOAST BİLDİRİM MİMARİSİ --- */
-        #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .custom-toast {
-            background: #ffffff; color: #1e293b; padding: 14px 22px; border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); font-size: 13px; font-weight: 700;
-            display: flex; align-items: center; gap: 10px; min-width: 280px; max-width: 380px;
-            pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; border-left: 5px solid #cbd5e1;
-        }
-        @keyframes toastIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(40px); opacity: 0; } }
-        .toast-success { border-left-color: var(--success-color); }
-        .toast-error { border-left-color: var(--danger-color); }
-        .toast-warning { border-left-color: var(--warning-color); }
-
         .order-panel-card { background: var(--card-bg); border: 2px solid #00338d; border-radius: var(--border-radius); padding: 15px; margin-top: 15px; box-shadow: var(--box-shadow); display: none; }
-        .basket-container { background: var(--secondary-color); border: 1px dashed #cbd5e1; border-radius: 6px; padding: 12px; margin-bottom: 12px; max-height: 250px; overflow-y: auto; }
-        
+        .basket-container { background: var(--secondary-color); border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px; margin-bottom: 12px; max-height: 200px; overflow-y: auto; }
+        .basket-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; background: var(--card-bg); border: 1px solid var(--table-border); border-radius: 4px; margin-bottom: 6px; font-size: 12.5px; }
+        .btn-remove-basket-item { background: none; border: none; color: var(--danger-color); font-size: 16px; font-weight: bold; cursor: pointer; padding: 0 4px; }
+
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px; }
         .modal-content { background: var(--card-bg); border-radius: var(--border-radius); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.25s ease-out; overflow: hidden; border: 1px solid var(--table-border); }
         .modal-large { max-width: 850px; }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-header { background: var(--secondary-color); padding: 15px 20px; border-bottom: 1px solid var(--table-border); display: flex; justify-content: space-between; align-items: center; }
         .modal-header h3 { font-size: 16px; color: var(--text-dark); font-weight: 600; }
         .modal-close-btn { background: none; border: none; font-size: 22px; color: #94a3b8; cursor: pointer; }
@@ -430,8 +419,6 @@
     </style>
 </head>
 <body>
-
-    <div id="toastContainer"></div>
 
     <header>
         <div class="header-top-row">
@@ -550,28 +537,20 @@
                         <div class="basket-search-wrapper">
                             <input type="text" id="basketProductSearch" class="basket-search-control" placeholder="🔍 Ürün ismi yazarak ara..." onkeyup="filterBasketProducts()">
                         </div>
-                        <select class="form-control" id="orderProductSelect" size="5" style="height: 120px;" onchange="onBasketProductSelected()">
+                        <select class="form-control" id="orderProductSelect" size="5" style="height: 120px;">
                             <option value="">-- Depodaki Ürünlerden Seçin --</option>
                         </select>
                     </div>
-                    
                     <div class="form-group">
-                        <label id="orderQtyLabel">Miktar:</label>
-                        <div class="stepper-input-group">
-                            <button type="button" class="btn-step btn-step-left" onclick="stepOrderQty(-1)">-</button>
-                            <input type="number" step="0.01" class="form-control input-stepper-control" id="orderQty" placeholder="Miktar girin...">
-                            <button type="button" class="btn-step btn-step-right" onclick="stepOrderQty(1)">+</button>
-                        </div>
+                        <label>Miktar:</label>
+                        <input type="number" step="0.01" class="form-control" id="orderQty" placeholder="Adet/Kg">
                     </div>
-
                     <button type="button" class="btn-submit" style="background:#00338d; margin-bottom:15px;" onclick="addItemToBasket()">Sepete Ekle ➕</button>
-                    
                     <div class="basket-container">
-                        <div id="basketListVisual">
-                            <div style="text-align:center; color:#aaa; font-size:12px; padding:10px;">Sepetiniz şu an boş. Yukarıdan ürün seçip ekleyin.</div>
-                        </div>
+                        <ul id="basketListVisual" style="list-style: none;">
+                            <li style="text-align:center; color:#aaa; font-size:12px; padding:10px;">Liste boş. Yukarıdan ürün ekleyin.</li>
+                        </ul>
                     </div>
-                    
                     <div class="form-group" style="display: none;">
                         <label>Hedef E-Posta:</label>
                         <input type="email" class="form-control" id="orderEmail" value="bahcelievlermemorialct@gmail.com" required>
@@ -580,7 +559,7 @@
                         <label>Talep Notu / Ekstra İstekler:</label>
                         <input type="text" class="form-control" id="orderNotes" placeholder="Varsa teslimat notu veya detay yazın...">
                     </div>
-                    <button type="submit" class="btn-submit" style="background:var(--success-color);">Siparişi Tamamla ve E-Posta Gönder 🚀</button>
+                    <button type="submit" class="btn-submit">Siparişi Tamamla ve E-Posta Gönder 🚀</button>
                 </form>
             </div>
         </div>
@@ -610,10 +589,11 @@
                             <th>Kritik Limit</th>
                             <th>S.K.T.</th>
                             <th>Durum</th>
-                            <th class="action-btns" style="text-align: center;">İşlemler</th>
+                            <th class="action-btns">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody id="liveMaterialsBody">
+                        <tr class="skeleton-row"><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td></tr>
                         <tr class="skeleton-row"><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td></tr>
                     </tbody>
                     <tfoot id="tableTotalFooter"></tfoot>
@@ -783,7 +763,6 @@
     </div>
 
     <script>
-        // Oturum Kontrolü
         if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
 
         emailjs.init("LzIhLTNYH47AasrBj");
@@ -801,22 +780,7 @@
             mainContainer.classList.add('two-columns');
         }
 
-        // TOAST NOTIFICATION SYSTEM
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            if(!container) return;
-            const toast = document.createElement('div');
-            toast.className = `custom-toast toast-${type}`;
-            let icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : '⚠️');
-            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.animation = 'toastOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                setTimeout(() => { toast.remove(); }, 300);
-            }, 3000);
-        }
-
-        // THEME / DARK MODE MANUFACTURE
+        // 6. MADDE: GECE MODU TARAYICI HAFIZA KONTROLÜ VE TETİKLEME FONKSİYONU
         if(localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             document.getElementById('themeToggleBtn').textContent = "☀️ Gündüz Modu";
@@ -829,57 +793,12 @@
                 document.documentElement.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'light');
                 btn.textContent = "🌙 Gece Modu";
-                showToast("Gündüz moduna geçildi.", "warning");
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
                 btn.textContent = "☀️ Gündüz Modu";
-                showToast("Gece moduna geçildi.", "success");
             }
         };
-
-        // BİRİM VE PLACEHOLDER ALGILAYICI
-        window.onBasketProductSelected = function() {
-            const selectEl = document.getElementById('orderProductSelect');
-            const qtyInput = document.getElementById('orderQty');
-            const labelEl = document.getElementById('orderQtyLabel');
-            const prodKey = selectEl.value;
-            
-            if(!prodKey) {
-                qtyInput.placeholder = "Miktar girin...";
-                labelEl.textContent = "Miktar:";
-                return;
-            }
-            const item = inventory.find(i => (i.dbKey === prodKey || i.name === prodKey));
-            if(item) {
-                qtyInput.placeholder = `${item.unit} cinsinden miktar yazın...`;
-                labelEl.textContent = `Talep Miktarı (${item.unit}):`;
-            }
-        };
-
-        // STEPPER MİKTAR AYARI
-        window.stepOrderQty = function(amount) {
-            const qtyInput = document.getElementById('orderQty');
-            let currentVal = parseFloat(qtyInput.value) || 0;
-            currentVal += amount;
-            if(currentVal < 0) currentVal = 0;
-            qtyInput.value = currentVal === 0 ? "" : currentVal.toFixed(2).replace(/\.00$/, '');
-        };
-
-        // ROW DROPDOWN KONTROLLERİ
-        window.toggleRowDropdown = function(event, id) {
-            event.stopPropagation();
-            document.querySelectorAll('.actions-dropdown').forEach(el => {
-                if(el.id !== 'drop_' + id) el.style.display = 'none';
-            });
-            const targetDrop = document.getElementById('drop_' + id);
-            if(!targetDrop) return;
-            targetDrop.style.display = targetDrop.style.display === 'block' ? 'none' : 'block';
-        };
-
-        document.addEventListener('click', () => {
-            document.querySelectorAll('.actions-dropdown').forEach(el => el.style.display = 'none');
-        });
 
         window.toggleAccordion = function(element) {
             const content = document.getElementById('advancedFormFields');
@@ -910,7 +829,6 @@
         }
         startLiveClock();
 
-        // --- FIREBASE ALTYAPISI ---
         const firebaseConfig = { databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -923,6 +841,13 @@
         let isNewPartyWithSkt = false;
 
         const definedDepots = ['HEPSİ', 'ET +4', 'ET -18', 'PASTANE +4', 'PASTANE -18', 'SEBZE +4', 'SEBZE -18', 'ŞARKÜTERİ', 'KURU GIDA', 'KİMYASAL', 'SARF DEPO'];
+
+        function getTodayDateString() {
+            const now = new Date();
+            const offset = now.getTimezoneOffset();
+            const localNow = new Date(now.getTime() - (offset * 60 * 1000));
+            return localNow.toISOString().split('T')[0];
+        }
 
         db.ref('depo_stok').on('value', (snapshot) => {
             const rawData = snapshot.val();
@@ -937,13 +862,15 @@
             checkExpiredProducts(rawData);
             updateOrderProductDropdown();
             updateSktAlertBtnState();
-            calculateLiveDashboardMetrics();
-            renderDepotFilterButtons(); // Butonların kaybolma hatası burada düzeltildi.
+            calculateLiveDashboardMetrics(); // 1. Madde tetikleyici
+            renderDepotFilterButtons();
             renderUi();
         });
 
+        // 1. MADDE: FIREBASE VERİSİNDEN CANLI DASHBOARD METRİKLERİNİ HESAPLAMA MOTORU
         function calculateLiveDashboardMetrics() {
             document.getElementById('dashTotalItems').textContent = inventory.length;
+            
             let criticalCount = inventory.filter(item => {
                 let limit = item.criticalLimit !== undefined ? item.criticalLimit : 0;
                 return (item.quantity <= limit);
@@ -963,7 +890,6 @@
             document.getElementById('dashSktItems').textContent = sktUrgentCount;
         }
 
-        // COK KRITIK DÜZELTME: DEPO BUTONLARININ YÜKLENME MOTORU EN COK COK KARARLI HALE GETIRILDI
         function renderDepotFilterButtons() {
             const bar = document.getElementById('depotButtonsBar');
             if(!bar) return;
@@ -990,7 +916,6 @@
                         backupKey: key, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt, backupLot: item.lot || null
                     });
                     db.ref('depo_stok/' + key).remove();
-                    showToast(`Markalanan "${item.name}" SKT dolduğu için sistem tarafından otomatik silindi.`, "error");
                 }
             });
         }
@@ -1083,8 +1008,8 @@
             const qtyInput = document.getElementById('orderQty');
             const prodKey = selectEl.value;
             const qty = parseFloat(qtyInput.value);
-            if(!prodKey) { showToast("Lütfen listeden bir malzeme seçin!", "warning"); return; }
-            if(isNaN(qty) || qty <= 0) { showToast("Lütfen geçerli bir sipariş miktarı girin!", "warning"); return; }
+            if(!prodKey) { alert("Lütfen listeden bir malzeme seçin!"); return; }
+            if(isNaN(qty) || qty <= 0) { alert("Lütfen geçerli bir sipariş miktarı girin!"); return; }
             const item = inventory.find(i => (i.dbKey === prodKey || i.name === prodKey));
             if(!item) return;
             let displayName = item.name;
@@ -1099,33 +1024,26 @@
             qtyInput.value = ""; selectEl.value = "";
             const searchInput = document.getElementById('basketProductSearch');
             if(searchInput) { searchInput.value = ""; }
-            filterBasketProducts(); onBasketProductSelected(); renderBasketVisual();
-            showToast("Malzeme talep sepetine eklendi.");
+            filterBasketProducts(); renderBasketVisual();
         };
 
-        window.removeItemFromBasket = function(index) { orderBasket.splice(index, 1); renderBasketVisual(); showToast("Ürün sepetten çıkarıldı.", "warning"); };
+        window.removeItemFromBasket = function(index) { orderBasket.splice(index, 1); renderBasketVisual(); };
 
         function renderBasketVisual() {
-            const container = document.getElementById('basketListVisual');
+            const ul = document.getElementById('basketListVisual');
             const countSpan = document.getElementById('basketCount');
-            if(!container || !countSpan) return;
-            container.innerHTML = "";
+            if(!ul || !countSpan) return;
+            ul.innerHTML = "";
             countSpan.textContent = `(${orderBasket.length} Ürün)`;
             if(orderBasket.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:#aaa; font-size:12px; padding:10px;">Sepetiniz şu an boş. Yukarıdan ürün seçip ekleyin.</div>';
+                ul.innerHTML = '<li style="text-align:center; color:#aaa; font-size:12px; padding:10px;">Liste boş. Yukarıdan ürün ekleyin.</li>';
                 return;
             }
             orderBasket.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = "premium-basket-card";
-                card.innerHTML = `
-                    <div class="item-info">
-                        <span class="item-title">📦 ${item.name}</span>
-                        <span class="item-qty-badge">${item.qty} ${item.unit}</span>
-                    </div>
-                    <button type="button" class="btn-delete-basket-card" onclick="removeItemFromBasket(${index})" title="Sepetten Çıkar">×</button>
-                `;
-                container.appendChild(card);
+                const li = document.createElement('li');
+                li.className = "basket-item";
+                li.innerHTML = `<span>📦 <b>${item.name}</b></span><span>${item.qty} ${item.unit} <button class="btn-remove-basket-item" onclick="removeItemFromBasket(${index})">×</button></span>`;
+                ul.appendChild(li);
             });
         }
 
@@ -1146,14 +1064,15 @@
                 return matchesSearch && matchesDepot && matchesDate;
             });
 
+            // 4. MADDE: ARANAN ÜRÜN BULUNAMADIĞINDA DEVREYE GİREN ESASLI EMPTY STATE MİMARİSİ
             if(filteredInventory.length === 0) {
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="7">
                             <div class="empty-state-container">
                                 <div class="empty-state-icon">🔍</div>
-                                <h4>Aradığınız Malzeme Envanterde Yok</h4>
-                                <p>Arama kelimesini değiştirebilir veya filtre çubuğundan farklı bir depo seçerek arama yapabilirsiniz.</p>
+                                <h4>Aradığınız Malzeme Bulunamadı</h4>
+                                <p>Filtre kriterlerinizi veya arama kelimenizi kontrol edip tekrar deneyebilirsiniz.</p>
                             </div>
                         </td>
                     </tr>`;
@@ -1188,39 +1107,26 @@
                 }
 
                 let itemUniqueId = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
-                let fastButtonsHtml = '';
-                let dropdownButtonsHtml = '';
+                let buttonsHtml = '';
 
                 if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
-                    fastButtonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>`;
+                    buttonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>`;
                 } else if (currentRole === 'DEPO') {
-                    fastButtonsHtml = `
+                    buttonsHtml = `
                         <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button>
                         <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>
                         <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>
+                        <span class="btn-divider">|</span>
+                        <button class="action-btn btn-edit-stock" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>
                     `;
-                    dropdownButtonsHtml = `<button class="dropdown-item item-edit" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>`;
                 } else {
-                    fastButtonsHtml = `
+                    buttonsHtml = `
                         <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button>
                         <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>
                         <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>
-                    `;
-                    dropdownButtonsHtml = `
-                        <button class="dropdown-item item-edit" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>
-                        <button class="dropdown-item item-delete" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button>
-                    `;
-                }
-
-                let moreActionTriggerHtml = '';
-                if(dropdownButtonsHtml !== '') {
-                    moreActionTriggerHtml = `
-                        <div style="position:relative; display:inline-block;">
-                            <button class="btn-more-trigger" type="button" onclick="toggleRowDropdown(event, '${itemUniqueId}')">⋮</button>
-                            <div class="actions-dropdown" id="drop_${itemUniqueId}">
-                                ${dropdownButtonsHtml}
-                            </div>
-                        </div>
+                        <span class="btn-divider">|</span>
+                        <button class="action-btn btn-edit-stock" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>
+                        <button class="action-btn btn-del-stock" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button>
                     `;
                 }
 
@@ -1234,7 +1140,7 @@
                     <td><strong>${item.criticalLimit} ${item.unit}</strong></td>
                     <td>${sktHtml}</td>
                     <td>${statusHtml}</td>
-                    <td class="action-btns" style="justify-content: center;">${fastButtonsHtml} ${moreActionTriggerHtml}</td>
+                    <td class="action-btns">${buttonsHtml}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1294,14 +1200,14 @@
             const item = currentModalProduct;
             const qty = parseFloat(document.getElementById('actionModalQty').value);
             let reportLabel = currentModalAction === 'in' ? 'GİRİŞ' : (currentModalAction === 'out' ? 'ÇIKIŞ' : 'İMHA');
-            if(isNaN(qty) || qty <= 0) { showToast("Geçerli bir miktar giriniz!", "warning"); return; }
+            if(isNaN(qty) || qty <= 0) { alert("Geçerli bir miktar giriniz!"); return; }
             
             let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
 
             if (currentModalAction === 'in' && isNewPartyWithSkt) {
                 const newSktVal = document.getElementById('actionModalSkt').value;
                 const newLotVal = document.getElementById('actionModalLot').value.trim().toUpperCase();
-                if(!newSktVal || newSktVal.includes('undefined')) { showToast("Lütfen geçerli bir Son Kullanma Tarihi seçin!", "warning"); return; }
+                if(!newSktVal || newSktVal.includes('undefined')) { alert("Lütfen geçerli bir Son Kullanma Tarihi seçin!"); return; }
                 
                 let baseCleanName = item.name.replace(/[.#$\[\]]/g, "");
                 let targetKey = baseCleanName + "_" + newSktVal;
@@ -1316,7 +1222,6 @@
                 db.ref('depo_rapor').push({
                     time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'STOK + SKT GİRİŞİ', qty: `${qty} ${item.unit} (LOT: ${newLotVal || 'Yok'})`
                 });
-                showToast(`"${item.name}" yeni SKT partisi başarıyla depoya kaydedildi.`);
                 closeStockActionModal();
                 return;
             }
@@ -1329,7 +1234,6 @@
             db.ref('depo_rapor').push({
                 time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${item.name}`, type: reportLabel, qty: `${qty} ${item.unit} ${item.lot ? `[LOT: ${item.lot}]` : ''}`
             });
-            showToast("Stok envanter kaydı güncellendi.");
             closeStockActionModal();
         });
 
@@ -1359,7 +1263,7 @@
             const newLot = document.getElementById('editProdLot').value.trim().toUpperCase() || null;
             const newSkt = document.getElementById('editProdSkt').value || null;
 
-            if(isNaN(newQty) || newQty < 0 || isNaN(newLimit) || newLimit < 0) { showToast("Lütfen geçerli sayılar giriniz!", "warning"); return; }
+            if(isNaN(newQty) || newQty < 0 || isNaN(newLimit) || newLimit < 0) { alert("Lütfen geçerli pozitif sayılar giriniz!"); return; }
 
             let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
             const updates = {};
@@ -1373,16 +1277,15 @@
                 db.ref('depo_rapor').push({
                     time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'BİLGİ GÜNCELLEME', qty: `Stok: ${newQty}, Lim: ${newLimit}, LOT: ${newLot || 'Yok'}, SKT: ${newSkt || 'Yok'}`
                 });
-                showToast("Malzeme kart bilgi içerikleri güncellendi.");
                 closeProductEditModal();
-            }).catch(err => { showToast("Hata: " + err.message, "error"); });
+            }).catch(err => { alert("Hata: " + err.message); });
         });
 
         const orderFormEl = document.getElementById('orderForm');
         if(orderFormEl) {
             orderFormEl.addEventListener('submit', function(e) {
                 e.preventDefault();
-                if(orderBasket.length === 0) { showToast("Sepete en az 1 ürün eklemelisiniz!", "warning"); return; }
+                if(orderBasket.length === 0) { alert("Sepete en az 1 ürün eklemelisiniz!"); return; }
                 const targetMail = document.getElementById('orderEmail').value;
                 const notes = document.getElementById('orderNotes').value.trim() || "Yok";
 
@@ -1401,8 +1304,8 @@
                     };
 
                     emailjs.send("service_wt1igmj", "template_ydhkoa6", emailParams)
-                    .then(() => { showToast(`Sipariş e-posta olarak başarıyla iletildi.`, "success"); })
-                    .catch((err) => { showToast(`E-Posta Hatası: ${JSON.stringify(err)}`, "error"); });
+                    .then(() => { alert(`✅ Başarılı! Sipariş e-posta olarak iletildi.`); })
+                    .catch((err) => { alert(`❌ Hata Alındı: ${JSON.stringify(err)}`); });
 
                     orderBasket.forEach(bItem => {
                         db.ref('depo_siparisler').push({ time: nowStr, rawTime: timestampIso, user: currentRole, product: bItem.name, qty: `${bItem.qty} ${bItem.unit}`, notes: notes });
@@ -1412,7 +1315,6 @@
                     orderBasket = []; renderBasketVisual(); orderFormEl.reset();
                     document.getElementById('orderEmail').value = "bahcelievlermemorialct@gmail.com";
                     document.getElementById('orderPanelCard').style.display = 'none';
-                    onBasketProductSelected();
                 }
             });
         }
@@ -1440,7 +1342,7 @@
                 if(sktVal && !sktVal.includes('undefined')) { targetKey += "_" + sktVal; }
                 if(lotVal) { targetKey += "_" + lotVal; }
 
-                if(inventory.some(item => (item.dbKey === targetKey))) { showToast("Aynı isim, SKT ve LOT değerlerine sahip bir kayıt envanterde zaten mevcut!", "warning"); return; }
+                if(inventory.some(item => (item.dbKey === targetKey))) { alert("Aynı isim, SKT ve LOT değerlerine sahip bir kayıt envanterde zaten mevcut!"); return; }
 
                 db.ref('depo_stok/' + targetKey).set({
                     dbKey: targetKey, name: name, depot: depot, unit: unit, quantity: qty, criticalLimit: limit, skt: sktVal || null, lot: lotVal || null, lastUpdatedDate: getTodayDateString()
@@ -1450,7 +1352,6 @@
                     time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${name}`, type: 'YENİ ÜRÜN', qty: `${qty} ${unit} ${lotVal ? `(LOT: ${lotVal})` : ''}`
                 });
 
-                showToast(`Marka Kartı "${name}" başarıyla envantere eklendi.`);
                 addFormEl.reset();
                 const advancedFields = document.getElementById('advancedFormFields');
                 if(advancedFields) advancedFields.style.maxHeight = "0px";
@@ -1472,12 +1373,11 @@
                     backupKey: item.dbKey || uniqueId, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt || null, backupLot: item.lot || null
                 });
                 db.ref('depo_stok/' + uniqueId).remove();
-                showToast("Malzeme depodan kaldırıldı.", "error");
             }
         };
 
         window.undoDeletedProduct = function(reportFbKey, prodName, bKey, bDepot, bUnit, bQtyStr, bLimit, bSkt, bLot) {
-            if(currentRole !== 'YÖNETİCİ') { showToast("Geri alma yetkisi sadece yöneticilere aittir!", "error"); return; }
+            if(currentRole !== 'YÖNETİCİ') { alert("Geri alma yetkisi sadece yöneticilere aittir!"); return; }
             if(confirm(`"${prodName}" ürününü depoya geri yüklemek istiyor musunuz?`)) {
                 let parsedQty = parseFloat(bQtyStr) || 0;
                 let targetKey = (bKey && bKey !== 'undefined') ? bKey : prodName.replace(/[.#$\[\]]/g, "");
@@ -1487,7 +1387,7 @@
                     skt: (bSkt && bSkt !== 'null' && bSkt !== 'undefined') ? bSkt : null, lot: (bLot && bLot !== 'null' && bLot !== 'undefined') ? bLot : null, lastUpdatedDate: getTodayDateString()
                 });
 
-                db.ref('depo_rapor/' + reportFbKey).remove().then(() => { showToast("Ürün başarıyla depoya geri yüklendi!", "success"); document.getElementById('openReportBtn').click(); });
+                db.ref('depo_rapor/' + reportFbKey).remove().then(() => { alert("✓ Ürün başarıyla depoya geri yüklendi!"); document.getElementById('openReportBtn').click(); });
             }
         };
 
