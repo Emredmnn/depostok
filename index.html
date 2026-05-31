@@ -40,8 +40,9 @@
         .badge { background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; }
         .live-clock { background: rgba(0,0,0,0.2); padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 500; min-width: 170px; text-align: center; }
         
-        .header-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 5px; }
-        .nav-btn { background: white; color: var(--primary-color); border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        /* Yenilenen Buton Satırı Düzeni */
+        .header-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.15); }
+        .nav-btn { background: white; color: var(--primary-color); border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .nav-btn:hover { background: #e6e6e6; transform: translateY(-1px); }
         .btn-logout { background: #fff0f1; color: var(--danger-color); }
         .btn-logout:hover { background: #ffe0e2; }
@@ -73,6 +74,13 @@
         .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #555; }
         .form-control { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; outline: none; transition: border-color 0.2s; background-color: #fafafa; }
         .form-control:focus { border-color: var(--primary-color); background-color: #fff; box-shadow: 0 0 0 3px rgba(0,86,179,0.1); }
+        
+        /* Sepet İçi Arama Alanı Tasarımı */
+        .basket-search-wrapper { position: relative; margin-bottom: 8px; }
+        .basket-search-control { width: 100%; padding: 9px 35px 9px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; background: #fff; }
+        .basket-search-control:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(0,86,179,0.1); }
+        .basket-search-icon { position: absolute; right: 12px; top: 11px; color: #94a3b8; font-size: 13px; }
+
         .btn-submit { width: 100%; background: var(--success-color); color: white; border: none; padding: 11px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 10px; box-shadow: 0 2px 4px rgba(40,167,69,0.2); }
         .btn-submit:hover { background: #218838; }
         .btn-trigger-order { width: 100%; background: #0056b3; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 5px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: var(--box-shadow); }
@@ -128,7 +136,6 @@
         .basket-item span { display: flex; align-items: center; gap: 4px; }
         .btn-remove-basket-item { background: none; border: none; color: var(--danger-color); font-size: 16px; font-weight: bold; cursor: pointer; padding: 0 4px; line-height: 1; }
         .btn-remove-basket-item:hover { color: #b91c1c; }
-        .basket-row-flex { display: grid; grid-template-columns: 1fr 100px auto; gap: 8px; align-items: flex-end; margin-bottom: 12px; }
 
         /* --- MODAL PENCERELER (AÇILIR EKRANLAR) --- */
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display:none; justify-content:center; align-items:center; z-index:9999; padding: 15px; }
@@ -234,7 +241,10 @@
                 <form id="orderForm">
                     <div class="form-group">
                         <label>Malzeme Seçin:</label>
-                        <select class="form-control" id="orderProductSelect">
+                        <div class="basket-search-wrapper">
+                            <input type="text" id="basketProductSearch" class="basket-search-control" placeholder="🔍 Ürün ismi yazarak ara..." onkeyup="filterBasketProducts()">
+                        </div>
+                        <select class="form-control" id="orderProductSelect" size="5" style="height: 120px;">
                             <option value="">-- Depodaki Ürünlerden Seçin --</option>
                         </select>
                     </div>
@@ -663,7 +673,30 @@
                 selectEl.appendChild(opt);
             });
             if(currentSelected) selectEl.value = currentSelected;
+            
+            // Dropdown güncellendikten sonra eğer arama motorunda yazı varsa filtreyi koru
+            filterBasketProducts();
         }
+
+        // --- SEPET İÇİ MALZEME ARAMA / FİLTRELEME FONKSİYONU ---
+        window.filterBasketProducts = function() {
+            const input = document.getElementById('basketProductSearch');
+            if(!input) return;
+            const filter = input.value.toUpperCase();
+            const select = document.getElementById('orderProductSelect');
+            const options = select.getElementsByTagName('option');
+
+            // İlk seçeneği (-- Depodaki Ürünlerden Seçin --) atlamamak için 0'dan başlıyoruz
+            for (let i = 0; i < options.length; i++) {
+                if(options[i].value === "") continue; // Varsayılan başlık seçeneğini elleme
+                const txtValue = options[i].textContent || options[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    options[i].style.display = "";
+                } else {
+                    options[i].style.display = "none";
+                }
+            }
+        };
 
         // --- SEPET SÜREÇLERİ ---
         window.addItemToBasket = function() {
@@ -690,6 +723,12 @@
 
             qtyInput.value = "";
             selectEl.value = "";
+            
+            // Arama kutusunu temizle ve listeyi sıfırla
+            const searchInput = document.getElementById('basketProductSearch');
+            if(searchInput) { searchInput.value = ""; }
+            filterBasketProducts();
+
             renderBasketVisual();
         };
 
@@ -1116,7 +1155,6 @@
                     modalReports.forEach(([fbKey, rep]) => {
                         let actionButtonsHtml = '';
                         
-                        // ŞARTLI KONTROL: GERİ AL BUTONU SADECE YÖNETİCİDE ÇIKAR
                         if((rep.type === 'ÜRÜN SİLİNDİ' || rep.type === 'SKT OTOMATİK SİLME') && rep.backupKey && currentRole === 'YÖNETİCİ') {
                             actionButtonsHtml += `<button class="btn-undo" onclick="undoDeletedProduct('${fbKey}', '${rep.product}', '${rep.backupKey}', '${rep.backupDepot}', '${rep.backupUnit}', '${rep.qty}', '${rep.backupLimit}', '${rep.backupSkt}')">↩ Geri Al</button> `;
                         }
