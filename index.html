@@ -25,7 +25,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--secondary-color); color: var(--text-dark); padding: 15px; }
         
-        /* --- KESİNLEŞEN YENİ ÜST PANEL (HEADER) DÜZENİ --- */
+        /* --- GÜNCELLENEN ÜST PANEL (HEADER) DÜZENİ --- */
         header { 
             background: #00338d; 
             color: white; 
@@ -34,11 +34,11 @@
             box-shadow: var(--box-shadow); 
             margin-bottom: 20px; 
             display: flex; 
-            flex-direction: column; /* İçerikleri net bir şekilde alt alta sıralar */
+            flex-direction: column; 
             gap: 15px;
         }
         
-        /* 1. Satır: Logo + Başlık ve Sağda Saat + Rol */
+        /* 1. Satır: Sola Yaslı Başlıklar ve Sağa Yaslı Rol/Saat */
         .header-top-row { 
             display: flex; 
             justify-content: space-between; 
@@ -52,19 +52,6 @@
             display: flex;
             align-items: center;
             gap: 15px;
-        }
-
-        /* Logo Alanı (img etiketi yerine CSS arka plan ile garantilenmiş görsel) */
-        .system-logo {
-            width: 65px;
-            height: 65px;
-            background-image: url('ChatGPT Image 30 May 2026 14_52_53.png');
-            background-size: cover;
-            background-position: center;
-            border-radius: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background-color: #000; /* Resim yüklenene kadar siyah zemin */
-            flex-shrink: 0;
         }
 
         .header-title h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.5px; margin: 0; }
@@ -84,7 +71,7 @@
         .badge { font-weight: bold; }
         .live-clock { font-weight: 500; }
         
-        /* 2. Satır: Saat, Tarih ve Rol Bilgisinin ALTINDAKİ Buton Grubu */
+        /* 2. Satır: BUTONLARIN SAĞ TARAFA TAŞINDIĞI ALAN */
         .header-actions-row { 
             display: flex; 
             gap: 12px; 
@@ -93,6 +80,7 @@
             padding-top: 15px; 
             border-top: 1px solid rgba(255,255,255,0.2); 
             align-items: center;
+            justify-content: flex-end; /* Tüm butonları sağ tarafa yaslar */
         }
 
         .nav-btn { 
@@ -113,7 +101,7 @@
         
         .nav-btn:hover { background: #f0f4f8; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
         .btn-urgent { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; animation: pulse 2s infinite; }
-        .btn-logout { background: #f8d7da; color: #721c24; margin-left: auto; } /* Çıkış butonunu en sağa yaslar */
+        .btn-logout { background: #f8d7da; color: #721c24; } 
         .btn-logout:hover { background: #f5c6cb; }
 
         @keyframes pulse {
@@ -128,7 +116,7 @@
 
         @media (max-width: 992px) { 
             .two-columns { grid-template-columns: 1fr; } 
-            .btn-logout { margin-left: 0; }
+            .header-actions-row { justify-content: flex-start; } /* Mobilde rahat tıklansın diye sola hizalanır */
         }
 
         .card { background: white; border-radius: var(--border-radius); padding: 20px; box-shadow: var(--box-shadow); border: 1px solid #eef2f5; margin-bottom: 20px; }
@@ -233,7 +221,7 @@
     <header>
         <div class="header-top-row">
             <div class="brand-container">
-                <div class="system-logo"></div> <div class="header-title">
+                <div class="header-title">
                     <h1>Bahçelievler Memorial CT</h1>
                     <p>Akıllı Depo Otomasyon & Canlı Stok Takip Sistemi</p>
                 </div>
