@@ -33,10 +33,10 @@
             padding: 15px;
         }
 
-        /* --- MAVİ FON YERİNE LOGO ENTEGRELİ ÜST PANEL (HEADER) --- */
+        /* --- MAVİ FON YERİNE LOGO ENTEGRELİ VE BOYUTU DÜZELTİLMİŞ ÜST PANEL (HEADER) --- */
         header {
             position: relative;
-            min-height: 165px; /* Panelin dengeli durması için ideal yükseklik */
+            min-height: 145px; /* Panelin dengeli ve kompakt durması için yükseklik optimize edildi */
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             margin-bottom: 20px;
@@ -44,17 +44,19 @@
             flex-direction: column;
             justify-content: space-between;
             padding: 20px 25px;
+            /* Logo boyutu 'contain' yapılarak kesilmeden net şekilde sığması sağlandı */
             background: url('akilli_depo_logo.jpeg.jpeg') no-repeat center center;
-            background-size: cover; /* Logoyu panel sınırlarına kusursuzca yayar */
+            background-size: contain; 
+            background-color: #002b7a; /* Logonun kenarlarında kalan boşluklar için uyumlu kurumsal lacivert */
             overflow: hidden;
         }
 
-        /* Resim üzerindeki yazıların kontrastını ve kurumsal okunurluğu korumak için katman */
+        /* Resim üzerindeki yazıların kontrastını ve okunurluğu korumak için katman */
         header::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 51, 141, 0.7); /* Kurumsal mavi tonlarında karartma katmanı */
+            background: rgba(0, 43, 122, 0.65); /* Detayları kapatmayan ama yazıları öne çıkaran karartma katmanı */
             z-index: 1;
         }
 
@@ -87,7 +89,7 @@
         }
         .header-title p {
             font-size: 13px;
-            opacity: 0.9;
+            opacity: 0.85;
             margin-top: 3px;
             font-weight: 300;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
@@ -888,7 +890,7 @@
                     </thead>
                     <tbody id="liveMaterialsBody">
                         <tr>
-                            <td colspan="7" style="text-align:center; color:#888; padding:20px;">Veriler Firebase'den yükleniyor, lütfen bekleyin...</td>
+                            <td colspan="7" style="text-align:center; color:#888; padding:20px;">Veriler Firebase'den yükleniyor, please wait...</td>
                         </tr>
                     </tbody>
                     <tfoot id="tableTotalFooter"></tfoot>
