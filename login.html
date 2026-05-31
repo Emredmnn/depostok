@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giriş - Bahçelievler Memorial CT</title>
     <style>
-        /* --- TEMEL AYARLAR --- */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
         
         body { 
             background: #f0f4f8;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(0, 51, 141, 0.03) 0, transparent 50%), 
-                radial-gradient(at 100% 100%, rgba(0, 51, 141, 0.05) 0, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(0, 51, 141, 0.05) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, rgba(0, 51, 141, 0.08) 0, transparent 50%);
             height: 100vh; 
             display: flex; 
             flex-direction: column;
@@ -23,81 +22,62 @@
 
         /* --- KART ANİMASYONU --- */
         @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            from { opacity: 0; transform: scale(0.98) translateY(15px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .login-card { 
             background: white; 
-            padding: 45px; 
+            padding: 40px 45px; 
             border-radius: 20px; 
-            box-shadow: 0 20px 40px rgba(0, 51, 141, 0.1); 
+            box-shadow: 0 25px 50px rgba(0, 51, 141, 0.12); 
             width: 100%; 
             max-width: 420px; 
             border-top: 6px solid #00338d; 
             text-align: center; 
-            animation: fadeInScale 0.6s ease-out;
+            animation: fadeInScale 0.5s ease-out;
             position: relative;
             z-index: 2;
         }
 
-        /* --- LOGO VE BAŞLIK --- */
-        .logo-area { margin-bottom: 30px; }
-        .login-logo { max-height: 85px; width: auto; object-fit: contain; margin-bottom: 15px; }
-        .logo-area h2 { color: #00338d; font-size: 20px; font-weight: 800; letter-spacing: 0.3px; margin-bottom: 5px; text-transform: uppercase; }
-        .logo-area p { color: #64748b; font-size: 14px; font-weight: 600; }
-
-        /* --- FORM ELEMANLARI --- */
-        .form-group { margin-bottom: 22px; text-align: left; position: relative; }
-        label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 13px; color: #334155; }
+        .logo-area { margin-bottom: 25px; }
+        .login-logo { max-height: 85px; width: auto; object-fit: contain; margin-bottom: 12px; }
         
-        input[type="text"], input[type="password"] { 
-            width: 100%; padding: 13px 15px; padding-right: 65px;
-            border: 2px solid #e2e8f0; border-radius: 12px; 
-            font-size: 14px; outline: none; transition: all 0.3s ease; color: #1e293b;
-            background: #f8fafc;
+        /* DİNAMİK KARŞILAMA STİLİ */
+        .welcome-msg { font-size: 13px; color: #00338d; font-weight: 700; margin-bottom: 5px; text-transform: none; }
+        
+        .logo-area h2 { color: #00338d; font-size: 19px; font-weight: 800; letter-spacing: 0.3px; margin-bottom: 5px; text-transform: uppercase; }
+        .logo-area p { color: #64748b; font-size: 13px; font-weight: 600; }
+
+        .form-group { margin-bottom: 20px; text-align: left; position: relative; }
+        label { display: block; margin-bottom: 6px; font-weight: 700; font-size: 12px; color: #475569; }
+        
+        input { 
+            width: 100%; padding: 13px 15px; border: 2px solid #e2e8f0; border-radius: 12px; 
+            font-size: 14px; outline: none; transition: all 0.2s ease; background: #f8fafc;
         }
-        input:focus { 
-            border-color: #00338d; 
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(0, 51, 141, 0.08); 
-        }
+        input:focus { border-color: #00338d; background: #fff; box-shadow: 0 0 0 4px rgba(0, 51, 141, 0.08); }
 
         .toggle-password { 
-            position: absolute; right: 15px; top: 38px; background: none; border: none; 
-            cursor: pointer; color: #94a3b8; font-weight: 700; font-size: 11px; outline: none; 
+            position: absolute; right: 15px; top: 35px; background: none; border: none; 
+            cursor: pointer; color: #94a3b8; font-weight: 700; font-size: 10px; outline: none; 
         }
-        .toggle-password:hover { color: #00338d; }
 
-        .remember-me-container { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; }
-        .remember-me-container input { width: 18px; height: 18px; cursor: pointer; accent-color: #00338d; }
-        .remember-me-container label { font-size: 13px; color: #475569; cursor: pointer; user-select: none; font-weight: 600; }
+        /* CAPS LOCK UYARISI */
+        #capsWarn { color: #ff9800; font-size: 10px; font-weight: 800; display: none; margin-top: 5px; }
 
-        /* --- GİRİŞ BUTONU --- */
         .btn-login { 
             width: 100%; padding: 16px; background: #00338d; color: white; border: none; 
             border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            box-shadow: 0 4px 12px rgba(0, 51, 141, 0.2); 
+            transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 51, 141, 0.2); 
         }
-        .btn-login:hover { 
-            background: #00225c; 
-            transform: translateY(-2px); 
-            box-shadow: 0 8px 20px rgba(0, 51, 141, 0.3); 
-        }
-        .btn-login:active { transform: scale(0.98); }
+        .btn-login:hover { background: #00225c; transform: translateY(-1px); box-shadow: 0 6px 15px rgba(0, 51, 141, 0.25); }
 
-        /* --- SİSTEM DURUMU --- */
-        .system-status { margin-top: 18px; font-size: 11px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .status-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; animation: blink 2s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        .system-status { margin-top: 15px; font-size: 11px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .status-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-        .error-msg { color: #dc3545; font-size: 13px; margin-top: 15px; font-weight: 700; display: none; }
-
-        /* --- FOOTER --- */
-        footer { 
-            position: absolute; bottom: 20px; text-align: center; width: 100%; color: #94a3b8; font-size: 11px; font-weight: 600; line-height: 1.6;
-        }
+        footer { position: absolute; bottom: 20px; text-align: center; width: 100%; color: #94a3b8; font-size: 11px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -105,110 +85,84 @@
 <div class="login-card">
     <div class="logo-area">
         <img src="akilli_depo_logo.jpeg.jpeg" alt="Logo" class="login-logo">
+        <div id="welcomeText" class="welcome-msg">Hoş geldiniz!</div>
         <h2>BAHÇELİEVLER MEMORİAL CT</h2>
-        <p>Akıllı Depo Otomasyon Sistemi</p>
+        <p>Akıllı Depo Takip Sistemi</p>
     </div>
     <form id="loginForm">
         <div class="form-group">
             <label>Kullanıcı Adı</label>
-            <input type="text" id="username" placeholder="Kullanıcı adınızı girin" required autocomplete="username">
+            <input type="text" id="username" placeholder="Kullanıcı adı" required>
         </div>
         <div class="form-group">
             <label>Şifre</label>
-            <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
-            <button type="button" class="toggle-password" id="togglePasswordBtn" onclick="togglePasswordVisibility()">GÖSTER</button>
+            <input type="password" id="password" placeholder="••••••••" required>
+            <button type="button" class="toggle-password" onclick="togglePass()">GÖSTER</button>
+            <div id="capsWarn">⚠️ Caps Lock Açık!</div>
         </div>
         
-        <div class="remember-me-container">
-            <input type="checkbox" id="rememberMe">
-            <label for="rememberMe">Beni Hatırla</label>
-        </div>
-
-        <button type="submit" class="btn-login" id="loginBtn">Sisteme Güvenli Giriş Yap</button>
+        <button type="submit" class="btn-login" id="loginBtn">Sisteme Giriş Yap</button>
         
         <div class="system-status">
-            <span class="status-dot"></span> Sistem Durumu: Aktif ve Güvenli
+            <span class="status-dot"></span> Veritabanı Bağlantısı Aktif
         </div>
-        
-        <div class="error-msg" id="errorMsg">⚠️ Kullanıcı adı veya şifre hatalı!</div>
+        <div id="errorMsg" style="color:#dc3545; font-size:12px; margin-top:10px; font-weight:700; display:none;">⚠️ Bilgiler hatalı!</div>
     </form>
 </div>
 
 <footer>
-    v2.5.0 - 2026<br>
-    ED Yazılım | Akıllı Depo Sistemleri tarafından geliştirilmiştir.<br>
-    <span style="font-size: 9px; opacity: 0.7;">🔒 Verileriniz 256-bit uçtan uca şifrelenmektedir.</span>
+    v2.6.0 - 2026 | ED Yazılım<br>
+    <span style="font-size: 9px; opacity: 0.7;">🔒 Güvenli SSL Bağlantısı</span>
 </footer>
 
 <script>
-    // Beni Hatırla Kontrolü
-    document.addEventListener("DOMContentLoaded", function() {
-        const savedUser = localStorage.getItem('rememberedUsername');
-        if (savedUser) {
-            document.getElementById('username').value = savedUser;
-            document.getElementById('rememberMe').checked = true;
-        }
+    // Dinamik Karşılama
+    const hour = new Date().getHours();
+    const welcomeText = document.getElementById('welcomeText');
+    if (hour >= 6 && hour < 12) welcomeText.innerText = "☀️ Günaydın, iyi mesailer!";
+    else if (hour >= 12 && hour < 18) welcomeText.innerText = "🌤️ İyi günler, kolay gelsin!";
+    else welcomeText.innerText = "🌙 İyi akşamlar, iyi çalışmalar!";
+
+    // Caps Lock Kontrolü
+    const passInput = document.getElementById('password');
+    const capsWarn = document.getElementById('capsWarn');
+    passInput.addEventListener('keyup', (e) => {
+        if (e.getModifierState('CapsLock')) capsWarn.style.display = 'block';
+        else capsWarn.style.display = 'none';
     });
 
-    // Şifre Göster/Gizle
-    function togglePasswordVisibility() {
-        const passwordInput = document.getElementById('password');
-        const toggleBtn = document.getElementById('togglePasswordBtn');
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            toggleBtn.textContent = 'GİZLE';
-        } else {
-            passwordInput.type = 'password';
-            toggleBtn.textContent = 'GÖSTER';
-        }
+    function togglePass() {
+        const p = document.getElementById('password');
+        p.type = p.type === 'password' ? 'text' : 'password';
     }
 
-    // Giriş Fonksiyonu
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const btn = document.getElementById('loginBtn');
-        const originalText = btn.textContent;
-        
-        // Yükleme efekti
         btn.disabled = true;
-        btn.textContent = "Giriş yapılıyor...";
-        
+        btn.innerText = "Doğrulanıyor...";
+
         let userInput = document.getElementById('username').value.trim().toLowerCase();
         let user = userInput.replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c');
-        
         const pass = document.getElementById('password').value;
-        const rememberMeChecked = document.getElementById('rememberMe').checked;
 
-        let detectedRole = "";
+        let role = "";
+        if ((user === "yonetici" || userInput === "yönetici") && pass === "2605") role = "YÖNETİCİ";
+        else if (user === "garson" && pass === "2222") role = "GARSON";
+        else if ((user === "uretim" || userInput === "üretim") && pass === "3333") role = "ÜRETİM";
+        else if (user === "depo" && pass === "1111") role = "DEPO";
 
-        // Şifre Matrisi
-        if ((user === "yonetici" || userInput === "yönetici") && pass === "2605") {
-            detectedRole = "YÖNETİCİ";
-        } else if (user === "garson" && pass === "2222") {
-            detectedRole = "GARSON";
-        } else if ((user === "uretim" || userInput === "üretim") && pass === "3333") {
-            detectedRole = "ÜRETİM";
-        } else if (user === "depo" && pass === "1111") {
-            detectedRole = "DEPO";
-        }
-
-        setTimeout(() => { // Gerçekçi bir gecikme hissi
-            if (detectedRole !== "") {
-                if (rememberMeChecked) {
-                    localStorage.setItem('rememberedUsername', document.getElementById('username').value.trim());
-                } else {
-                    localStorage.removeItem('rememberedUsername');
-                }
-
+        setTimeout(() => {
+            if (role) {
                 localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('userRole', detectedRole);
+                localStorage.setItem('userRole', role);
                 window.location.replace('index.html');
             } else {
                 btn.disabled = false;
-                btn.textContent = originalText;
+                btn.innerText = "Sisteme Giriş Yap";
                 document.getElementById('errorMsg').style.display = 'block';
             }
-        }, 800);
+        }, 600);
     });
 </script>
 </body>
