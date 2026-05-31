@@ -25,7 +25,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--secondary-color); color: var(--text-dark); padding: 15px; }
         
-        /* --- YENİLENEN LOGOLU HEADER TASARIMI --- */
+        /* --- KESİNLEŞEN YENİ ÜST PANEL (HEADER) DÜZENİ --- */
         header { 
             background: #00338d; 
             color: white; 
@@ -34,15 +34,18 @@
             box-shadow: var(--box-shadow); 
             margin-bottom: 20px; 
             display: flex; 
-            flex-direction: column;
+            flex-direction: column; /* İçerikleri net bir şekilde alt alta sıralar */
+            gap: 15px;
         }
         
-        .header-top { 
+        /* 1. Satır: Logo + Başlık ve Sağda Saat + Rol */
+        .header-top-row { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             flex-wrap: wrap; 
             gap: 15px; 
+            width: 100%;
         }
 
         .brand-container {
@@ -51,13 +54,17 @@
             gap: 15px;
         }
 
+        /* Logo Alanı (img etiketi yerine CSS arka plan ile garantilenmiş görsel) */
         .system-logo {
             width: 65px;
             height: 65px;
-            object-fit: cover;
+            background-image: url('ChatGPT Image 30 May 2026 14_52_53.png');
+            background-size: cover;
+            background-position: center;
             border-radius: 10px;
             border: 2px solid rgba(255, 255, 255, 0.3);
-            background-color: #000;
+            background-color: #000; /* Resim yüklenene kadar siyah zemin */
+            flex-shrink: 0;
         }
 
         .header-title h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.5px; margin: 0; }
@@ -77,14 +84,15 @@
         .badge { font-weight: bold; }
         .live-clock { font-weight: 500; }
         
-        /* --- YENİLENEN BUTON SATIRI DÜZENİ (SAAT VE TARİHİN ALTINDA) --- */
-        .header-actions { 
+        /* 2. Satır: Saat, Tarih ve Rol Bilgisinin ALTINDAKİ Buton Grubu */
+        .header-actions-row { 
             display: flex; 
             gap: 12px; 
             flex-wrap: wrap; 
-            margin-top: 20px; 
+            width: 100%;
             padding-top: 15px; 
             border-top: 1px solid rgba(255,255,255,0.2); 
+            align-items: center;
         }
 
         .nav-btn { 
@@ -104,9 +112,9 @@
         }
         
         .nav-btn:hover { background: #f0f4f8; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-        .btn-logout { background: #f8d7da; color: #721c24; margin-left: auto; }
-        .btn-logout:hover { background: #f5c6cb; }
         .btn-urgent { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; animation: pulse 2s infinite; }
+        .btn-logout { background: #f8d7da; color: #721c24; margin-left: auto; } /* Çıkış butonunu en sağa yaslar */
+        .btn-logout:hover { background: #f5c6cb; }
 
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -223,10 +231,9 @@
 <body>
 
     <header>
-        <div class="header-top">
+        <div class="header-top-row">
             <div class="brand-container">
-                <img src="ChatGPT Image 30 May 2026 14_52_53.png" alt="ED Logo" class="system-logo">
-                <div class="header-title">
+                <div class="system-logo"></div> <div class="header-title">
                     <h1>Bahçelievler Memorial CT</h1>
                     <p>Akıllı Depo Otomasyon & Canlı Stok Takip Sistemi</p>
                 </div>
@@ -237,7 +244,7 @@
             </div>
         </div>
         
-        <div class="header-actions">
+        <div class="header-actions-row">
             <button class="nav-btn btn-urgent" id="sktAlertButton" onclick="openSktUrgentModal()" style="display: none;">⚠️ SKT Kritik (0 Ürün)</button>
             <button class="nav-btn" id="openReportBtn">📋 İşlem Geçmişi Raporu</button>
             <button class="nav-btn" id="openOrdersBtn">🛒 Verilen Siparişler</button>
@@ -1157,7 +1164,7 @@
             }
         };
 
-        // --- RAPOR PANALİ MODALI ---
+        // --- RAPOR PANELİ MODALI ---
         const reportModal = document.getElementById('reportModal');
         const ordersListModal = document.getElementById('ordersListModal');
 
