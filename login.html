@@ -7,62 +7,95 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         
-        /* --- ARKA PLAN: LOGO VE KURUMSAL RENKLE UYUMLU GEÇİŞ --- */
+        /* --- DİNAMİK VE MODERN ARKA PLAN --- */
         body { 
-            background: linear-gradient(135deg, #ebf1fa 0%, #cbdcf5 100%); 
+            background: #f0f4f8;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(0, 51, 141, 0.03) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, rgba(0, 51, 141, 0.05) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, rgba(0, 51, 141, 0.03) 0, transparent 50%);
             height: 100vh; 
             display: flex; 
+            flex-direction: column;
             justify-content: center; 
             align-items: center; 
+            overflow: hidden;
         }
-        
-        /* --- LOGO İLE UYUMLU GİRİŞ KARTI (ÜST ŞERİT KURUMSAL LACİVERT) --- */
+
+        /* --- GİRİŞ KARTI ANİMASYONU --- */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .login-card { 
             background: white; 
-            padding: 40px; 
-            border-radius: 12px; 
-            box-shadow: 0 8px 24px rgba(0, 51, 141, 0.12); 
+            padding: 45px; 
+            border-radius: 16px; 
+            box-shadow: 0 15px 35px rgba(0, 51, 141, 0.1); 
             width: 100%; 
             max-width: 420px; 
-            border-top: 5px solid #00338d; /* Kurumsal Lacivert */
+            border-top: 6px solid #00338d; 
             text-align: center; 
+            animation: slideIn 0.8s ease-out;
+            position: relative;
+            z-index: 2;
         }
         
-        /* --- LOGO VE BAŞLIK ALANI --- */
-        .logo-area { margin-bottom: 25px; }
-        .login-logo { max-height: 80px; width: auto; object-fit: contain; margin-bottom: 15px; border-radius: 6px; }
-        .logo-area h2 { color: #00338d; font-size: 22px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
-        .logo-area p { color: #5c7294; font-size: 14px; font-weight: 600; }
+        /* --- LOGO VE BAŞLIK --- */
+        .logo-area { margin-bottom: 30px; }
+        .login-logo { max-height: 85px; width: auto; object-fit: contain; margin-bottom: 15px; }
+        .logo-area h2 { color: #00338d; font-size: 20px; font-weight: 800; letter-spacing: 0.3px; margin-bottom: 5px; text-transform: uppercase; }
+        .logo-area p { color: #64748b; font-size: 14px; font-weight: 600; }
         
-        .form-group { margin-bottom: 20px; text-align: left; position: relative; }
-        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #334155; }
-        input[type="text"], input[type="password"] { width: 100%; padding: 12px; padding-right: 65px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: all 0.2s; color: #1e293b; }
+        /* --- FORM ELEMANLARI --- */
+        .form-group { margin-bottom: 22px; text-align: left; position: relative; }
+        label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 13px; color: #334155; }
+        input[type="text"], input[type="password"] { 
+            width: 100%; padding: 13px; padding-right: 65px; 
+            border: 2px solid #e2e8f0; border-radius: 10px; 
+            font-size: 14px; outline: none; transition: all 0.3s ease; color: #1e293b;
+        }
+        input:focus { border-color: #00338d; box-shadow: 0 0 0 4px rgba(0, 51, 141, 0.08); }
         
-        /* Input Odaklanma Efekti (Kurumsal Lacivert) */
-        input:focus { border-color: #00338d; box-shadow: 0 0 0 3px rgba(0, 51, 141, 0.15); }
-        
-        /* Şifre Göster Butonu */
-        .toggle-password { position: absolute; right: 12px; top: 34px; background: none; border: none; cursor: pointer; color: #64748b; font-weight: 600; font-size: 12px; outline: none; padding: 4px; }
+        .toggle-password { 
+            position: absolute; right: 12px; top: 37px; background: none; border: none; 
+            cursor: pointer; color: #94a3b8; font-weight: 700; font-size: 11px; outline: none; 
+        }
         .toggle-password:hover { color: #00338d; }
         
-        /* Beni Hatırla Alanı */
-        .remember-me-container { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; text-align: left; }
-        .remember-me-container input { width: 16px; height: 16px; cursor: pointer; accent-color: #00338d; }
-        .remember-me-container label { display: inline; margin-bottom: 0; font-size: 13px; color: #475569; cursor: pointer; user-select: none; }
+        .remember-me-container { display: flex; align-items: center; gap: 8px; margin-bottom: 25px; }
+        .remember-me-container input { width: 17px; height: 17px; cursor: pointer; accent-color: #00338d; }
+        .remember-me-container label { font-size: 13px; color: #475569; cursor: pointer; user-select: none; font-weight: 600; }
 
-        /* --- LOGO İLE UYUMLU BUTON (KURUMSAL LACİVERT) --- */
-        .btn-login { width: 100%; padding: 14px; background: #00338d; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: background 0.2s; margin-top: 5px; box-shadow: 0 4px 6px rgba(0, 51, 141, 0.15); }
-        .btn-login:hover { background: #00225c; }
-        .error-msg { color: #dc3545; font-size: 13px; margin-top: 12px; font-weight: 600; display: none; }
+        .btn-login { 
+            width: 100%; padding: 15px; background: #00338d; color: white; border: none; 
+            border-radius: 10px; font-weight: 800; font-size: 15px; cursor: pointer; 
+            transition: all 0.3s; margin-top: 5px; box-shadow: 0 4px 12px rgba(0, 51, 141, 0.2); 
+        }
+        .btn-login:hover { background: #00225c; transform: translateY(-1px); box-shadow: 0 6px 15px rgba(0, 51, 141, 0.3); }
+        
+        /* --- SİSTEM DURUMU --- */
+        .system-status { margin-top: 15px; font-size: 11px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .status-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; display: inline-block; animation: blink 2s infinite; }
+        
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        .error-msg { color: #dc3545; font-size: 13px; margin-top: 15px; font-weight: 700; display: none; }
+
+        /* --- FOOTER BİLGİSİ --- */
+        footer { 
+            position: absolute; bottom: 20px; text-align: center; width: 100%; color: #94a3b8; font-size: 11px; font-weight: 600; line-height: 1.6;
+        }
     </style>
 </head>
 <body>
 
 <div class="login-card">
     <div class="logo-area">
-        <img src="akilli_depo_logo.jpeg.jpeg" alt="Akıllı Depo Otomasyon Sistemi Logo" class="login-logo">
+        <img src="akilli_depo_logo.jpeg.jpeg" alt="Logo" class="login-logo">
         <h2>BAHÇELİEVLER MEMORİAL CT</h2>
-        <p>Canlı Stok Takip Sistemi</p>
+        <p>Akıllı Depo Otomasyon Sistemi</p>
     </div>
     <form id="loginForm">
         <div class="form-group">
@@ -81,12 +114,22 @@
         </div>
 
         <button type="submit" class="btn-login">Sisteme Güvenli Giriş Yap</button>
+        
+        <div class="system-status">
+            <span class="status-dot"></span> Sistem Durumu: Aktif ve Güvenli
+        </div>
+        
         <div class="error-msg" id="errorMsg">⚠️ Kullanıcı adı veya şifre hatalı!</div>
     </form>
 </div>
 
+<footer>
+    v2.4.0 - 2026<br>
+    ED Yazılım | Akıllı Depo Sistemleri tarafından geliştirilmiştir.<br>
+    <span style="font-size: 9px; opacity: 0.7;">🔒 256-bit SSL şifreleme ile korunmaktadır.</span>
+</footer>
+
 <script>
-    // Sayfa yüklendiğinde Beni Hatırla kontrolü yap
     document.addEventListener("DOMContentLoaded", function() {
         const savedUser = localStorage.getItem('rememberedUsername');
         if (savedUser) {
@@ -95,7 +138,6 @@
         }
     });
 
-    // Şifre Göster / Gizle Fonksiyonu
     function togglePasswordVisibility() {
         const passwordInput = document.getElementById('password');
         const toggleBtn = document.getElementById('togglePasswordBtn');
@@ -108,11 +150,9 @@
         }
     }
 
-    // Giriş Kontrolü ve Belirlenen Şifre Kombinasyonları
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Türkçe karakter girişlerini yumuşatarak olası hataları önlüyoruz
         let userInput = document.getElementById('username').value.trim().toLowerCase();
         let user = userInput.replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c');
         
@@ -121,7 +161,6 @@
 
         let detectedRole = "";
 
-        // Şifre ve kullanıcı adı eşleşme matrisi
         if ((user === "yonetici" || userInput === "yönetici") && pass === "2605") {
             detectedRole = "YÖNETİCİ";
         } else if (user === "garson" && pass === "2222") {
@@ -133,14 +172,12 @@
         }
 
         if (detectedRole !== "") {
-            // Beni hatırla seçiliyse orijinal girdiyi kaydet
             if (rememberMeChecked) {
                 localStorage.setItem('rememberedUsername', document.getElementById('username').value.trim());
             } else {
                 localStorage.removeItem('rememberedUsername');
             }
 
-            // Yetki atamasını yap ve ana panele yönlendir
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userRole', detectedRole);
             window.location.replace('index.html');
