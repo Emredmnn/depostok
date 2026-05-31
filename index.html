@@ -33,35 +33,17 @@
             padding: 15px;
         }
 
-        /* --- ÜST PANEL (HEADER) DÜZENİ - BELİRTİLEN ÖLÇÜDE LOGO ENTEGRELİ --- */
+        /* --- ÜST PANEL (HEADER) DÜZENİ - GÖRSEL ARINDIRILMIŞ SADE KURUMSAL TASARIM --- */
         header {
-            position: relative;
-            min-height: 145px; /* Tam olarak belirttiğiniz kurumsal ölçü */
+            background: #00338d;
+            color: white;
+            padding: 20px 25px;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             margin-bottom: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            padding: 20px 25px;
-            background: url('akilli_depo_logo.jpeg.jpeg') no-repeat center center;
-            background-size: cover; /* Belirtilen 145px ölçüye görsele tam uyum sağlatır */
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        /* Resim üzerindeki yazıların kontrastını ve kurumsal okunurluğu korumak için katman */
-        header::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 51, 141, 0.72); /* Yazıların logo üzerinde net okunması için kurumsal mavi katman */
-            z-index: -1;
-        }
-
-        .header-top-row, .header-actions-row {
-            position: relative;
-            width: 100%;
+            gap: 15px;
         }
 
         /* 1. Satır: Sola Yaslı Başlıklar ve Sağa Yaslı Rol/Saat */
@@ -71,7 +53,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
-            color: white;
+            width: 100%;
         }
         .brand-container {
             display: flex;
@@ -83,24 +65,22 @@
             font-weight: 700;
             letter-spacing: 0.5px;
             margin: 0;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
         }
         .header-title p {
             font-size: 13px;
             opacity: 0.85;
             margin-top: 3px;
             font-weight: 300;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
         }
         .user-meta-zone {
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             padding: 10px 18px;
             border-radius: 25px;
             font-size: 13px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(5px);
         }
         .badge {
@@ -115,8 +95,9 @@
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
+            width: 100%;
             padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.25);
+            border-top: 1px solid rgba(255,255,255,0.2);
             align-items: center;
             justify-content: flex-end;
         }
@@ -197,26 +178,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-        }
-
-        /* --- STOK LİSTESİ KARTINA LOGO ENTEGRASYONU (SÜTUNLAR VE BUTONLAR ÜSTTE) --- */
-        .inventory-list-card {
-            position: relative;
-            background: url('akilli_depo_logo.jpeg.jpeg') no-repeat center center;
-            background-size: contain; /* Görselin bozulmadan tam ortada belirmesini sağlar */
-            background-color: white;
-            z-index: 1;
-            overflow: hidden;
-        }
-        
-        /* Malzeme sütunları, filtre barları ve butonların fotoğraf üzerinde kaybolmaması için transparan örtü */
-        .inventory-list-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255, 255, 255, 0.91); /* Arka plandaki logoyu şık bir şekilde geçirgen gösterir */
-            border-radius: var(--border-radius);
-            z-index: -1;
         }
 
         /* --- DEPO FİLTRELEME BUTONLARI --- */
@@ -373,7 +334,7 @@
             color: var(--danger-color);
         }
 
-        /* --- TABLO TASARIMI (GÖRSELİN ÜZERİNE GELEN ALAN) --- */
+        /* --- TABLO TASARIMI --- */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -385,7 +346,7 @@
             border-collapse: collapse;
             text-align: left;
             font-size: 13px;
-            background: rgba(255, 255, 255, 0.9); /* Tablo için hafif opak koruyucu katman */
+            background: white;
         }
         th {
             background-color: #f8fafc;
@@ -405,16 +366,16 @@
         /* KRİTİK STOK SATIR ALARMI (PULSE EFEKTİ) */
         .row-critical-alert td {
             animation: pulse-row-red 2.5s infinite ease-in-out;
-            background-color: rgba(255, 245, 245, 0.95);
+            background-color: #fff5f5;
         }
 
         @keyframes pulse-row-red {
-            0% { background-color: rgba(255, 245, 245, 0.95); }
-            50% { background-color: rgba(255, 227, 227, 0.95); }
-            100% { background-color: rgba(255, 245, 245, 0.95); }
+            0% { background-color: #fff5f5; }
+            50% { background-color: #ffe3e3; }
+            100% { background-color: #fff5f5; }
         }
         tr:hover td {
-            background-color: rgba(248, 250, 252, 0.95);
+            background-color: #f8fafc;
         }
 
         .depot-tag {
@@ -707,54 +668,6 @@
         .btn-print-system:hover {
             background: #495057;
         }
-
-        /* --- KURUMSAL YAZDIRMA (PRINT) CSS DÜZENLERİ --- */
-        @media print {
-            body {
-                background: white;
-                color: black;
-                padding: 0;
-            }
-            header, #addProductColumn, .depot-filter-bar, .search-filter-grid, .action-btns, .action-btn, .btn-print-system {
-                display: none !important;
-            }
-            .card {
-                box-shadow: none !important;
-                border: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            .inventory-list-card::before {
-                background: transparent !important;
-            }
-            .main-container {
-                display: block !important;
-            }
-            table {
-                width: 100% !important;
-                border: 1px solid #000 !important;
-                font-size: 12px !important;
-            }
-            th, td {
-                border: 1px solid #000 !important;
-                padding: 8px !important;
-                color: black !important;
-                background: transparent !important;
-            }
-            .row-critical-alert td {
-                animation: none !important;
-                background: transparent !important;
-            }
-            .card-title {
-                font-size: 18px !important;
-                border-bottom: 2px solid #000 !important;
-                color: black !important;
-                margin-bottom: 20px !important;
-            }
-            .card-title::after {
-                content: " - RESMİ STOK RAPORU";
-            }
-        }
     </style>
 </head>
 <body>
@@ -870,7 +783,7 @@
             </div>
         </div>
 
-        <div class="card inventory-list-card">
+        <div class="card">
             <div class="card-title">🟢 Anlık Stok Durumu & Malzeme Listesi</div>
             <div class="depot-filter-bar">
                 <button class="btn-depot-filter active" onclick="filterByDepot('HEPSİ')">HEPSİ</button>
