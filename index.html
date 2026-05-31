@@ -19,7 +19,7 @@
             --danger-color: #dc3545;
             --warning-color: #ffc107;
             --border-radius: 8px;
-            --box-shadow: 0 4px 6px rgba(0, 51, 141, 0.08); /* Kurumsal tonda yumuşak gölge */
+            --box-shadow: 0 4px 6px rgba(0, 51, 141, 0.08);
         }
         * {
             box-sizing: border-box;
@@ -48,7 +48,6 @@
             gap: 15px;
         }
 
-        /* 1. Satır: Sola Yaslı Logo + Başlıklar ve Sağa Yaslı Rol/Saat */
         .header-top-row {
             display: flex;
             justify-content: space-between;
@@ -63,7 +62,6 @@
             gap: 18px;
         }
         
-        /* SOL ÜST KÖŞEDEKİ LOGO STİLİ */
         .header-logo {
             height: 55px;
             width: auto;
@@ -91,20 +89,15 @@
             align-items: center;
             gap: 12px;
             background: rgba(255, 255, 255, 0.12);
-            padding: 10px 18px;
-            border-radius: 25px;
-            font-size: 13px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12.5px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(5px);
         }
-        .badge {
-            font-weight: bold;
-        }
-        .live-clock {
-            font-weight: 500;
-        }
+        .badge { font-weight: bold; }
+        .live-clock { font-weight: 500; }
 
-        /* 2. Satır: BUTONLARIN SAĞ TARAFA TAŞINDIĞI ALAN */
         .header-actions-row {
             display: flex;
             gap: 12px;
@@ -169,12 +162,8 @@
         }
 
         @media (max-width: 992px) {
-            .two-columns {
-                grid-template-columns: 1fr;
-            }
-            .header-actions-row {
-                justify-content: flex-start;
-            }
+            .two-columns { grid-template-columns: 1fr; }
+            .header-actions-row { justify-content: flex-start; }
         }
 
         .card {
@@ -195,6 +184,32 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        /* --- AKORDEON (COLLAPSE) FORM ALTYAPISI --- */
+        .accordion-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #475569;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            transition: background 0.2s;
+        }
+        .accordion-trigger:hover { background: #f1f5f9; }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding: 0 2px;
         }
 
         /* --- DEPO FİLTRELEME BUTONLARI --- */
@@ -231,16 +246,9 @@
         }
 
         /* --- FORMLAR VE INPUT ELEMANLARI --- */
-        .form-group {
-            margin-bottom: 12px;
-        }
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #475569;
-        }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: #475569; }
+        
         .form-control {
             width: 100%;
             padding: 10px;
@@ -257,481 +265,132 @@
             background-color: #fff;
             box-shadow: 0 0 0 3px rgba(0, 51, 141, 0.12);
         }
-        .basket-search-wrapper {
-            position: relative;
-            margin-bottom: 8px;
-        }
+        
+        .basket-search-wrapper { position: relative; margin-bottom: 8px; }
         .basket-search-control {
-            width: 100%;
-            padding: 9px 35px 9px 10px;
-            border: 2px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 13px;
-            outline: none;
-            background: #fff;
-            transition: all 0.2s;
+            width: 100%; padding: 9px 10px; border: 2px solid #cbd5e1; border-radius: 6px;
+            font-size: 13px; outline: none; background: #fff; transition: all 0.2s;
         }
-        .basket-search-control:focus {
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(0, 51, 141, 0.12);
-        }
+        .basket-search-control:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(0, 51, 141, 0.12); }
+        
         .btn-submit {
-            width: 100%;
-            background: var(--success-color);
-            color: white;
-            border: none;
-            padding: 11px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 10px;
-            box-shadow: 0 2px 4px rgba(40,167,69,0.2);
+            width: 100%; background: var(--success-color); color: white; border: none; padding: 11px;
+            border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s;
+            margin-top: 10px; box-shadow: 0 2px 4px rgba(40,167,69,0.2);
         }
-        .btn-submit:hover {
-            background: #218838;
-        }
+        .btn-submit:hover { background: #218838; }
+        
+        /* MODERN OUTLINE FORM BUTON HİYERARŞİSİ */
         .btn-trigger-order {
-            width: 100%;
-            background: var(--primary-blue);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: var(--box-shadow);
+            width: 100%; background: transparent; color: var(--primary-blue); border: 2px solid var(--primary-blue);
+            padding: 11px; border-radius: 6px; font-size: 13.5px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s ease; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-trigger-order:hover {
-            background: #00225c;
-        }
+        .btn-trigger-order:hover { background: rgba(0, 51, 141, 0.05); }
 
         /* --- FİLTRE VE ARAMA PANELİ --- */
-        .search-filter-grid {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 10px;
-            margin-bottom: 15px;
-            align-items: center;
-        }
-        .search-wrapper {
-            position: relative;
-            width: 100%;
-        }
-        .date-filter-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: white;
-            border: 2px solid #cbd5e1;
-            padding: 4px 8px;
-            border-radius: 6px;
-        }
-        .date-filter-wrapper input {
-            border: none;
-            outline: none;
-            font-size: 13px;
-            color: var(--text-dark);
-            cursor: pointer;
-        }
-        .btn-clear-date {
-            background: none;
-            border: none;
-            color: #aaa;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 0 4px;
-        }
-        .btn-clear-date:hover {
-            color: var(--danger-color);
+        .search-filter-grid { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 15px; align-items: center; }
+        .search-wrapper { position: relative; width: 100%; }
+        .date-filter-wrapper { display: flex; align-items: center; gap: 5px; background: white; border: 2px solid #cbd5e1; padding: 4px 8px; border-radius: 6px; }
+        .date-filter-wrapper input { border: none; outline: none; font-size: 13px; color: var(--text-dark); cursor: pointer; }
+        .btn-clear-date { background: none; border: none; color: #aaa; font-size: 16px; cursor: pointer; padding: 0 4px; }
+        .btn-clear-date:hover { color: var(--danger-color); }
+
+        /* --- TABLO TASARIMI VE SATIR HOVER STATE --- */
+        .table-responsive { width: 100%; overflow-x: auto; border: 1px solid #eef2f5; border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; background: white; }
+        th { background-color: #f8fafc; color: #475569; font-weight: 600; padding: 10px 10px; border-bottom: 2px solid #e2e8f0; white-space: nowrap; }
+        td { padding: 9px 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; color: #334155; transition: background 0.15s; }
+        
+        tr:hover td { background-color: #f8fafc; }
+
+        /* KRİTİK STOK PULSE ALARMI */
+        .row-critical-alert td { background-color: #fff5f5; animation: pulse-row-red 3s infinite ease-in-out; }
+        @keyframes pulse-row-red { 
+            0%, 100% { background-color: #fff5f5; } 
+            50% { background-color: #ffe8e8; } 
         }
 
-        /* --- TABLO TASARIMI --- */
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            border: 1px solid #eef2f5;
-            border-radius: 6px;
+        /* KRİTİK STOK + BUTONU PARLAMA EFEKTİ */
+        @keyframes criticalPulseBtn {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 13px;
-            background: white;
+        .row-critical-alert .btn-add-stock { animation: criticalPulseBtn 1.5s infinite; font-weight: 800; }
+
+        .depot-tag { background: #e2e8f0; color: #475569; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        .lot-tag { background: #e0f2fe; color: #0369a1; padding: 2px 5px; border-radius: 4px; font-size: 10.5px; font-weight: 700; display: inline-block; margin-top: 2px; border: 1px solid #bae6fd; }
+        .date-tag { display: block; font-size: 11px; color: #94a3b8; margin-top: 2px; font-weight: normal; }
+        
+        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
+        .status-safe { background: #d4edda; color: #155724; }
+        .status-critical { background: #f8d7da; color: #721c24; font-weight: 700; }
+
+        .skt-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
+        .skt-none { background: #f1f5f9; color: #64748b; }
+        .skt-ok { background: #e0f2fe; color: #0369a1; }
+        .skt-expired { background: #fee2e2; color: #b91c1c; }
+
+        /* --- SKELETON LOADER (ÖN YÜKLEME EKRANI ESPRİSİ) --- */
+        @keyframes skeletonShimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: 200px 0; }
         }
-        th {
-            background-color: #f8fafc;
-            color: #475569;
-            font-weight: 600;
-            padding: 12px 10px;
-            border-bottom: 2px solid #e2e8f0;
-            white-space: nowrap;
-        }
-        td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #f1f5f9;
-            vertical-align: middle;
-            color: #334155;
+        .skeleton-row td { padding: 15px 10px; }
+        .skeleton-block {
+            height: 14px; background: #f1f5f9;
+            background-image: linear-gradient(90deg, #f1f5f9 0px, #e2e8f0 40px, #f1f5f9 8px);
+            background-size: 400px 100%; background-repeat: no-repeat;
+            animation: skeletonShimmer 1.4s infinite linear; border-radius: 4px; width: 85%;
         }
 
-        /* KRİTİK STOK SATIR ALARMI (PULSE EFEKTİ) */
-        .row-critical-alert td {
-            animation: pulse-row-red 2.5s infinite ease-in-out;
-            background-color: #fff5f5;
-        }
-
-        @keyframes pulse-row-red {
-            0% { background-color: #fff5f5; }
-            50% { background-color: #ffe3e3; }
-            100% { background-color: #fff5f5; }
-        }
-        tr:hover td {
-            background-color: #f8fafc;
-        }
-
-        .depot-tag {
-            background: #e2e8f0;
-            color: #475569;
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .lot-tag {
-            background: #e0f2fe;
-            color: #0369a1;
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-size: 10.5px;
-            font-weight: 700;
-            display: inline-block;
-            margin-top: 2px;
-            border: 1px solid #bae6fd;
-        }
-        .date-tag {
-            display: block;
-            font-size: 11px;
-            color: #94a3b8;
-            margin-top: 2px;
-            font-weight: normal;
-        }
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            display: inline-block;
-            white-space: nowrap;
-        }
-        .status-safe {
-            background: #d4edda;
-            color: #155724;
-        }
-        .status-critical {
-            background: #f8d7da;
-            color: #721c24;
-            font-weight: 700;
-        }
-
-        .skt-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            display: inline-block;
-            white-space: nowrap;
-        }
-        .skt-none {
-            background: #f1f5f9;
-            color: #64748b;
-        }
-        .skt-ok {
-            background: #e0f2fe;
-            color: #0369a1;
-        }
-        .skt-expired {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-        .action-btns {
-            display: flex;
-            gap: 4px;
-            flex-wrap: nowrap;
-            white-space: nowrap;
-        }
-        .action-btn {
-            border: none;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.15s;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .action-btn:hover {
-            transform: translateY(-1px);
-            filter: brightness(0.9);
-        }
+        /* --- BUTON GRUPLAMASI VE AYRACI --- */
+        .action-btns { display: flex; gap: 4px; flex-wrap: nowrap; white-space: nowrap; align-items: center; }
+        .btn-divider { color: #cbd5e1; margin: 0 4px; font-weight: 300; font-size: 14px; user-select: none; }
+        
+        .action-btn { border: none; padding: 6px 11px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.15s; color: white; display: inline-flex; align-items: center; justify-content: center; }
+        .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
         .btn-add-stock { background-color: var(--success-color); }
         .btn-drop-stock { background-color: #ff9800; }
         .btn-waste-stock { background-color: #795548; }
         .btn-edit-stock { background-color: #17a2b8; }
         .btn-del-stock { background-color: var(--danger-color); }
         
-        .total-row {
-            background-color: #f8fafc;
-            font-weight: bold;
-            color: #1e293b;
-            border-top: 2px solid #cbd5e1;
-        }
-        .total-row td {
-            padding: 14px 10px;
-            font-size: 13px;
-        }
+        .total-row { background-color: #f8fafc; font-weight: bold; color: #1e293b; border-top: 2px solid #cbd5e1; }
+        .total-row td { padding: 14px 10px; font-size: 13px; }
 
-        /* --- MALZEME TALEP SEPETİ PANELİ --- */
-        .order-panel-card {
-            background: #fff;
-            border: 2px solid var(--primary-blue);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            margin-top: 15px;
-            box-shadow: var(--box-shadow);
-            display: none;
-        }
-        .basket-container {
-            background: #f8fafc;
-            border: 1px dashed #cbd5e1;
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .basket-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 8px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            margin-bottom: 6px;
-            font-size: 12.5px;
-        }
-        .basket-item span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .btn-remove-basket-item {
-            background: none;
-            border: none;
-            color: var(--danger-color);
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0 4px;
-            line-height: 1;
-        }
-        .btn-remove-basket-item:hover {
-            color: #b91c1c;
-        }
+        /* --- SEPET & MODALLAR --- */
+        .order-panel-card { background: #fff; border: 2px solid var(--primary-blue); border-radius: var(--border-radius); padding: 15px; margin-top: 15px; box-shadow: var(--box-shadow); display: none; }
+        .basket-container { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px; margin-bottom: 12px; max-height: 200px; overflow-y: auto; }
+        .basket-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; background: white; border: 1px solid #e2e8f0; border-radius: 4px; margin-bottom: 6px; font-size: 12.5px; }
+        .btn-remove-basket-item { background: none; border: none; color: var(--danger-color); font-size: 16px; font-weight: bold; cursor: pointer; padding: 0 4px; }
 
-        /* --- MODAL PENCERELER --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15,23,42,0.6);
-            backdrop-filter: blur(3px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 15px;
-        }
-        .modal-content {
-            background: white;
-            border-radius: var(--border-radius);
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
-            animation: slideDown 0.25s ease-out;
-            overflow: hidden;
-        }
-        .modal-large {
-            max-width: 850px;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px; }
+        .modal-content { background: white; border-radius: var(--border-radius); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.25s ease-out; overflow: hidden; }
+        .modal-large { max-width: 850px; }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-header { background: #f8fafc; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { font-size: 16px; color: #1e293b; font-weight: 600; }
+        .modal-close-btn { background: none; border: none; font-size: 22px; color: #94a3b8; cursor: pointer; }
+        .modal-body { padding: 20px; max-height: 75vh; overflow-y: auto; }
+        .modal-footer-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
+        .btn-secondary { background: #e2e8f0; color: #475569; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .badge-order { padding: 3px 6px; border-radius: 4px; font-size: 11px; background: #e0f2fe; color: #0369a1; display: inline-block; }
+        .btn-undo { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; margin-right: 4px; }
+        .btn-report-del { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-print-system { background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; margin-top: 15px; width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; }
 
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-header {
-            background: #f8fafc;
-            padding: 15px 20px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-header h3 {
-            font-size: 16px;
-            color: #1e293b;
-            font-weight: 600;
-        }
-        .modal-close-btn {
-            background: none;
-            border: none;
-            font-size: 22px;
-            color: #94a3b8;
-            cursor: pointer;
-            line-height: 1;
-        }
-        .modal-close-btn:hover {
-            color: #475569;
-        }
-        .modal-body {
-            padding: 20px;
-            max-height: 75vh;
-            overflow-y: auto;
-        }
-        .modal-footer-btns {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .btn-secondary {
-            background: #e2e8f0;
-            color: #475569;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .btn-secondary:hover {
-            background: #cbd5e1;
-        }
-        .badge-order {
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            background: #e0f2fe;
-            color: #0369a1;
-            display: inline-block;
-        }
-        .btn-undo {
-            background: #e6f4ea;
-            color: #137333;
-            border: 1px solid #ceead6;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-right: 4px;
-        }
-        .btn-undo:hover {
-            background: #d2e3d6;
-        }
-        .btn-report-del {
-            background: #fce8e6;
-            color: #c5221f;
-            border: 1px solid #fad2cf;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .btn-report-del:hover {
-            background: #fa3c3c;
-            color: white;
-        }
-        .btn-print-system {
-            background: #6c757d;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-weight: bold;
-            margin-top: 15px;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: var(--box-shadow);
-            transition: background 0.2s;
-        }
-        .btn-print-system:hover {
-            background: #495057;
-        }
-
-        /* --- KURUMSAL YAZDIRMA (PRINT) CSS DÜZENLERİ --- */
         @media print {
-            body {
-                background: white;
-                color: black;
-                padding: 0;
-            }
-            header, #addProductColumn, .depot-filter-bar, .search-filter-grid, .action-btns, .action-btn, .btn-print-system {
-                display: none !important;
-            }
-            .card {
-                box-shadow: none !important;
-                border: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            .main-container {
-                display: block !important;
-            }
-            table {
-                width: 100% !important;
-                border: 1px solid #000 !important;
-                font-size: 12px !important;
-            }
-            th, td {
-                border: 1px solid #000 !important;
-                padding: 8px !important;
-                color: black !important;
-                background: transparent !important;
-            }
-            .row-critical-alert td {
-                animation: none !important;
-                background: transparent !important;
-            }
-            .card-title {
-                font-size: 18px !important;
-                border-bottom: 2px solid #000 !important;
-                color: black !important;
-                margin-bottom: 20px !important;
-            }
-            .card-title::after {
-                content: " - RESMİ STOK RAPORU";
-            }
+            body { background: white; color: black; padding: 0; }
+            header, #addProductColumn, .depot-filter-bar, .search-filter-grid, .action-btns, .action-btn, .btn-print-system { display: none !important; }
+            .card { box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; }
+            .main-container { display: block !important; }
+            table { width: 100% !important; border: 1px solid #000 !important; font-size: 12px !important; }
+            th, td { border: 1px solid #000 !important; padding: 8px !important; color: black !important; background: transparent !important; }
+            .row-critical-alert td { animation: none !important; background: transparent !important; }
+            .card-title { font-size: 18px !important; border-bottom: 2px solid #000 !important; color: black !important; margin-bottom: 20px !important; }
+            .card-title::after { content: " - RESMİ STOK RAPORU"; }
         }
     </style>
 </head>
@@ -801,14 +460,21 @@
                         <label>Kritik Stok Sınırı (Limit):</label>
                         <input type="number" step="0.01" class="form-control" id="newProdLimit" value="5" required>
                     </div>
-                    <div class="form-group">
-                        <label>Lot / Parti No <span style="color:#aaa; font-weight:normal;">(Opsiyonel)</span>:</label>
-                        <input type="text" class="form-control" id="newProdLot" placeholder="Örn: LOT2026A" style="text-transform: uppercase;">
+
+                    <div class="accordion-trigger" type="button" onclick="toggleAccordion(this)">
+                        <span>Gelişmiş / Detaylı Bilgiler (Opsiyonel)</span> <span>⚙️ ▼</span>
                     </div>
-                    <div class="form-group">
-                        <label>Son Kullanma Tarihi (SKT) <span style="color:#aaa; font-weight:normal;">(Opsiyonel)</span>:</label>
-                        <input type="date" class="form-control" id="newProdSkt">
+                    <div class="accordion-content" id="advancedFormFields">
+                        <div class="form-group" style="margin-top:8px;">
+                            <label>Lot / Parti No:</label>
+                            <input type="text" class="form-control" id="newProdLot" placeholder="Örn: LOT2026A" style="text-transform: uppercase;">
+                        </div>
+                        <div class="form-group">
+                            <label>Son Kullanma Tarihi (SKT):</label>
+                            <input type="date" class="form-control" id="newProdSkt">
+                        </div>
                     </div>
+
                     <button type="submit" class="btn-submit">Kayıt Aç ve Envantere Ekle 💾</button>
                 </form>
                 <button type="button" class="btn-trigger-order" onclick="toggleOrderPanel()">📦 Sipariş Oluştur / Malzeme Talep Et</button>
@@ -851,18 +517,8 @@
 
         <div class="card">
             <div class="card-title">🟢 Anlık Stok Durumu & Malzeme Listesi</div>
-            <div class="depot-filter-bar">
+            <div class="depot-filter-bar" id="depotButtonsBar">
                 <button class="btn-depot-filter active" onclick="filterByDepot('HEPSİ')">HEPSİ</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('ET +4')">ET +4</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('ET -18')">ET -18</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('PASTANE +4')">PASTANE +4</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('PASTANE -18')">PASTANE -18</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('SEBZE +4')">SEBZE +4</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('SEBZE -18')">SEBZE -18</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('ŞARKÜTERİ')">ŞARKÜTERİ</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('KURU GIDA')">KURU GIDA</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('KİMYASAL')">KİMYASAL</button>
-                <button class="btn-depot-filter" onclick="filterByDepot('SARF DEPO')">SARF DEPO</button>
             </div>
             <div class="search-filter-grid">
                 <div class="search-wrapper">
@@ -888,9 +544,9 @@
                         </tr>
                     </thead>
                     <tbody id="liveMaterialsBody">
-                        <tr>
-                            <td colspan="7" style="text-align:center; color:#888; padding:20px;">Veriler Firebase'den yükleniyor, lütfen bekleyin...</td>
-                        </tr>
+                        <tr class="skeleton-row"><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td></tr>
+                        <tr class="skeleton-row"><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td></tr>
+                        <tr class="skeleton-row"><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td></tr>
                     </tbody>
                     <tfoot id="tableTotalFooter"></tfoot>
                 </table>
@@ -1060,9 +716,7 @@
 
     <script>
         // Oturum kontrolü
-        if(localStorage.getItem('isLoggedIn') !== 'true') {
-            window.location.replace('login.html'); 
-        }
+        if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
 
         emailjs.init("LzIhLTNYH47AasrBj");
 
@@ -1078,6 +732,19 @@
         } else {
             mainContainer.classList.add('two-columns');
         }
+
+        // AKORDEON (GELİŞMİŞ AYARLAR) TETİKLEYİCİSİ
+        window.toggleAccordion = function(element) {
+            const content = document.getElementById('advancedFormFields');
+            const arrow = element.querySelector('span:last-child');
+            if (content.style.maxHeight && content.style.maxHeight !== "0px") {
+                content.style.maxHeight = "0px";
+                arrow.textContent = "⚙️ ▼";
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                arrow.textContent = "⚙️ ▲";
+            }
+        };
 
         window.toggleOrderPanel = function() {
             const panel = document.getElementById('orderPanelCard');
@@ -1096,10 +763,7 @@
         }
         startLiveClock();
 
-        // Firebase Yapılandırması
-        const firebaseConfig = {
-            databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/"
-        };
+        const firebaseConfig = { databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
@@ -1109,6 +773,8 @@
         let currentModalProduct = null;
         let currentModalAction = "";
         let isNewPartyWithSkt = false;
+
+        const definedDepots = ['HEPSİ', 'ET +4', 'ET -18', 'PASTANE +4', 'PASTANE -18', 'SEBZE +4', 'SEBZE -18', 'ŞARKÜTERİ', 'KURU GIDA', 'KİMYASAL', 'SARF DEPO'];
 
         function getTodayDateString() {
             const now = new Date();
@@ -1123,17 +789,36 @@
             if (rawData) {
                 Object.keys(rawData).forEach(key => {
                     let item = rawData[key];
-                    if(!item.dbKey || item.dbKey.includes('undefined')) {
-                        item.dbKey = key;
-                    }
+                    if(!item.dbKey || item.dbKey.includes('undefined')) { item.dbKey = key; }
                     inventory.push(item);
                 });
             }
             checkExpiredProducts(rawData);
             updateOrderProductDropdown();
             updateSktAlertBtnState();
+            renderDepotFilterButtons(); // Canlı Özet Sayıları Güncelle
             renderUi();
         });
+
+        // DEPO BUTONLARINDA CANLI ÖZET SAYILARI RAPORLAMA FONKSİYONU
+        function renderDepotFilterButtons() {
+            const bar = document.getElementById('depotButtonsBar');
+            if(!bar) return;
+            bar.innerHTML = "";
+            definedDepots.forEach(dep => {
+                let count = 0;
+                if(dep === 'HEPSİ') {
+                    count = inventory.length;
+                } else {
+                    count = inventory.filter(i => i.depot === dep).length;
+                }
+                const btn = document.createElement('button');
+                btn.className = `btn-depot-filter ${activeDepotFilter === dep ? 'active' : ''}`;
+                btn.setAttribute('onclick', `filterByDepot('${dep}')`);
+                btn.textContent = dep === 'HEPSİ' ? `HEPSİ (${count})` : `${dep} (${count})`;
+                bar.appendChild(btn);
+            });
+        }
 
         function checkExpiredProducts(rawData) {
             if (!rawData) return;
@@ -1171,9 +856,7 @@
                     let todayTime = new Date(todayStr).getTime();
                     let sktTime = new Date(item.skt).getTime();
                     let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
-                    if(diffDays >= 0 && diffDays <= 1) {
-                        urgentCount++;
-                    }
+                    if(diffDays >= 0 && diffDays <= 1) { urgentCount++; }
                 }
             });
             if(urgentCount > 0) {
@@ -1218,9 +901,7 @@
             modal.style.display = "flex";
         };
 
-        window.closeSktUrgentModal = function() {
-            document.getElementById('sktUrgentModal').style.display = "none";
-        };
+        window.closeSktUrgentModal = function() { document.getElementById('sktUrgentModal').style.display = "none"; };
 
         function updateOrderProductDropdown() {
             const selectEl = document.getElementById('orderProductSelect');
@@ -1232,10 +913,7 @@
                 const opt = document.createElement('option');
                 let labelText = item.name;
                 if(item.lot) { labelText += ` [LOT: ${item.lot}]`; }
-                if(item.skt && !item.skt.includes('undefined')) {
-                    const p = item.skt.split('-');
-                    labelText += ` (SKT: ${p[2]}.${p[1]}.${p[0]})`;
-                }
+                if(item.skt && !item.skt.includes('undefined')) { labelText += ` (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})`; }
                 opt.value = item.dbKey || item.name;
                 opt.textContent = `${labelText} (Mevcut: ${item.quantity} ${item.unit})`;
                 selectEl.appendChild(opt);
@@ -1253,11 +931,7 @@
             for (let i = 0; i < options.length; i++) {
                 if(options[i].value === "") continue;
                 const txtValue = options[i].textContent || options[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    options[i].style.display = "";
-                } else {
-                    options[i].style.display = "none";
-                }
+                if (txtValue.toUpperCase().indexOf(filter) > -1) { options[i].style.display = ""; } else { options[i].style.display = "none"; }
             }
         };
 
@@ -1272,9 +946,7 @@
             if(!item) return;
             let displayName = item.name;
             if(item.lot) { displayName += ` [LOT: ${item.lot}]`; }
-            if(item.skt && !item.skt.includes('undefined')) {
-                displayName += ` (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})`;
-            }
+            if(item.skt && !item.skt.includes('undefined')) { displayName += ` (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})`; }
             const existingIndex = orderBasket.findIndex(b => b.key === (item.dbKey || item.name));
             if(existingIndex > -1) {
                 orderBasket[existingIndex].qty = parseFloat((orderBasket[existingIndex].qty + qty).toFixed(2));
@@ -1289,10 +961,7 @@
             renderBasketVisual();
         };
 
-        window.removeItemFromBasket = function(index) {
-            orderBasket.splice(index, 1);
-            renderBasketVisual();
-        };
+        window.removeItemFromBasket = function(index) { orderBasket.splice(index, 1); renderBasketVisual(); };
 
         function renderBasketVisual() {
             const ul = document.getElementById('basketListVisual');
@@ -1307,10 +976,7 @@
             orderBasket.forEach((item, index) => {
                 const li = document.createElement('li');
                 li.className = "basket-item";
-                li.innerHTML = `
-                    <span>📦 <b>${item.name}</b></span>
-                    <span>${item.qty} ${item.unit} <button class="btn-remove-basket-item" onclick="removeItemFromBasket(${index})">×</button></span>
-                `;
+                li.innerHTML = `<span>📦 <b>${item.name}</b></span><span>${item.qty} ${item.unit} <button class="btn-remove-basket-item" onclick="removeItemFromBasket(${index})">×</button></span>`;
                 ul.appendChild(li);
             });
         }
@@ -1367,6 +1033,7 @@
                 let itemUniqueId = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
                 let buttonsHtml = '';
 
+                // BÖLÜNMÜŞ VE GRUPLANMIŞ AKSİYON BUTONLARI YAPISI
                 if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
                     buttonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>`;
                 } else if (currentRole === 'DEPO') {
@@ -1374,6 +1041,7 @@
                         <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button>
                         <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>
                         <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>
+                        <span class="btn-divider">|</span>
                         <button class="action-btn btn-edit-stock" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>
                     `;
                 } else {
@@ -1381,6 +1049,7 @@
                         <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button>
                         <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>
                         <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>
+                        <span class="btn-divider">|</span>
                         <button class="action-btn btn-edit-stock" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>
                         <button class="action-btn btn-del-stock" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button>
                     `;
@@ -1390,10 +1059,7 @@
                 if (isCritical) { tr.className = "row-critical-alert"; }
                 
                 tr.innerHTML = `
-                    <td>
-                        <strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}
-                        <span class="date-tag">Gnc: ${displayDate}</span>
-                    </td>
+                    <td><strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}<span class="date-tag">Gnc: ${displayDate}</span></td>
                     <td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td>
                     <td><strong>${item.quantity} ${item.unit}</strong></td>
                     <td><strong>${item.criticalLimit} ${item.unit}</strong></td>
@@ -1405,16 +1071,11 @@
             });
 
             let totalStrings = [];
-            for (const [unit, sum] of Object.entries(totalsByUnit)) {
-                totalStrings.push(`${sum.toFixed(2)} ${unit}`);
-            }
+            for (const [unit, sum] of Object.entries(totalsByUnit)) { totalStrings.push(`${sum.toFixed(2)} ${unit}`); }
             if(tfoot) {
                 const footTr = document.createElement('tr');
                 footTr.className = "total-row";
-                footTr.innerHTML = `
-                    <td colspan="2" style="text-align: right;">🧮 FİLTRELENEN TOPLAM:</td>
-                    <td colspan="5">${totalStrings.join(' | ')}</td>
-                `;
+                footTr.innerHTML = `<td colspan="2" style="text-align: right;">🧮 FİLTRELENEN TOPLAM:</td><td colspan="5">${totalStrings.join(' | ')}</td>`;
                 tfoot.appendChild(footTr);
             }
         }
@@ -1545,10 +1206,7 @@
             const newLot = document.getElementById('editProdLot').value.trim().toUpperCase() || null;
             const newSkt = document.getElementById('editProdSkt').value || null;
 
-            if(isNaN(newQty) || newQty < 0 || isNaN(newLimit) || newLimit < 0) {
-                alert("Lütfen geçerli pozitif sayılar giriniz!");
-                return;
-            }
+            if(isNaN(newQty) || newQty < 0 || isNaN(newLimit) || newLimit < 0) { alert("Lütfen geçerli pozitif sayılar giriniz!"); return; }
 
             let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
             const updates = {};
@@ -1568,9 +1226,7 @@
                     qty: `Stok: ${newQty}, Lim: ${newLimit}, LOT: ${newLot || 'Yok'}, SKT: ${newSkt || 'Yok'}`
                 });
                 closeProductEditModal();
-            }).catch(err => {
-                alert("Hata: " + err.message);
-            });
+            }).catch(err => { alert("Hata: " + err.message); });
         });
 
         const orderFormEl = document.getElementById('orderForm');
@@ -1604,22 +1260,8 @@
                     .catch((err) => { alert(`❌ Hata Alındı: ${JSON.stringify(err)}`); });
 
                     orderBasket.forEach(bItem => {
-                        db.ref('depo_siparisler').push({
-                            time: nowStr,
-                            rawTime: timestampIso,
-                            user: currentRole,
-                            product: bItem.name,
-                            qty: `${bItem.qty} ${bItem.unit}`,
-                            notes: notes
-                        });
-                        db.ref('depo_rapor').push({
-                            time: nowStr,
-                            rawTime: timestampIso,
-                            user: currentRole,
-                            product: bItem.name,
-                            type: 'TALEP GÖNDERİLDİ',
-                            qty: `${bItem.qty} ${bItem.unit}`
-                        });
+                        db.ref('depo_siparisler').push({ time: nowStr, rawTime: timestampIso, user: currentRole, product: bItem.name, qty: `${bItem.qty} ${bItem.unit}`, notes: notes });
+                        db.ref('depo_rapor').push({ time: nowStr, rawTime: timestampIso, user: currentRole, product: bItem.name, type: 'TALEP GÖNDERİLDİ', qty: `${bItem.qty} ${bItem.unit}` });
                     });
 
                     orderBasket = [];
@@ -1633,17 +1275,11 @@
 
         window.filterByDepot = function(depotName) {
             activeDepotFilter = depotName;
-            const buttons = document.querySelectorAll('.btn-depot-filter');
-            buttons.forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === depotName);
-            });
+            renderDepotFilterButtons();
             renderUi();
         };
 
-        window.clearDateFilter = function() {
-            document.getElementById('dateFilterInput').value = '';
-            renderUi();
-        };
+        window.clearDateFilter = function() { document.getElementById('dateFilterInput').value = ''; renderUi(); };
 
         document.getElementById('dateFilterInput').addEventListener('change', renderUi);
         document.getElementById('searchInput').addEventListener('input', renderUi);
@@ -1665,89 +1301,52 @@
                 if(sktVal && !sktVal.includes('undefined')) { targetKey += "_" + sktVal; }
                 if(lotVal) { targetKey += "_" + lotVal; }
 
-                if(inventory.some(item => (item.dbKey === targetKey))) {
-                    alert("Aynı isim, SKT ve LOT değerlerine sahip bir kayıt envanterde zaten mevcut!");
-                    return;
-                }
+                if(inventory.some(item => (item.dbKey === targetKey))) { alert("Aynı isim, SKT ve LOT değerlerine sahip bir kayıt envanterde zaten mevcut!"); return; }
 
                 db.ref('depo_stok/' + targetKey).set({
-                    dbKey: targetKey,
-                    name: name,
-                    depot: depot,
-                    unit: unit,
-                    quantity: qty,
-                    criticalLimit: limit,
-                    skt: sktVal || null,
-                    lot: lotVal || null,
-                    lastUpdatedDate: getTodayDateString()
+                    dbKey: targetKey, name: name, depot: depot, unit: unit, quantity: qty, criticalLimit: limit, skt: sktVal || null, lot: lotVal || null, lastUpdatedDate: getTodayDateString()
                 });
 
                 db.ref('depo_rapor').push({
-                    time: new Date().toLocaleString('tr-TR'),
-                    rawTime: new Date().toISOString(),
-                    user: currentRole,
-                    product: `${name}`,
-                    type: 'YENİ ÜRÜN',
-                    qty: `${qty} ${unit} ${lotVal ? `(LOT: ${lotVal})` : ''}`
+                    time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${name}`, type: 'YENİ ÜRÜN', qty: `${qty} ${unit} ${lotVal ? `(LOT: ${lotVal})` : ''}`
                 });
 
                 addFormEl.reset();
+                const advancedFields = document.getElementById('advancedFormFields');
+                if(advancedFields) advancedFields.style.maxHeight = "0px";
+                const trigger = document.querySelector('.accordion-trigger span:last-child');
+                if(trigger) trigger.textContent = "⚙️ ▼";
             });
         }
 
         window.deleteProductDirect = function(uniqueId) {
             const item = inventory.find(i => i.dbKey === uniqueId);
             if(!item) {
-                if(confirm("Bu kayıt zorunlu olarak silinsin mi?")) {
-                    db.ref('depo_stok/' + uniqueId).remove();
-                }
+                if(confirm("Bu kayıt zorunlu olarak silinsin mi?")) { db.ref('depo_stok/' + uniqueId).remove(); }
                 return;
             }
             if(confirm(`"${item.name}" ürününü depodan kalıcı olarak silmek istediğinize emin misiniz?`)) {
                 const now = new Date();
                 db.ref('depo_rapor').push({
-                    time: now.toLocaleString('tr-TR'),
-                    rawTime: now.toISOString(),
-                    user: currentRole,
-                    product: item.name,
-                    type: 'ÜRÜN SİLİNDİ',
-                    qty: `${item.quantity} ${item.unit}`,
-                    backupKey: item.dbKey || uniqueId,
-                    backupDepot: item.depot || 'KURU GIDA',
-                    backupUnit: item.unit || 'Adet',
-                    backupLimit: item.criticalLimit || 0,
-                    backupSkt: item.skt || null,
-                    backupLot: item.lot || null
+                    time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(), user: currentRole, product: item.name, type: 'ÜRÜN SİLİNDİ', qty: `${item.quantity} ${item.unit}`,
+                    backupKey: item.dbKey || uniqueId, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt || null, backupLot: item.lot || null
                 });
                 db.ref('depo_stok/' + uniqueId).remove();
             }
         };
 
         window.undoDeletedProduct = function(reportFbKey, prodName, bKey, bDepot, bUnit, bQtyStr, bLimit, bSkt, bLot) {
-            if(currentRole !== 'YÖNETİCİ') {
-                alert("Geri alma yetkisi sadece yöneticilere aittir!");
-                return;
-            }
+            if(currentRole !== 'YÖNETİCİ') { alert("Geri alma yetkisi sadece yöneticilere aittir!"); return; }
             if(confirm(`"${prodName}" ürününü depoya geri yüklemek istiyor musunuz?`)) {
                 let parsedQty = parseFloat(bQtyStr) || 0;
                 let targetKey = (bKey && bKey !== 'undefined') ? bKey : prodName.replace(/[.#$\[\]]/g, "");
 
                 db.ref('depo_stok/' + targetKey).set({
-                    dbKey: targetKey,
-                    name: prodName,
-                    depot: bDepot || 'KURU GIDA',
-                    unit: bUnit || 'Adet',
-                    quantity: parsedQty,
-                    criticalLimit: parseFloat(bLimit) || 0,
-                    skt: (bSkt && bSkt !== 'null' && bSkt !== 'undefined') ? bSkt : null,
-                    lot: (bLot && bLot !== 'null' && bLot !== 'undefined') ? bLot : null,
-                    lastUpdatedDate: getTodayDateString()
+                    dbKey: targetKey, name: prodName, depot: bDepot || 'KURU GIDA', unit: bUnit || 'Adet', quantity: parsedQty, criticalLimit: parseFloat(bLimit) || 0,
+                    skt: (bSkt && bSkt !== 'null' && bSkt !== 'undefined') ? bSkt : null, lot: (bLot && bLot !== 'null' && bLot !== 'undefined') ? bLot : null, lastUpdatedDate: getTodayDateString()
                 });
 
-                db.ref('depo_rapor/' + reportFbKey).remove().then(() => {
-                    alert("✓ Ürün başarıyla depoya geri yüklendi!");
-                    document.getElementById('openReportBtn').click();
-                });
+                db.ref('depo_rapor/' + reportFbKey).remove().then(() => { alert("✓ Ürün başarıyla depoya geri yüklendi!"); document.getElementById('openReportBtn').click(); });
             }
         };
 
@@ -1759,12 +1358,7 @@
                 const tbody = document.getElementById('reportTableBody');
                 const clearAllBtn = document.getElementById('clearAllReportsBtn');
                 tbody.innerHTML = '';
-
-                if(currentRole === 'YÖNETİCİ') {
-                    clearAllBtn.style.display = 'block';
-                } else {
-                    clearAllBtn.style.display = 'none';
-                }
+                if(currentRole === 'YÖNETİCİ') { clearAllBtn.style.display = 'block'; } else { clearAllBtn.style.display = 'none'; }
 
                 let modalReports = snapshot.val() ? Object.entries(snapshot.val()) : [];
                 if(modalReports.length === 0) {
@@ -1776,18 +1370,8 @@
                         if((rep.type === 'ÜRÜN SİLİNDİ' || rep.type === 'SKT OTOMATİK SİLME') && rep.backupKey && currentRole === 'YÖNETİCİ') {
                             actionButtonsHtml += `<button class="btn-undo" onclick="undoDeletedProduct('${fbKey}', '${rep.product}', '${rep.backupKey}', '${rep.backupDepot}', '${rep.backupUnit}', '${rep.qty}', '${rep.backupLimit}', '${rep.backupSkt}', '${rep.backupLot || null}')">↩ Geri Al</button> `;
                         }
-                        if(currentRole === 'YÖNETİCİ') {
-                            actionButtonsHtml += `<button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button>`;
-                        }
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${rep.time}</td>
-                                <td><b>${rep.user}</b></td>
-                                <td>${rep.product}</td>
-                                <td><span class="badge-order" style="${rep.type.includes('SİLİNDİ') ? 'background:#f8d7da; color:#721c24;' : ''}">${rep.type}</span></td>
-                                <td><strong>${rep.qty}</strong></td>
-                                <td>${actionButtonsHtml || '---'}</td>
-                            </tr>`;
+                        if(currentRole === 'YÖNETİCİ') { actionButtonsHtml += `<button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button>`; }
+                        tbody.innerHTML += `<tr><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order" style="${rep.type.includes('SİLİNDİ') ? 'background:#f8d7da; color:#721c24;' : ''}">${rep.type}</span></td><td><strong>${rep.qty}</strong></td><td>${actionButtonsHtml || '---'}</td></tr>`;
                     });
                 }
                 reportModal.style.display = 'flex';
@@ -1796,16 +1380,12 @@
 
         window.deleteReportRow = function(fbKey) {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Bu işlem kaydı geçmişten silinsin mi?")) {
-                db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click());
-            }
+            if(confirm("Bu işlem kaydı geçmişten silinsin mi?")) { db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click()); }
         };
 
         window.clearAllReports = function() {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Tüm işlem geçmişini kalıcı olarak silmek istediğinize emin misiniz?")) {
-                db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click());
-            }
+            if(confirm("Tüm işlem geçmişini kalıcı olarak silmek istediğinize emin misiniz?")) { db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click()); }
         };
 
         document.getElementById('openOrdersBtn').addEventListener('click', () => {
@@ -1814,14 +1394,7 @@
                 const headerAction = document.getElementById('orderActionHeader');
                 const clearAllBtn = document.getElementById('clearAllOrdersBtn');
                 tbody.innerHTML = '';
-
-                if(currentRole === 'YÖNETİCİ') {
-                    headerAction.style.display = 'table-cell';
-                    clearAllBtn.style.display = 'block';
-                } else {
-                    headerAction.style.display = 'none';
-                    clearAllBtn.style.display = 'none';
-                }
+                if(currentRole === 'YÖNETİCİ') { headerAction.style.display = 'table-cell'; clearAllBtn.style.display = 'block'; } else { headerAction.style.display = 'none'; clearAllBtn.style.display = 'none'; }
 
                 let modalOrders = snapshot.val() ? Object.entries(snapshot.val()) : [];
                 if(modalOrders.length === 0) {
@@ -1830,9 +1403,7 @@
                     modalOrders.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
                     modalOrders.forEach(([fbKey, ord]) => {
                         let deleteCellHtml = '';
-                        if(currentRole === 'YÖNETİCİ') {
-                            deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteOrderRow('${fbKey}')">Kayıt Sil</button></td>`;
-                        }
+                        if(currentRole === 'YÖNETİCİ') { deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteOrderRow('${fbKey}')">Kayıt Sil</button></td>`; }
                         tbody.innerHTML += `<tr><td>${ord.time || ord.date}</td><td><b>${ord.user}</b></td><td>${ord.product}</td><td><strong>${ord.qty}</strong></td><td><i style="color:#666;">${ord.notes}</i></td>${deleteCellHtml}</tr>`;
                     });
                 }
@@ -1842,16 +1413,12 @@
 
         window.deleteOrderRow = function(fbKey) {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Bu sipariş kaydı listeden silinsin mi?")) {
-                db.ref('depo_siparisler/' + fbKey).remove().then(() => document.getElementById('openOrdersBtn').click());
-            }
+            if(confirm("Bu sipariş kaydı listeden silinsin mi?")) { db.ref('depo_siparisler/' + fbKey).remove().then(() => document.getElementById('openOrdersBtn').click()); }
         };
 
         window.clearAllOrders = function() {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Tüm sipariş geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) {
-                db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click());
-            }
+            if(confirm("Tüm sipariş geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) { db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click()); }
         };
 
         document.getElementById('closeReportBtn').addEventListener('click', () => reportModal.style.display = 'none');
