@@ -82,7 +82,6 @@
             gap: 18px;
         }
         
-        /* LOGO ALANINA ED YENİ LOGO ENTEGRASYONU */
         .header-logo {
             height: 60px;
             width: auto;
@@ -179,8 +178,6 @@
         /* --- ANA SÜTUNLAR VE FORM YERLEŞİMİ --- */
         .main-container { display: grid; grid-template-columns: 1fr; gap: 20px; }
         .two-columns { grid-template-columns: 380px 1fr; }
-
-        /* --- SÜTUN İÇİ YAN YANA İKİLİ FORM KARTLARI (YENİ EK) --- */
         .forms-stack { display: flex; flex-direction: column; gap: 20px; }
 
         .card {
@@ -282,7 +279,6 @@
         .empty-state-container h4 { font-size: 14.5px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
         .empty-state-container p { font-size: 12.5px; }
 
-        /* MULTI-ITEMS EMPTY BASKET STATE STİLİ */
         .empty-basket-box {
             border: 2px dashed var(--table-border); border-radius: 8px; padding: 25px 15px;
             text-align: center; color: var(--text-light); background: var(--input-bg); margin-bottom: 12px;
@@ -484,21 +480,20 @@
                 </form>
             </div>
 
-            <div class="card" style="border: 1px solid var(--table-border);">
+            <div class="card">
                 <div class="card-title">🛒 Malzeme Talep Listesi / Sepet <span id="basketCount" style="font-size:13px; color:var(--text-light); margin-left:5px;">(0 Ürün)</span></div>
                 <form id="orderForm">
                     <div class="form-group">
                         <label>Malzeme Seçin:</label>
                         
-                        <div class="searchable-select-container">
-                            <input type="text" id="customSelectSearch" class="select-search-input" placeholder="🔍 Seçmek için malzeme adı yazın..." onfocus="openSelectDropdown()" onkeyup="filterSelectOptions()">
+                        <div class="searchable-select-container" id="selectContainerBlock">
+                            <input type="text" id="customSelectSearch" class="select-search-input" placeholder="🔍 Seçmek için malzeme adı yazın..." onfocus="openSelectDropdown(event)" onkeyup="filterSelectOptions()">
                             <input type="hidden" id="orderProductSelect" value="">
-                            <div class="select-options-panel" id="customSelectOptionsPanel">
-                                </div>
+                            <div class="select-options-panel" id="customSelectOptionsPanel"></div>
                         </div>
                     </div>
                     <div class="form-group" style="margin-top: 12px;">
-                        <label>Miktar Miktarı:</label>
+                        <label>Miktar:</label>
                         <input type="number" step="0.01" class="form-control" id="orderQty" placeholder="Talep Edilecek Adet/Kg">
                     </div>
                     <button type="button" class="btn-submit" style="background:#00338d; margin-bottom:15px;" onclick="addItemToBasket()">Listeye / Sepete Ekle ➕</button>
@@ -509,7 +504,7 @@
                             <p style="font-size:12.5px; font-weight:700; margin-bottom:2px;">Talep Sepetiniz Boş</p>
                             <p style="font-size:11px; opacity:0.8;">Yukarıdan malzeme ve miktar seçerek listenizi oluşturmaya başlayabilirsiniz.</p>
                         </div>
-                        <ul id="basketListVisual" style="list-style: none; display:none;"></ul>
+                        <ul id="basketListVisual" style="list-style: none; display:none; background: var(--input-bg); padding:10px; border-radius:8px;"></ul>
                     </div>
 
                     <div class="form-group" style="display: none;">
@@ -554,7 +549,6 @@
                         </tr>
                     </thead>
                     <tbody id="liveMaterialsBody">
-                        <tr class="skeleton-row"><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td></tr>
                         <tr class="skeleton-row"><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td></tr>
                     </tbody>
                     <tfoot id="tableTotalFooter"></tfoot>
@@ -786,15 +780,20 @@
             targetDrop.style.display = targetDrop.style.display === 'block' ? 'none' : 'block';
         };
 
-        document.addEventListener('click', () => {
+        // GLOBAL TIKLAMA FİLTRESİ (PANEL KAPATMA KONTROLLERİ)
+        document.addEventListener('click', (event) => {
             document.querySelectorAll('.actions-dropdown').forEach(el => el.style.display = 'none');
-            // Arama panelini kapatma tetikleyicisi
-            const panel = document.getElementById('customSelectOptionsPanel');
-            if(panel) panel.style.display = 'none';
+            
+            // Tıklanan yer arama kutusunun dışındaysa dropdown panelini kapat
+            const selectContainer = document.getElementById('selectContainerBlock');
+            if (selectContainer && !selectContainer.contains(event.target)) {
+                document.getElementById('customSelectOptionsPanel').style.display = 'none';
+            }
         });
 
-        // SEARCHABLE DROPDOWN KONTROL VE SEÇİM MOTORU
-        window.openSelectDropdown = function() {
+        // 2. MODERN SEARCHABLE DROPDOWN - CANLI RE-RENDER MOTORU
+        window.openSelectDropdown = function(event) {
+            if(event) event.stopPropagation();
             document.getElementById('customSelectOptionsPanel').style.display = 'block';
             filterSelectOptions();
         };
@@ -802,6 +801,7 @@
         window.filterSelectOptions = function() {
             const txt = document.getElementById('customSelectSearch').value.toUpperCase();
             const panel = document.getElementById('customSelectOptionsPanel');
+            if(!panel) return;
             panel.innerHTML = "";
             
             let sortedInv = [...inventory].sort((a,b) => a.name.localeCompare(b.name, 'tr'));
@@ -819,8 +819,10 @@
                     const div = document.createElement('div');
                     div.className = "select-option-item";
                     div.innerHTML = `<span>📦 ${labelText}</span> <span class="qty-badge">${item.quantity} ${item.unit}</span>`;
-                    div.addEventListener('mousedown', (e) => {
-                        e.preventDefault();
+                    
+                    // Malzeme tıklandığında inputları besleme fonksiyonu
+                    div.addEventListener('click', (e) => {
+                        e.stopPropagation();
                         document.getElementById('customSelectSearch').value = labelText;
                         document.getElementById('orderProductSelect').value = item.dbKey || item.name;
                         panel.style.display = 'none';
@@ -965,9 +967,8 @@
         }
 
         function updateOrderProductDropdown() {
-            // Searchable Dropdown entegre edildiği için panel içi filtreleme yenileniyor
-            const panel = document.getElementById('customSelectOptionsPanel');
-            if(panel && panel.style.display === 'block') filterSelectOptions();
+            // Canlı veri geldiğinde arka plandaki seçim havuzunu yenile
+            filterSelectOptions();
         }
 
         window.addItemToBasket = function() {
@@ -1010,7 +1011,7 @@
                 return;
             }
             emptyBox.style.display = 'none';
-            ul.style.style.display = 'block';
+            ul.style.display = 'block'; // Yazım hatası düzeltildi!
             
             orderBasket.forEach((item, index) => {
                 const li = document.createElement('li');
