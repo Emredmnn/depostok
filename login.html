@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Giriş - Bahçelievler Memorial CT</title>
     <style>
-        /* --- PROFESSIONAL RESET & BASE SYSTEM --- */
+        /* --- CORE DESIGN RESET & SYSTEM --- */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
         
         body { 
             background: #f4f7fa;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(0, 51, 141, 0.04) 0, transparent 45%), 
-                radial-gradient(at 100% 100%, rgba(0, 51, 141, 0.06) 0, transparent 45%);
+                radial-gradient(at 0% 0%, rgba(0, 51, 141, 0.05) 0, transparent 45%), 
+                radial-gradient(at 100% 100%, rgba(0, 51, 141, 0.07) 0, transparent 45%);
             height: 100vh; 
             display: flex; 
             flex-direction: column;
@@ -21,24 +21,40 @@
             overflow: hidden;
         }
 
-        /* --- HIGH-END CARD ANIMATION --- */
+        /* --- HIGH-END ANIMATIONS --- */
         @keyframes cardEntrance {
-            from { opacity: 0; transform: scale(0.99) translateY(12px); }
+            from { opacity: 0; transform: scale(0.98) translateY(12px); }
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        @keyframes spinLoading {
+            to { transform: rotate(360deg); }
+        }
 
+        /* --- PREMIUM LOGIN CARD (GLASSMORPHISM) --- */
         .login-card { 
-            background: #ffffff; 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             padding: 45px 50px; 
-            border-radius: 20px; 
-            box-shadow: 0 25px 60px rgba(0, 51, 141, 0.08); 
+            border-radius: 24px; 
+            box-shadow: 0 25px 60px rgba(0, 51, 141, 0.08), 0 2px 8px rgba(0, 51, 141, 0.02); 
             width: 100%; 
             max-width: 420px; 
+            border: 1px solid rgba(255, 255, 255, 0.7);
             border-top: 6px solid #00338d; 
             text-align: center; 
-            animation: cardEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             z-index: 2;
+        }
+        
+        .login-card.shake {
+            animation: shakeError 0.4s ease-in-out;
         }
 
         /* --- BRANDING AREA --- */
@@ -49,21 +65,29 @@
         .logo-area h2 { color: #00338d; font-size: 19px; font-weight: 800; letter-spacing: 0.4px; margin-bottom: 4px; text-transform: uppercase; }
         .logo-area p { color: #64748b; font-size: 13px; font-weight: 600; }
 
-        /* --- FORM STRUCTURE --- */
+        /* --- INPUT STRUCTURE WITH INTEGRATED ICONS --- */
         .form-group { margin-bottom: 20px; text-align: left; position: relative; }
         label { display: block; margin-bottom: 7px; font-weight: 700; font-size: 12px; color: #475569; letter-spacing: 0.2px; }
         
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        
+        .input-icon {
+            position: absolute; left: 14px; color: #94a3b8; width: 16px; height: 16px;
+            pointer-events: none; transition: color 0.2s ease;
+        }
+
         input { 
-            width: 100%; padding: 13px 16px; border: 2px solid #e2e8f0; border-radius: 12px; 
+            width: 100%; padding: 13px 16px 13px 42px; border: 2px solid #e2e8f0; border-radius: 12px; 
             font-size: 14px; outline: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); background: #f8fafc;
             color: #1e293b;
         }
         input:focus { border-color: #00338d; background: #ffffff; box-shadow: 0 0 0 4px rgba(0, 51, 141, 0.08); }
+        input:focus + .input-icon { color: #00338d; }
 
         .toggle-password { 
-            position: absolute; right: 16px; top: 36px; background: none; border: none; 
+            position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; 
             cursor: pointer; color: #94a3b8; font-weight: 700; font-size: 10px; outline: none; 
-            transition: color 0.15s;
+            transition: color 0.15s; z-index: 3;
         }
         .toggle-password:hover { color: #00338d; }
 
@@ -73,25 +97,33 @@
         .remember-me-container input { width: 18px; height: 18px; cursor: pointer; accent-color: #00338d; }
         .remember-me-container label { font-size: 13px; color: #475569; cursor: pointer; user-select: none; font-weight: 600; }
 
-        /* --- ENTERPRISE BUTTON --- */
+        /* --- ENTERPRISE BUTTON & SPINNER --- */
         .btn-login { 
             width: 100%; padding: 16px; background: #00338d; color: #ffffff; border: none; 
             border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; 
             transition: all 0.25s ease; box-shadow: 0 4px 12px rgba(0, 51, 141, 0.15); 
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .btn-login:hover { background: #00225c; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0, 51, 141, 0.22); }
         .btn-login:disabled { background: #64748b; cursor: not-allowed; transform: none; box-shadow: none; }
 
+        .spinner {
+            width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #ffffff;
+            border-radius: 50%; display: none; animation: spinLoading 0.6s linear infinite;
+        }
+
         .system-status { margin-top: 18px; font-size: 11px; color: #94a3b8; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .status-dot { width: 7px; height: 7px; background: #22c55e; border-radius: 50%; animation: statusPulse 2s infinite; }
         @keyframes statusPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.92); } }
+
+        .error-msg { color: #dc3545; font-size: 12px; margin-top: 12px; font-weight: 700; display: none; }
 
         footer { position: absolute; bottom: 20px; text-align: center; width: 100%; color: #94a3b8; font-size: 11px; font-weight: 600; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-<div class="login-card">
+<div class="login-card" id="cardContainer">
     <div class="logo-area">
         <img src="akilli_depo_logo.jpeg.jpeg" alt="Logo" class="login-logo">
         <div id="welcomeText" class="welcome-msg">Sistem Yükleniyor...</div>
@@ -101,12 +133,18 @@
     <form id="loginForm">
         <div class="form-group">
             <label>Kullanıcı Adı</label>
-            <input type="text" id="username" placeholder="Kullanıcı adınızı girin" required autocomplete="username">
+            <div class="input-wrapper">
+                <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <input type="text" id="username" placeholder="Kullanıcı adınızı girin" required autocomplete="username">
+            </div>
         </div>
         <div class="form-group">
             <label>Şifre</label>
-            <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
-            <button type="button" class="toggle-password" onclick="togglePass()">GÖSTER</button>
+            <div class="input-wrapper">
+                <svg class="input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+                <button type="button" class="toggle-password" onclick="togglePass()">GÖSTER</button>
+            </div>
             <div id="capsWarn">⚠️ Caps Lock Açık!</div>
         </div>
         
@@ -115,12 +153,15 @@
             <label for="rememberMe">Beni Hatırla</label>
         </div>
         
-        <button type="submit" class="btn-login" id="loginBtn">Sisteme Güvenli Giriş Yap</button>
+        <button type="submit" class="btn-login" id="loginBtn">
+            <span class="spinner" id="loginSpinner"></span>
+            <span id="btnText">Sisteme Güvenli Giriş Yap</span>
+        </button>
         
         <div class="system-status">
             <span class="status-dot"></span> Canlı Veritabanı Bağlantısı Aktif
         </div>
-        <div id="errorMsg" style="color:#dc3545; font-size:12px; margin-top:12px; font-weight:700; display:none;">⚠️ Giriş bilgileri hatalı, lütfen kontrol edin!</div>
+        <div id="errorMsg" class="error-msg">⚠️ Giriş bilgileri hatalı, lütfen kontrol edin!</div>
     </form>
 </div>
 
@@ -137,7 +178,7 @@
     else if (hour >= 12 && hour < 18) welcomeText.innerText = "🌤️ İyi günler, kolay gelsin!";
     else welcomeText.innerText = "🌙 İyi akşamlar, iyi çalışmalar!";
 
-    // Caps Lock Güvenlik Filtresi
+    // Caps Lock Filtresi
     const passInput = document.getElementById('password');
     const capsWarn = document.getElementById('capsWarn');
     passInput.addEventListener('keyup', (e) => {
@@ -145,7 +186,7 @@
         else capsWarn.style.display = 'none';
     });
 
-    // Şifre Maskeleme/Gösterim Geçişi
+    // Şifre Gösterim Geçişi
     function togglePass() {
         const p = document.getElementById('password');
         const btn = event.target;
@@ -158,7 +199,7 @@
         }
     }
 
-    // Beni Hatırla Tanımlama ve Yükleme Altyapısı
+    // Beni Hatırla Hafızası
     document.addEventListener("DOMContentLoaded", function() {
         const savedUser = localStorage.getItem('rememberedUsername');
         if (savedUser) {
@@ -171,8 +212,15 @@
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const btn = document.getElementById('loginBtn');
+        const spinner = document.getElementById('loginSpinner');
+        const btnText = document.getElementById('btnText');
+        const card = document.getElementById('cardContainer');
+        const errorMsg = document.getElementById('errorMsg');
+
+        errorMsg.style.display = 'none';
         btn.disabled = true;
-        btn.innerText = "Doğrulanıyor...";
+        spinner.style.display = 'block';
+        btnText.textContent = "Doğrulanıyor...";
 
         let userInput = document.getElementById('username').value.trim().toLowerCase();
         let user = userInput.replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c');
@@ -196,11 +244,16 @@
                 localStorage.setItem('userRole', role);
                 window.location.replace('index.html');
             } else {
+                // Shake (Sallanma) Hata Efekti Tetikleme
                 btn.disabled = false;
-                btn.innerText = "Sisteme Güvenli Giriş Yap";
-                document.getElementById('errorMsg').style.display = 'block';
+                spinner.style.display = 'none';
+                btnText.textContent = "Sisteme Güvenli Giriş Yap";
+                errorMsg.style.display = 'block';
+                
+                card.classList.add('shake');
+                setTimeout(() => { card.classList.remove('shake'); }, 400);
             }
-        }, 650);
+        }, 750);
     });
 </script>
 </body>
