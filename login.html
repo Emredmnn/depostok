@@ -18,13 +18,13 @@
             overflow: hidden;
         }
 
-        /* Arka plandaki dev logo filigranı (Beğenmezseniz bu .bg-watermark kısmını silebiliriz) */
+        /* Arka plandaki dev logo filigranı (ed logo.png olarak güncellendi) */
         body::before {
             content: "";
             position: absolute;
             width: 140%;
             height: 140%;
-            background: url('logo.png') no-repeat center center;
+            background: url('ed logo.png') no-repeat center center;
             background-size: contain;
             opacity: 0.04; /* Arka planda gözü yormayacak kadar hafif şeffaf */
             pointer-events: none;
@@ -47,7 +47,7 @@
 
         /* Form içi Logo Alanı */
         .logo-area { margin-bottom: 25px; }
-        .logo-img { width: 120px; height: auto; margin-bottom: 15px; }
+        .logo-img { width: 140px; height: auto; margin-bottom: 15px; border-radius: 8px; }
         .logo-area h2 { color: #212529; font-size: 18px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
         .logo-area p { color: #6c757d; font-size: 13px; font-weight: 600; }
         
@@ -75,7 +75,7 @@
 
 <div class="login-card">
     <div class="logo-area">
-        <img src="logo.png" alt="ED Depo Stok" class="logo-img">
+        <img src="ed logo.png" alt="ED Depo Stok" class="logo-img">
         <h2>BAHÇELİEVLER MEMORİAL CT</h2>
         <p>Canlı Stok Takip Sistemi</p>
     </div>
