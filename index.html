@@ -18,7 +18,7 @@
             --success-color: #28a745;
             --danger-color: #dc3545;
             --warning-color: #ffc107;
-            --brand-orange: #ff6b00; /* ED Logo ile uyumlu canlı turuncu vurgu */
+            --brand-orange: #ff6b00;
             --border-radius: 10px;
             --box-shadow: 0 4px 6px rgba(0, 51, 141, 0.05);
             --card-bg: #ffffff;
@@ -282,84 +282,35 @@
         .basket-search-wrapper { position: relative; margin-bottom: 8px; }
         .basket-search-control { width: 100%; padding: 10px 12px; border: 2px solid var(--table-border); border-radius: 6px; font-size: 13.5px; outline: none; background: var(--input-bg); color: var(--text-dark); }
         
-        /* MODERN - / + MİKTAR BUTON GRUBU */
-        .stepper-input-group {
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
+        /* MODERN STEPPER BUTON GRUBU */
+        .stepper-input-group { display: flex; align-items: center; width: 100%; }
         .btn-step {
-            background: var(--input-bg);
-            border: 2px solid var(--table-border);
-            color: var(--text-dark);
-            font-size: 18px;
-            font-weight: bold;
-            width: 42px;
-            height: 42px;
-            cursor: pointer;
-            outline: none;
-            transition: all 0.15s;
+            background: var(--input-bg); border: 2px solid var(--table-border); color: var(--text-dark);
+            font-size: 18px; font-weight: bold; width: 42px; height: 42px; cursor: pointer; outline: none; transition: all 0.15s;
         }
         .btn-step-left { border-radius: 6px 0 0 6px; border-right: none; }
         .btn-step-right { border-radius: 0 6px 6px 0; border-left: none; }
         .btn-step:hover { background: var(--dropdown-hover); color: #00338d; }
-        .input-stepper-control {
-            flex: 1;
-            text-align: center;
-            border-radius: 0 !important;
-            height: 42px;
-        }
+        .input-stepper-control { flex: 1; text-align: center; border-radius: 0 !important; height: 42px; }
 
-        /* YENİ NESİL SEPET KARTLARI */
+        /* PREMIUM SEPET KARTLARI */
         .premium-basket-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--card-bg);
-            border: 1px solid var(--table-border);
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            animation: slideDropdown 0.2s ease-out;
+            display: flex; align-items: center; justify-content: space-between; background: var(--card-bg);
+            border: 1px solid var(--table-border); padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); animation: slideDropdown 0.2s ease-out;
         }
-        .premium-basket-card .item-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .premium-basket-card .item-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
+        .premium-basket-card .item-info { display: flex; flex-direction: column; gap: 2px; }
+        .premium-basket-card .item-title { font-size: 13px; font-weight: 700; color: var(--text-dark); }
         .premium-basket-card .item-qty-badge {
-            font-size: 11.5px;
-            font-weight: bold;
-            color: var(--brand-orange);
-            background: rgba(255, 107, 0, 0.08);
-            padding: 1px 6px;
-            border-radius: 4px;
-            width: fit-content;
+            font-size: 11.5px; font-weight: bold; color: var(--brand-orange); background: rgba(255, 107, 0, 0.08);
+            padding: 1px 6px; border-radius: 4px; width: fit-content;
         }
         .btn-delete-basket-card {
-            background: rgba(220, 53, 69, 0.08);
-            border: none;
-            color: var(--danger-color);
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            transition: all 0.15s;
+            background: rgba(220, 53, 69, 0.08); border: none; color: var(--danger-color);
+            width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.15s;
         }
-        .btn-delete-basket-card:hover {
-            background: var(--danger-color);
-            color: white;
-        }
+        .btn-delete-basket-card:hover { background: var(--danger-color); color: white; }
 
         .btn-submit {
             width: 100%; background: var(--success-color); color: white; border: none; padding: 11px;
@@ -411,7 +362,7 @@
         .skeleton-row td { padding: 15px 10px; }
         .skeleton-block { height: 14px; background: #e2e8f0; background-image: linear-gradient(90deg, #e2e8f0 0px, #cbd5e1 40px, #e2e8f0 8px); background-size: 400px 100%; background-repeat: no-repeat; animation: skeletonShimmer 1.4s infinite linear; border-radius: 4px; width: 85%; }
 
-        /* --- PLANLANAN GRUPLAMA VE ÜÇ NOKTA DROPDOWN YAPISI --- */
+        /* --- DROPDOWN AKSİYON MENÜSÜ YAPISI --- */
         .action-btns { display: flex; gap: 5px; flex-wrap: nowrap; white-space: nowrap; align-items: center; position: relative; }
         .action-btn { border: none; padding: 6px 11px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.15s; color: white; display: inline-flex; align-items: center; justify-content: center; }
         .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
@@ -443,7 +394,10 @@
         .item-edit { color: #17a2b8; }
         .item-delete { color: var(--danger-color); }
 
-        /* --- TOAST BİLDİRİM MİMARİSİ --- */
+        .total-row { background-color: var(--secondary-color); font-weight: bold; color: var(--text-dark); border-top: 2px solid #cbd5e1; }
+        .total-row td { padding: 14px 10px; font-size: 13px; }
+
+        /* --- SİSTEMİK TOAST BİLDİRİM MİMARİSİ --- */
         #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .custom-toast {
             background: #ffffff; color: #1e293b; padding: 14px 22px; border-radius: 8px;
@@ -829,6 +783,7 @@
     </div>
 
     <script>
+        // Oturum Kontrolü
         if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
 
         emailjs.init("LzIhLTNYH47AasrBj");
@@ -846,7 +801,7 @@
             mainContainer.classList.add('two-columns');
         }
 
-        // TOAST ENGINE
+        // TOAST NOTIFICATION SYSTEM
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             if(!container) return;
@@ -861,7 +816,7 @@
             }, 3000);
         }
 
-        // DARK MODE CONTROLS
+        // THEME / DARK MODE MANUFACTURE
         if(localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             document.getElementById('themeToggleBtn').textContent = "☀️ Gündüz Modu";
@@ -883,7 +838,7 @@
             }
         };
 
-        // 4. MADDE: AKILLI BİRİM ALGILAMA / PLACEHOLDER DEĞİŞİM MOTORU
+        // BİRİM VE PLACEHOLDER ALGILAYICI
         window.onBasketProductSelected = function() {
             const selectEl = document.getElementById('orderProductSelect');
             const qtyInput = document.getElementById('orderQty');
@@ -902,7 +857,7 @@
             }
         };
 
-        // 2. MADDE: STEPPER ARTIŞ / AZALIŞ BUTON FONKSİYONU
+        // STEPPER MİKTAR AYARI
         window.stepOrderQty = function(amount) {
             const qtyInput = document.getElementById('orderQty');
             let currentVal = parseFloat(qtyInput.value) || 0;
@@ -911,6 +866,7 @@
             qtyInput.value = currentVal === 0 ? "" : currentVal.toFixed(2).replace(/\.00$/, '');
         };
 
+        // ROW DROPDOWN KONTROLLERİ
         window.toggleRowDropdown = function(event, id) {
             event.stopPropagation();
             document.querySelectorAll('.actions-dropdown').forEach(el => {
@@ -954,6 +910,7 @@
         }
         startLiveClock();
 
+        // --- FIREBASE ALTYAPISI ---
         const firebaseConfig = { databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -981,7 +938,7 @@
             updateOrderProductDropdown();
             updateSktAlertBtnState();
             calculateLiveDashboardMetrics();
-            renderDepotFilterButtons();
+            renderDepotFilterButtons(); // Butonların kaybolma hatası burada düzeltildi.
             renderUi();
         });
 
@@ -1006,6 +963,7 @@
             document.getElementById('dashSktItems').textContent = sktUrgentCount;
         }
 
+        // COK KRITIK DÜZELTME: DEPO BUTONLARININ YÜKLENME MOTORU EN COK COK KARARLI HALE GETIRILDI
         function renderDepotFilterButtons() {
             const bar = document.getElementById('depotButtonsBar');
             if(!bar) return;
@@ -1032,7 +990,7 @@
                         backupKey: key, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt, backupLot: item.lot || null
                     });
                     db.ref('depo_stok/' + key).remove();
-                    showToast(`"${item.name}" SKT dolduğu için sistem tarafından otomatik temizlendi.`, "error");
+                    showToast(`Markalanan "${item.name}" SKT dolduğu için sistem tarafından otomatik silindi.`, "error");
                 }
             });
         }
@@ -1147,7 +1105,6 @@
 
         window.removeItemFromBasket = function(index) { orderBasket.splice(index, 1); renderBasketVisual(); showToast("Ürün sepetten çıkarıldı.", "warning"); };
 
-        // 3. MADDE: MAKET LİSTEYİ MODERN BİLGİ KARTLARINA DÖNÜŞTÜREN YENİ SEPET GÖRSELİ
         function renderBasketVisual() {
             const container = document.getElementById('basketListVisual');
             const countSpan = document.getElementById('basketCount');
@@ -1416,7 +1373,7 @@
                 db.ref('depo_rapor').push({
                     time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'BİLGİ GÜNCELLEME', qty: `Stok: ${newQty}, Lim: ${newLimit}, LOT: ${newLot || 'Yok'}, SKT: ${newSkt || 'Yok'}`
                 });
-                showToast("Malzeme kart bilgileri güncellendi.");
+                showToast("Malzeme kart bilgi içerikleri güncellendi.");
                 closeProductEditModal();
             }).catch(err => { showToast("Hata: " + err.message, "error"); });
         });
@@ -1493,7 +1450,7 @@
                     time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${name}`, type: 'YENİ ÜRÜN', qty: `${qty} ${unit} ${lotVal ? `(LOT: ${lotVal})` : ''}`
                 });
 
-                showToast(`"${name}" başarıyla envantere eklendi.`);
+                showToast(`Marka Kartı "${name}" başarıyla envantere eklendi.`);
                 addFormEl.reset();
                 const advancedFields = document.getElementById('advancedFormFields');
                 if(advancedFields) advancedFields.style.maxHeight = "0px";
