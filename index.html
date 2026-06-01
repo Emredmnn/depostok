@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        /* --- GENEL KURUMSAL RENK PALETİ VE DEĞİŞKENLER --- */
+        /* --- GENEL KURUMSUR RENK PALETİ VE DEĞİŞKENLER --- */
         :root {
             --primary-blue: #00338d;
             --secondary-color: #f4f7f6;
@@ -499,6 +499,7 @@
         .badge-order { padding: 3px 6px; border-radius: 4px; font-size: 11px; background: #e0f2fe; color: #0369a1; display: inline-block; }
         .btn-undo { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; margin-right: 4px; }
         .btn-report-del { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-report-batch { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; display: none; }
         .btn-print-system { background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; margin-top: 15px; width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; }
         .skeleton-block { height: 14px; background: #e2e8f0; border-radius: 4px; width: 85%; }
     </style>
@@ -741,7 +742,7 @@
     <div class="modal-overlay" id="sktUrgentModal">
         <div class="modal-content modal-large">
             <div class="modal-header" style="background:#fff3cd;">
-                <h3 style="color:#856404;">🚨 Son Kullanma Tarihi Yaklaşan / Dolan Malzemeler</h3>
+                <h3 style="color:#856404;">🚨 Son Kullanma Tarihi Yaklaşan / Dolan Malzemeler (Bugün & 1 Gün Kala)</h3>
                 <button class="modal-close-btn" onclick="closeSktUrgentModal()">&times;</button>
             </div>
             <div class="modal-body">
@@ -771,7 +772,10 @@
         <div class="modal-content modal-large">
             <div class="modal-header">
                 <h3>📋 Sistem İşlem Geçmişi / Log Raporu</h3>
-                <button class="modal-close-btn" id="closeReportBtnSpec">&times;</button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn-report-batch" id="batchDeleteReportsBtn" onclick="deleteSelectedReports()">Seçilenleri Sil 🗑️</button>
+                    <button class="modal-close-btn" id="closeReportBtnSpec">&times;</button>
+                </div>
             </div>
             <div class="modal-body">
                 <button class="btn-report-del" id="clearAllReportsBtn" onclick="clearAllReports()" style="display:none; margin-bottom:12px; float:right; padding:8px 12px; font-size:12px;">Tüm İşlem Geçmişini Sıfırla 🗑️</button>
@@ -780,12 +784,13 @@
                     <table>
                         <thead>
                             <tr>
+                                <th style="width: 40px; text-align: center;"><input type="checkbox" id="selectAllReports" onclick="toggleSelectAll('report')"></th>
                                 <th>İşlem Tarihi</th>
                                 <th>Yapan Rol</th>
                                 <th>Malzeme</th>
                                 <th>İşlem Türü</th>
                                 <th>Miktar</th>
-                                <th>Aksiyon</th>
+                                <th style="text-align: right; padding-right: 20px;">Aksiyon</th>
                             </tr>
                         </thead>
                         <tbody id="reportTableBody"></tbody>
@@ -799,7 +804,10 @@
         <div class="modal-content modal-large">
             <div class="modal-header">
                 <h3>🛒 Verilen Malzeme Siparişleri & Talepleri Listesi</h3>
-                <button class="modal-close-btn" id="closeOrdersBtnSpec">&times;</button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn-report-batch" id="batchDeleteOrdersBtn" onclick="deleteSelectedOrders()">Seçilen Siparişleri Sil 🗑️</button>
+                    <button class="modal-close-btn" id="closeOrdersBtnSpec">&times;</button>
+                </div>
             </div>
             <div class="modal-body">
                 <button class="btn-report-del" id="clearAllOrdersBtn" onclick="clearAllOrders()" style="display:none; margin-bottom:12px; float:right; padding:8px 12px; font-size:12px;">Tüm Sipariş Listesini Temizle 🗑️</button>
@@ -808,12 +816,13 @@
                     <table>
                         <thead>
                             <tr>
+                                <th style="width: 40px; text-align: center;"><input type="checkbox" id="selectAllOrders" onclick="toggleSelectAll('order')"></th>
                                 <th>Sipariş Tarihi</th>
                                 <th>Talep Eden</th>
                                 <th>Malzeme Adı</th>
                                 <th>İstenen Miktar</th>
                                 <th>Açıklama / Not</th>
-                                <th id="orderActionHeader">İşlem</th>
+                                <th id="orderActionHeader" style="text-align: right; padding-right: 20px;">İşlem</th>
                             </tr>
                         </thead>
                         <tbody id="ordersTableBody"></tbody>
@@ -836,7 +845,6 @@
         const basketPanel = document.getElementById('basketCardPanel');
         const addProductColumn = document.getElementById('addProductColumn');
         
-        // ROL KONTROLÜ: Garson ve Üretim rollerinden sepet ve yeni ekleme panellerini tam işlevsel gizle
         if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
             if (newProductPanel) newProductPanel.style.display = 'none';
             if (basketPanel) basketPanel.style.display = 'none';
@@ -906,7 +914,8 @@
         };
 
         window.filterSelectOptions = function() {
-            const txt = document.getElementById('customSelectSearch') ? document.getElementById('customSelectSearch').value.toUpperCase() : '';
+            const searchInputEl = document.getElementById('customSelectSearch');
+            const txt = searchInputEl ? searchInputEl.value.toUpperCase() : '';
             const panel = document.getElementById('customSelectOptionsPanel');
             if(!panel) return;
             panel.innerHTML = "";
@@ -1013,7 +1022,7 @@
                     let todayTime = new Date(todayStr).getTime();
                     let sktTime = new Date(item.skt).getTime();
                     let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
-                    if(diffDays >= 0 && diffDays <= 7) { // Son 7 gün kriteri
+                    if(diffDays >= 0 && diffDays <= 1) { // KRİTER GÜNCELLENDİ: Bugün veya 1 gün kalanlar
                         sktUrgentCount++;
                     }
                 }
@@ -1049,7 +1058,7 @@
             });
         }
 
-        // SKT KRİTİK BUTONUNUN AKTİF ÇALIŞMASI VE LİSTELEME KURGUSU
+        // SKT KRİTİK BUTONUNUN AKTİF ÇALIŞMASI (BUGÜN VE 1 GÜN KALA)
         function updateSktAlertBtnState() {
             const btn = document.getElementById('sktAlertButton');
             const tbody = document.getElementById('sktUrgentTableBody');
@@ -1065,10 +1074,10 @@
                     let sktTime = new Date(item.skt).getTime();
                     let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
                     
-                    if(diffDays >= 0 && diffDays <= 7) { // 7 gün ve daha az kalanlar kritik kabul edilir
+                    if(diffDays >= 0 && diffDays <= 1) { // 7 Gün Devre Dışı Bırakıldı: Yalnızca 0 ve 1 gün kalanlar eklendi
                         urgentCount++;
                         const sParts = item.skt.split('-');
-                        tbody.innerHTML += `<tr><td><strong>${item.name}</strong></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><span style="color:#b91c1c; font-weight:bold;">${diffDays === 0 ? 'Bugün Son!' : `${diffDays} Gün Kaldı`}</span></td><td>${sParts[2]}.${sParts[1]}.${sParts[2]}</td></tr>`;
+                        tbody.innerHTML += `<tr><td><strong>${item.name}</strong></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><span style="color:#b91c1c; font-weight:bold;">${diffDays === 0 ? 'Bugün Son!' : `1 Gün Kaldı`}</span></td><td>${sParts[2]}.${sParts[1]}.${sParts[0]}</td></tr>`;
                     }
                 }
             });
@@ -1183,7 +1192,6 @@
                 let fastButtonsHtml = '';
                 let dropdownButtonsHtml = '';
                 
-                // BUTON TETİKLEYİCİLERİ VE ROLLER TAMAMEN STABİLİZE EDİLDİ
                 if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
                     fastButtonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>`;
                 } else if (currentRole === 'DEPO') {
@@ -1387,29 +1395,144 @@
         const reportModal = document.getElementById('reportModal');
         const ordersListModal = document.getElementById('ordersListModal');
         
+        // --- TOPLU VE TEKLİ SİLME ALTYAPISI (İŞLEM GEÇMİŞİ) ---
         document.getElementById('openReportBtn').addEventListener('click', () => {
             db.ref('depo_rapor').once('value', (snapshot) => {
                 const tbody = document.getElementById('reportTableBody');
+                const clearAllBtn = document.getElementById('clearAllReportsBtn');
+                const batchDelBtn = document.getElementById('batchDeleteReportsBtn');
                 tbody.innerHTML = '';
+                document.getElementById('selectAllReports').checked = false;
+
+                if(currentRole === 'YÖNETİCİ') {
+                    clearAllBtn.style.display = 'block';
+                    batchDelBtn.style.display = 'block';
+                } else {
+                    clearAllBtn.style.display = 'none';
+                    batchDelBtn.style.display = 'none';
+                }
+
                 let modalReports = snapshot.val() ? Object.entries(snapshot.val()) : [];
-                modalReports.forEach(([fbKey, rep]) => {
-                    tbody.innerHTML += `<tr><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td>${rep.type}</td><td><strong>${rep.qty}</strong></td><td>---</td></tr>`;
-                });
+                if(modalReports.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">Kayıt bulunamadı.</td></tr>`;
+                } else {
+                    modalReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
+                    modalReports.forEach(([fbKey, rep]) => {
+                        let actionHtml = '---';
+                        let cbHtml = '';
+                        if(currentRole === 'YÖNETİCİ') {
+                            cbHtml = `<input type="checkbox" class="report-cb" value="${fbKey}">`;
+                            actionHtml = `<button class="btn-report-del" style="margin:0;" onclick="deleteReportRowDirect('${fbKey}')">Kayıt Sil</button>`;
+                        }
+                        tbody.innerHTML += `<tr><td style="text-align:center;">${cbHtml}</td><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order">${rep.type}</span></td><td><strong>${rep.qty}</strong></td><td style="text-align:right; padding-right:20px;">${actionHtml}</td></tr>`;
+                    });
+                }
                 reportModal.style.display = 'flex';
             });
         });
 
+        window.deleteReportRowDirect = function(fbKey) {
+            if(currentRole !== 'YÖNETİCİ') return;
+            if(confirm("Bu işlem kaydı kalıcı olarak silinsin mi?")) {
+                db.ref('depo_rapor/' + fbKey).remove().then(() => {
+                    showToast("İşlem kaydı silindi.", "success");
+                    document.getElementById('openReportBtn').click();
+                });
+            }
+        };
+
+        window.deleteSelectedReports = function() {
+            if(currentRole !== 'YÖNETİCİ') return;
+            const checkboxes = document.querySelectorAll('.report-cb:checked');
+            if(checkboxes.length === 0) { showToast("Lütfen silinecek kayıtları seçin!", "warning"); return; }
+            if(confirm(`Seçilen ${checkboxes.length} adet işlem kaydını silmek istediğinize emin misiniz?`)) {
+                const promises = Array.from(checkboxes).map(cb => db.ref('depo_rapor/' + cb.value).remove());
+                Promise.all(promises).then(() => {
+                    showToast("Seçilen kayıtlar toplu olarak temizlendi.", "success");
+                    document.getElementById('openReportBtn').click();
+                });
+            }
+        };
+
+        // --- TOPLU VE TEKLİ SİLME ALTYAPISI (VERİLEN SİPARİŞLER) ---
         document.getElementById('openOrdersBtn').addEventListener('click', () => {
             db.ref('depo_siparisler').once('value', (snapshot) => {
                 const tbody = document.getElementById('ordersTableBody');
+                const clearAllBtn = document.getElementById('clearAllOrdersBtn');
+                const batchDelBtn = document.getElementById('batchDeleteOrdersBtn');
                 tbody.innerHTML = '';
+                document.getElementById('selectAllOrders').checked = false;
+
+                if(currentRole === 'YÖNETİCİ') {
+                    clearAllBtn.style.display = 'block';
+                    batchDelBtn.style.display = 'block';
+                } else {
+                    clearAllBtn.style.display = 'none';
+                    batchDelBtn.style.display = 'none';
+                }
+
                 let modalOrders = snapshot.val() ? Object.entries(snapshot.val()) : [];
-                modalOrders.forEach(([fbKey, ord]) => {
-                    tbody.innerHTML += `<tr><td>${ord.time}</td><td><b>${ord.user}</b></td><td>${ord.product}</td><td><strong>${ord.qty}</strong></td><td>${ord.notes || ''}</td><td>---</td></tr>`;
-                });
+                if(modalOrders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">Henüz sipariş bulunmamaktadır.</td></tr>`;
+                } else {
+                    modalOrders.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
+                    modalOrders.forEach(([fbKey, ord]) => {
+                        let actionHtml = '---';
+                        let cbHtml = '';
+                        if(currentRole === 'YÖNETİCİ') {
+                            cbHtml = `<input type="checkbox" class="order-cb" value="${fbKey}">`;
+                            actionHtml = `<button class="btn-report-del" style="margin:0;" onclick="deleteOrderRowDirect('${fbKey}')">Kayıt Sil</button>`;
+                        }
+                        tbody.innerHTML += `<tr><td style="text-align:center;">${cbHtml}</td><td>${ord.time || ord.date}</td><td><b>${ord.user}</b></td><td>${ord.product}</td><td><strong>${ord.qty}</strong></td><td><i style="color:#666;">${ord.notes || 'Not Yok'}</i></td><td style="text-align:right; padding-right:20px;">${actionHtml}</td></tr>`;
+                    });
+                }
                 ordersListModal.style.display = 'flex';
             });
         });
+
+        window.deleteOrderRowDirect = function(fbKey) {
+            if(currentRole !== 'YÖNETİCİ') return;
+            if(confirm("Bu sipariş kaydı listeden kalıcı olarak silinsin mi?")) {
+                db.ref('depo_siparisler/' + fbKey).remove().then(() => {
+                    showToast("Sipariş kaydı silindi.", "success");
+                    document.getElementById('openOrdersBtn').click();
+                });
+            }
+        };
+
+        window.deleteSelectedOrders = function() {
+            if(currentRole !== 'YÖNETİCİ') return;
+            const checkboxes = document.querySelectorAll('.order-cb:checked');
+            if(checkboxes.length === 0) { showToast("Lütfen silinecek siparişleri seçin!", "warning"); return; }
+            if(confirm(`Seçilen ${checkboxes.length} adet siparişi silmek istediğinize emin misiniz?`)) {
+                const promises = Array.from(checkboxes).map(cb => db.ref('depo_siparisler/' + cb.value).remove());
+                Promise.all(promises).then(() => {
+                    showToast("Seçilen siparişler toplu olarak temizlendi.", "success");
+                    document.getElementById('openOrdersBtn').click();
+                });
+            }
+        };
+
+        // Checkbox Hızlı Seçim Fonksiyonu
+        window.toggleSelectAll = function(type) {
+            const isChecked = document.getElementById(type === 'report' ? 'selectAllReports' : 'selectAllOrders').checked;
+            const checkboxes = document.querySelectorAll(type === 'report' ? '.report-cb' : '.order-cb');
+            checkboxes.forEach(cb => cb.checked = isChecked);
+        };
+
+        window.clearAllReports = function() {
+            if(currentRole !== 'YÖNETİCİ') return;
+            if(confirm("Tüm işlem geçmişini kalıcı olarak silmek istediğinize emin misiniz?")) {
+                db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click());
+            }
+        };
+
+        window.clearAllOrders = function() {
+            if(currentRole !== 'YÖNETİCİ') return;
+            if(confirm("Tüm sipariş geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) {
+                db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click());
+            }
+        };
 
         document.getElementById('closeReportBtnSpec').addEventListener('click', () => reportModal.style.display = 'none');
         document.getElementById('closeOrdersBtnSpec').addEventListener('click', () => ordersListModal.style.display = 'none');
