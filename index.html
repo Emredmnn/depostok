@@ -45,7 +45,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
         }
         body {
             background-color: var(--secondary-color);
@@ -57,13 +57,13 @@
         header {
             background: #00338d;
             color: white;
-            padding: 20px 25px;
+            padding: 22px 25px;
             border-radius: var(--border-radius);
             box-shadow: var(--box-shadow);
             margin-bottom: 20px;
             display: flex;
             flex-direction: column;
-            min-height: 145px;
+            min-height: 155px;
             justify-content: space-between;
             gap: 15px;
         }
@@ -79,24 +79,32 @@
         .brand-container {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 20px;
         }
         
-        /* LOGONUN NET, KUSURSUZ VE ORANTILI GÖRÜNMESİNİ SAĞLAYAN CSS MİMARİSİ */
+        /* LOGO ALANININ ALBENİSİNİ VE BOYUTUNU ZİRVEYE TAŞIYAN PREMIUM ETKİLEŞİM KATMANI */
         .header-logo {
-            height: 56px;
+            height: 74px; /* Boyut ideal kurumsal ölçüye büyütüldü */
             width: auto;
             object-fit: contain;
-            border-radius: 6px;
-            background: white;
-            padding: 3px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 4px;
+            /* Premium Derinlik ve Glow Efekti */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 0 15px rgba(255, 255, 255, 0.15);
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
+            cursor: pointer;
+            will-change: transform, box-shadow;
+        }
+        /* Fare ile üzerine gelindiğinde canlılık katan mikro animasyon */
+        .header-logo:hover {
+            transform: scale(1.05) translateY(-1px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         .header-title h1 {
-            font-size: 22px;
+            font-size: 23px;
             font-weight: 700;
             letter-spacing: 0.5px;
             margin: 0;
@@ -104,7 +112,7 @@
         .header-title p {
             font-size: 13px;
             opacity: 0.85;
-            margin-top: 3px;
+            margin-top: 4px;
             font-weight: 300;
         }
         .user-meta-zone {
@@ -152,7 +160,6 @@
             font-weight: 600;
             font-size: 13.5px;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -308,7 +315,7 @@
 
         /* --- DROPDOWN MENÜ YAPISI --- */
         .action-btns { display: flex; gap: 5px; flex-wrap: nowrap; white-space: nowrap; align-items: center; position: relative; }
-        .action-btn { border: none; padding: 6px 11px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.15s; color: white; display: inline-flex; align-items: center; justify-content: center; }
+        .action-btn { border: none; padding: 6px 11px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; }
         .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
         
         .btn-add-stock { background-color: var(--success-color); }
@@ -318,7 +325,7 @@
         .btn-more-trigger {
             background: transparent; color: var(--text-light); border: 1px solid var(--table-border);
             padding: 5px 10px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center; line-height: 1; transition: all 0.15s;
+            display: inline-flex; align-items: center; justify-content: center; line-height: 1;
         }
         .btn-more-trigger:hover { background: var(--secondary-color); color: var(--text-dark); border-color: var(--text-light); }
 
@@ -332,7 +339,7 @@
         .dropdown-item {
             width: 100%; padding: 9px 12px; text-align: left; background: none; border: none;
             font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;
-            color: var(--text-dark); transition: background 0.1s;
+            color: var(--text-dark);
         }
         .dropdown-item:hover { background: var(--dropdown-hover); }
         .item-edit { color: #17a2b8; }
@@ -354,11 +361,6 @@
         .toast-success { border-left-color: var(--success-color); }
         .toast-error { border-left-color: var(--danger-color); }
         .toast-warning { border-left-color: var(--warning-color); }
-
-        .order-panel-card { background: var(--card-bg); border: 2px solid #00338d; border-radius: var(--border-radius); padding: 15px; margin-top: 15px; box-shadow: var(--box-shadow); display: none; }
-        .basket-container { background: var(--secondary-color); border: 1px dashed #cbd5e1; border-radius: 6px; padding: 10px; margin-bottom: 12px; max-height: 200px; overflow-y: auto; }
-        .basket-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; background: var(--card-bg); border: 1px solid var(--table-border); border-radius: 4px; margin-bottom: 6px; font-size: 12.5px; }
-        .btn-remove-basket-item { background: none; border: none; color: var(--danger-color); font-size: 16px; font-weight: bold; cursor: pointer; padding: 0 4px; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px; }
         .modal-content { background: var(--card-bg); border-radius: var(--border-radius); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.25s ease-out; overflow: hidden; border: 1px solid var(--table-border); }
@@ -382,7 +384,7 @@
     <header>
         <div class="header-top-row">
             <div class="brand-container">
-                <img src="akilli_depo_logo.jpeg.jpeg" alt="Logo" class="header-logo">
+                <img src="akilli_depo_logo.jpeg.jpeg" alt="Logo" class="header-logo" title="Akıllı Depo Otomasyon Sistemi">
                 <div class="header-title">
                     <h1>Bahçelievler Memorial CT</h1>
                     <p>Akıllı Depo Otomasyon & Canlı Stok Takip Sistemi</p>
@@ -1208,7 +1210,7 @@
                     dbKey: targetKey, name: item.name, depot: item.depot, unit: item.unit, quantity: finalQty, criticalLimit: item.criticalLimit, skt: newSktVal, lot: newLotVal || null, lastUpdatedDate: getTodayDateString()
                 });
                 db.ref('depo_rapor').push({
-                    time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'STOK + SKT GİRİŞI', qty: `${qty} ${item.unit} (LOT: ${newLotVal || 'Yok'})`
+                    time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'STOK + SKT GİRİŞİ', qty: `${qty} ${item.unit} (LOT: ${newLotVal || 'Yok'})`
                 });
                 showToast(`"${item.name}" yeni SKT partisi başarıyla depoya kaydedildi.`);
                 closeStockActionModal();
