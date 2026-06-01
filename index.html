@@ -406,18 +406,18 @@
         .date-filter-wrapper input { border: none; outline: none; font-size: 13px; color: var(--text-dark); background: transparent; cursor: pointer; }
         .btn-clear-date { background: none; border: none; color: #aaa; font-size: 16px; cursor: pointer; padding: 0 4px; }
         
-        /* --- TABLO TASARIMI VE KUSURSUZ HİZALAMA KATMANI --- */
+        /* --- TABLO TASARIMI VE KUSURSUZ MİLİMETRİK HİZALAMA KATMANI --- */
         .table-responsive { width: 100%; overflow-x: auto; border: 1px solid var(--table-border); border-radius: 6px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; background: var(--card-bg); table-layout: fixed; }
         
-        /* Tablo sütun genişlikleri ss.png görselindeki oranlara göre netleştirildi */
-        th:nth-child(1), td:nth-child(1) { width: 24%; } /* Malzeme Adı */
-        th:nth-child(2), td:nth-child(2) { width: 13%; } /* Depo Birimi */
-        th:nth-child(3), td:nth-child(3) { width: 13%; } /* Mevcut Stok */
-        th:nth-child(4), td:nth-child(4) { width: 13%; } /* Kritik Limit */
+        /* Tablo sütun genişlikleri ss.png görselindeki oranlara göre kusursuzlaştırıldı */
+        th:nth-child(1), td:nth-child(1) { width: 23%; } /* Malzeme Adı */
+        th:nth-child(2), td:nth-child(2) { width: 12%; } /* Depo Birimi */
+        th:nth-child(3), td:nth-child(3) { width: 12%; } /* Mevcut Stok */
+        th:nth-child(4), td:nth-child(4) { width: 12%; } /* Kritik Limit */
         th:nth-child(5), td:nth-child(5) { width: 12%; } /* S.K.T. */
-        th:nth-child(6), td:nth-child(6) { width: 11%; } /* Durum */
-        th:nth-child(7), td:nth-child(7) { width: 14%; text-align: right; padding-right: 15px; } /* İşlemler */
+        th:nth-child(6), td:nth-child(6) { width: 13%; } /* Durum Göstergesi (Taşma Engellendi) */
+        th:nth-child(7), td:nth-child(7) { width: 16%; text-align: right; padding-right: 15px; } /* İşlemler */
 
         th { background-color: var(--secondary-color); color: var(--text-light); font-weight: 600; padding: 12px 10px; border-bottom: 2px solid var(--table-border); white-space: nowrap; }
         td { padding: 12px 10px; border-bottom: 1px solid var(--table-border); vertical-align: middle; color: var(--text-dark); word-wrap: break-word; }
@@ -462,7 +462,9 @@
         .depot-tag { background: #e2e8f0; color: #475569; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
         .lot-tag { background: #e0f2fe; color: #0369a1; padding: 2px 5px; border-radius: 4px; font-size: 10.5px; font-weight: 700; display: inline-block; margin-top: 2px; border: 1px solid #bae6fd; }
         .date-tag { display: block; font-size: 11px; color: #94a3b8; margin-top: 2px; font-weight: normal; }
-        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
+        
+        /* GÖSTERGE ROBUST TASARIMI: Kayma ve satır kırılması tamamen engellendi */
+        .status-badge { padding: 5px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; max-width: 100%; text-overflow: ellipsis; overflow: hidden; }
         .status-safe { background: #d4edda; color: #155724; }
         .status-critical { background: #f8d7da; color: #721c24; font-weight: 700; }
         .skt-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
@@ -471,7 +473,7 @@
         .skt-expired { background: #fee2e2; color: #b91c1c; }
         
         /* --- BUTON AKSİYON KATMANI (SAĞA TAM HİZALI DURUŞ) --- */
-        .action-btns { display: flex; gap: 4px; justify-content: flex-end; align-items: center; white-space: nowrap; }
+        .action-btns { display: flex; gap: 4px; justify-content: flex-end; align-items: center; white-space: nowrap; padding-right: 5px; }
         .action-btn { border: none; padding: 6px 10px; border-radius: 4px; font-size: 11.5px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; }
         .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
         .btn-add-stock { background-color: var(--success-color); }
@@ -1437,12 +1439,10 @@
             });
         }
 
-        // --- GÜNCELLEME: SİLME AKSİYONUNA RAPOR/LOG ENTEGRASYONU AKTİFLEŞTİRİLDİ ---
         window.deleteProductDirect = function(uniqueId) {
             if(confirm("Kayıt kalıcı olarak silinsin mi?")) {
                 const item = inventory.find(i => i.dbKey === uniqueId);
                 if(item) {
-                    // Silme işlemi Firebase'den gerçekleşmeden önce rapor geçmişine log düşülüyor
                     db.ref('depo_rapor').push({
                         time: new Date().toLocaleString('tr-TR'),
                         rawTime: new Date().toISOString(),
