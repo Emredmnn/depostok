@@ -405,12 +405,24 @@
         }
         .date-filter-wrapper input { border: none; outline: none; font-size: 13px; color: var(--text-dark); background: transparent; cursor: pointer; }
         .btn-clear-date { background: none; border: none; color: #aaa; font-size: 16px; cursor: pointer; padding: 0 4px; }
-        /* --- TABLO TASARIMI --- */
+        
+        /* --- TABLO TASARIMI VE KUSURSUZ HİZALAMA KATMANI --- */
         .table-responsive { width: 100%; overflow-x: auto; border: 1px solid var(--table-border); border-radius: 6px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; background: var(--card-bg); }
-        th { background-color: var(--secondary-color); color: var(--text-light); font-weight: 600; padding: 11px 10px; border-bottom: 2px solid var(--table-border); white-space: nowrap; }
-        td { padding: 9px 10px; border-bottom: 1px solid var(--table-border); vertical-align: middle; color: var(--text-dark); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; background: var(--card-bg); table-layout: fixed; }
+        
+        /* Tablo sütun genişlikleri ss.png görselindeki oranlara göre netleştirildi */
+        th:nth-child(1), td:nth-child(1) { width: 24%; } /* Malzeme Adı */
+        th:nth-child(2), td:nth-child(2) { width: 13%; } /* Depo Birimi */
+        th:nth-child(3), td:nth-child(3) { width: 13%; } /* Mevcut Stok */
+        th:nth-child(4), td:nth-child(4) { width: 13%; } /* Kritik Limit */
+        th:nth-child(5), td:nth-child(5) { width: 12%; } /* S.K.T. */
+        th:nth-child(6), td:nth-child(6) { width: 11%; } /* Durum */
+        th:nth-child(7), td:nth-child(7) { width: 14%; text-align: right; padding-right: 15px; } /* İşlemler */
+
+        th { background-color: var(--secondary-color); color: var(--text-light); font-weight: 600; padding: 12px 10px; border-bottom: 2px solid var(--table-border); white-space: nowrap; }
+        td { padding: 12px 10px; border-bottom: 1px solid var(--table-border); vertical-align: middle; color: var(--text-dark); word-wrap: break-word; }
         tr:hover td { background-color: rgba(0, 51, 141, 0.01); }
+        
         .row-critical-alert td {
             background-color: rgba(220, 53, 69, 0.03) !important;
             animation: pulse-row-red 3s infinite ease-in-out;
@@ -447,7 +459,7 @@
             margin-bottom: 12px;
         }
         .empty-basket-box span.icon { font-size: 32px; display: block; margin-bottom: 6px; opacity: 0.6; }
-        .depot-tag { background: #e2e8f0; color: #475569; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+        .depot-tag { background: #e2e8f0; color: #475569; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
         .lot-tag { background: #e0f2fe; color: #0369a1; padding: 2px 5px; border-radius: 4px; font-size: 10.5px; font-weight: 700; display: inline-block; margin-top: 2px; border: 1px solid #bae6fd; }
         .date-tag { display: block; font-size: 11px; color: #94a3b8; margin-top: 2px; font-weight: normal; }
         .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
@@ -457,15 +469,16 @@
         .skt-none { background: #f1f5f9; color: #64748b; }
         .skt-ok { background: #e0f2fe; color: #0369a1; }
         .skt-expired { background: #fee2e2; color: #b91c1c; }
-        /* --- DROPDOWN MENÜ YAPISI --- */
-        .action-btns { display: flex; gap: 5px; flex-wrap: nowrap; white-space: nowrap; align-items: center; position: relative; }
-        .action-btn { border: none; padding: 6px 11px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; }
+        
+        /* --- BUTON AKSİYON KATMANI (SAĞA TAM HİZALI DURUŞ) --- */
+        .action-btns { display: flex; gap: 4px; justify-content: flex-end; align-items: center; white-space: nowrap; }
+        .action-btn { border: none; padding: 6px 10px; border-radius: 4px; font-size: 11.5px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; }
         .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
         .btn-add-stock { background-color: var(--success-color); }
         .btn-drop-stock { background-color: #ff9800; }
         .btn-waste-stock { background-color: #795548; }
         .btn-more-trigger {
-            background: transparent; color: var(--text-light); border: 1px solid var(--table-border); padding: 5px 10px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+            background: transparent; color: var(--text-light); border: 1px solid var(--table-border); padding: 5px 8px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1;
         }
         .btn-more-trigger:hover { background: var(--secondary-color); color: var(--text-dark); border-color: var(--text-light); }
         .actions-dropdown {
@@ -478,7 +491,8 @@
         .item-delete { color: var(--danger-color); }
         .total-row { background-color: var(--secondary-color); font-weight: bold; color: var(--text-dark); border-top: 2px solid #cbd5e1; }
         .total-row td { padding: 14px 10px; font-size: 13px; }
-        /* --- SİSTEMİK TOAST BİLDİRİM MİMARİSİ --- */
+        
+        /* --- BİLDİRİM TOAST ALTYAPISI --- */
         #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .custom-toast { background: #ffffff; color: #1e293b; padding: 14px 22px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 10px; min-width: 280px; max-width: 380px; pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; border-left: 5px solid #cbd5e1; }
         @keyframes toastIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -487,6 +501,7 @@
         .toast-error { border-left-color: var(--danger-color); }
         .toast-warning { border-left-color: var(--warning-color); }
         
+        /* --- MODAL PLANI VE YAPILARI --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px; }
         .modal-content { background: var(--card-bg); border-radius: var(--border-radius); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.25s ease-out; overflow: hidden; border: 1px solid var(--table-border); }
         .modal-large { max-width: 850px; }
@@ -503,7 +518,7 @@
         .btn-print-system { background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; margin-top: 15px; width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; }
         .skeleton-block { height: 14px; background: #e2e8f0; border-radius: 4px; width: 85%; }
         
-        /* --- GELİŞMİŞ MODAL FİLTRELEME ALANI --- */
+        /* --- GELİŞMİŞ MODAL RAPOR FİLTRELEME ALANI --- */
         .modal-filter-zone {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -667,7 +682,7 @@
                             <th>Kritik Limit</th>
                             <th>S.K.T.</th>
                             <th>Durum</th>
-                            <th style="text-align: center;">İşlemler</th>
+                            <th style="text-align: right; padding-right: 15px;">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody id="liveMaterialsBody">
@@ -762,7 +777,7 @@
             </div>
             <div class="modal-body">
                 <div class="table-responsive">
-                    <table>
+                    <table style="table-layout: auto;">
                         <thead>
                             <tr>
                                 <th>Malzeme Adı</th>
@@ -816,7 +831,7 @@
                 <button class="btn-report-del" id="clearAllReportsBtn" onclick="clearAllReports()" style="display:none; margin-bottom:12px; float:right; padding:8px 12px; font-size:12px;">Tüm İşlem Geçmişini Sıfırla 🗑️</button>
                 <div style="clear:both;"></div>
                 <div class="table-responsive">
-                    <table>
+                    <table style="table-layout: auto;">
                         <thead>
                             <tr>
                                 <th style="width: 40px; text-align: center;"><input type="checkbox" id="selectAllReports" onclick="toggleSelectAll('report')"></th>
@@ -848,7 +863,7 @@
                 <button class="btn-report-del" id="clearAllOrdersBtn" onclick="clearAllOrders()" style="display:none; margin-bottom:12px; float:right; padding:8px 12px; font-size:12px;">Tüm Sipariş Listesini Temizle 🗑️</button>
                 <div style="clear:both;"></div>
                 <div class="table-responsive">
-                    <table>
+                    <table style="table-layout: auto;">
                         <thead>
                             <tr>
                                 <th style="width: 40px; text-align: center;"><input type="checkbox" id="selectAllOrders" onclick="toggleSelectAll('order')"></th>
@@ -1014,7 +1029,7 @@
         let currentModalProduct = null;
         let currentModalAction = "";
         let isNewPartyWithSkt = false;
-        let localCachedReports = []; // Filtreleme için yerel önbellek
+        let localCachedReports = [];
         const definedDepots = ['HEPSİ', 'ET +4', 'ET -18', 'PASTANE +4', 'PASTANE -18', 'SEBZE +4', 'SEBZE -18', 'ŞARKÜTERİ', 'KURU GIDA', 'KİMYASAL', 'SARF DEPO'];
         
         function getTodayDateString() {
@@ -1112,7 +1127,7 @@
                     if(diffDays >= 0 && diffDays <= 1) {
                         urgentCount++;
                         const sParts = item.skt.split('-');
-                        tbody.innerHTML += `<tr><td><strong>${item.name}</strong></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><span style="color:#b91c1c; font-weight:bold;">${diffDays === 0 ? 'Bugün Son!' : `1 Gün Kaldı`}</span></td><td>${sParts[2]}.${sParts[1]}.${sParts[0]}</td></tr>`;
+                        tbody.innerHTML += `<tr><td><strong>${item.name}</strong></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td>export <strong>${item.quantity} ${item.unit}</strong></td><td><span style="color:#b91c1c; font-weight:bold;">${diffDays === 0 ? 'Bugün Son!' : `1 Gün Kaldı`}</span></td><td>${sParts[2]}.${sParts[1]}.${sParts[0]}</td></tr>`;
                     }
                 }
             });
@@ -1244,7 +1259,7 @@
                 
                 const tr = document.createElement('tr');
                 if (isCritical) tr.className = "row-critical-alert";
-                tr.innerHTML = `<td><td><strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}<span class="date-tag">Gnc: ${displayDate}</span></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><strong>${item.criticalLimit} ${item.unit}</strong></td><td>${sktHtml}</td><td>${statusHtml}</td><td class="action-btns" style="justify-content: center;">${fastButtonsHtml} ${moreActionTriggerHtml}</td>`;
+                tr.innerHTML = `<td><strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}<span class="date-tag">Gnc: ${displayDate}</span></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><strong>${item.criticalLimit} ${item.unit}</strong></td><td>${sktHtml}</td><td>${statusHtml}</td><td class="action-btns">${fastButtonsHtml} ${moreActionTriggerHtml}</td>`;
                 tbody.appendChild(tr);
             });
             
@@ -1363,7 +1378,7 @@
             
             db.ref().update(updates).then(() => {
                 db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'BİLGİ GÜNCELLEME', qty: `Stok: ${newQty}` });
-                showToast("Kart güncellendi.");
+                showToast("Malzeme envanter kartı güncellendi.");
                 closeProductEditModal();
             });
         });
@@ -1430,24 +1445,20 @@
         const reportModal = document.getElementById('reportModal');
         const ordersListModal = document.getElementById('ordersListModal');
         
-        // --- İŞLEM GEÇMİŞİ VE CANLI MODAL FİLTRELEME ---
+        // --- RAPOR GÖSTERİMİ VE GELİŞMİŞ CANLI FİLTRE MODÜLÜ ---
         document.getElementById('openReportBtn').addEventListener('click', () => {
             db.ref('depo_rapor').once('value', (snapshot) => {
-                // Gelen verileri yerel önbelleğe alıp sıralıyoruz
                 localCachedReports = snapshot.val() ? Object.entries(snapshot.val()) : [];
                 localCachedReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
                 
-                // Modal input alanlarını sıfırla
                 document.getElementById('modalReportSearchInput').value = '';
                 document.getElementById('modalReportTypeSelect').value = 'HEPSİ';
                 
-                // Rapor Arayüzünü Çizdir
                 filterModalReportsUi();
                 reportModal.style.display = 'flex';
             });
         });
 
-        // MODAL RAPORU FİLTRELEME FONKSİYONU
         window.filterModalReportsUi = function() {
             const tbody = document.getElementById('reportTableBody');
             const clearAllBtn = document.getElementById('clearAllReportsBtn');
@@ -1468,7 +1479,6 @@
             const searchText = document.getElementById('modalReportSearchInput').value.toLowerCase();
             const selectedType = document.getElementById('modalReportTypeSelect').value;
 
-            // Filtreleme Algoritması
             let filtered = localCachedReports.filter(([fbKey, rep]) => {
                 let matchesSearch = rep.product && rep.product.toLowerCase().includes(searchText);
                 let matchesType = (selectedType === 'HEPSİ' || rep.type === selectedType);
@@ -1476,7 +1486,7 @@
             });
 
             if(filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">Aradığınız kriterlere uygun işlem kaydı bulunamadı.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">Kriterlere uygun işlem logu bulunamadı.</td></tr>`;
                 return;
             }
 
@@ -1495,9 +1505,8 @@
             if(currentRole !== 'YÖNETİCİ') return;
             if(confirm("Bu işlem kaydı kalıcı olarak silinsin mi?")) {
                 db.ref('depo_rapor/' + fbKey).remove().then(() => {
-                    showToast("İşlem kaydı silindi.", "success");
-                    // Önbellekten de sil ve arayüzü güncelle
-                    localCachedReports = localCachedReports.filter(([key, val]) => key !== fbKey);
+                    showToast("Kayıt geçmişten silindi.", "success");
+                    localCachedReports = localCachedReports.filter(([key]) => key !== fbKey);
                     filterModalReportsUi();
                 });
             }
@@ -1506,19 +1515,19 @@
         window.deleteSelectedReports = function() {
             if(currentRole !== 'YÖNETİCİ') return;
             const checkboxes = document.querySelectorAll('.report-cb:checked');
-            if(checkboxes.length === 0) { showToast("Lütfen silinecek kayıtları seçin!", "warning"); return; }
+            if(checkboxes.length === 0) { showToast("Lütfen silinecek logları seçin!", "warning"); return; }
             if(confirm(`Seçilen ${checkboxes.length} adet işlem kaydını silmek istediğinize emin misiniz?`)) {
                 const promises = Array.from(checkboxes).map(cb => db.ref('depo_rapor/' + cb.value).remove());
                 Promise.all(promises).then(() => {
-                    showToast("Seçilen kayıtlar toplu olarak temizlendi.", "success");
+                    showToast("Seçilen kayıtlar başarıyla temizlendi.", "success");
                     const selectedIds = Array.from(checkboxes).map(cb => cb.value);
-                    localCachedReports = localCachedReports.filter(([key, val]) => !selectedIds.includes(key));
+                    localCachedReports = localCachedReports.filter(([key]) => !selectedIds.includes(key));
                     filterModalReportsUi();
                 });
             }
         };
 
-        // --- SİPARİŞ GEÇMİŞİ LİSTELEME ---
+        // --- SİPARİŞ GEÇMİŞİ VE TEKLİ/TOPLU SİLME KATMANLARI ---
         document.getElementById('openOrdersBtn').addEventListener('click', () => {
             db.ref('depo_siparisler').once('value', (snapshot) => {
                 const tbody = document.getElementById('ordersTableBody');
@@ -1537,7 +1546,7 @@
 
                 let modalOrders = snapshot.val() ? Object.entries(snapshot.val()) : [];
                 if(modalOrders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">Henüz sipariş bulunmamaktadır.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">Henüz sipariş talebi bulunmamaktadır.</td></tr>`;
                 } else {
                     modalOrders.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
                     modalOrders.forEach(([fbKey, ord]) => {
@@ -1558,7 +1567,7 @@
             if(currentRole !== 'YÖNETİCİ') return;
             if(confirm("Bu sipariş kaydı listeden kalıcı olarak silinsin mi?")) {
                 db.ref('depo_siparisler/' + fbKey).remove().then(() => {
-                    showToast("Sipariş kaydı silindi.", "success");
+                    showToast("Sipariş kaydı temizlendi.", "success");
                     document.getElementById('openOrdersBtn').click();
                 });
             }
@@ -1568,10 +1577,10 @@
             if(currentRole !== 'YÖNETİCİ') return;
             const checkboxes = document.querySelectorAll('.order-cb:checked');
             if(checkboxes.length === 0) { showToast("Lütfen silinecek siparişleri seçin!", "warning"); return; }
-            if(confirm(`Seçilen ${checkboxes.length} adet siparişi silmek istediğinize emin misiniz?`)) {
+            if(confirm(`Seçilen ${checkboxes.length} adet talebi silmek istediğinize emin misiniz?`)) {
                 const promises = Array.from(checkboxes).map(cb => db.ref('depo_siparisler/' + cb.value).remove());
                 Promise.all(promises).then(() => {
-                    showToast("Seçilen siparişler toplu olarak temizlendi.", "success");
+                    showToast("Seçilen siparişler toplu olarak silindi.", "success");
                     document.getElementById('openOrdersBtn').click();
                 });
             }
@@ -1585,7 +1594,7 @@
 
         window.clearAllReports = function() {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Tüm işlem geçmişini kalıcı olarak silmek istediğinize emin misiniz?")) {
+            if(confirm("Tüm işlem geçmişini geri döndürülemeyecek şekilde sıfırlamak istiyor musunuz?")) {
                 db.ref('depo_rapor').remove().then(() => {
                     localCachedReports = [];
                     filterModalReportsUi();
