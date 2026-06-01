@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        /* --- GENEL KURUMSUR RENK PALETİ VE DEĞİŞKENLER --- */
+        /* --- GENEL KURUMSAL RENK PALETİ VE DEĞİŞKENLER --- */
         :root {
             --primary-blue: #00338d;
             --secondary-color: #f4f7f6;
@@ -502,6 +502,21 @@
         .btn-report-batch { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; display: none; }
         .btn-print-system { background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; margin-top: 15px; width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; }
         .skeleton-block { height: 14px; background: #e2e8f0; border-radius: 4px; width: 85%; }
+        
+        /* --- GELİŞMİŞ MODAL FİLTRELEME ALANI --- */
+        .modal-filter-zone {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            background: var(--secondary-color);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid var(--table-border);
+        }
+        @media (max-width: 580px) {
+            .modal-filter-zone { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -778,6 +793,26 @@
                 </div>
             </div>
             <div class="modal-body">
+                <div class="modal-filter-zone">
+                    <div class="form-group" style="margin:0;">
+                        <label style="font-size:11px; font-weight:700;">🔍 Malzeme Adı İle Ara:</label>
+                        <input type="text" class="form-control" id="modalReportSearchInput" placeholder="Loglarda malzeme adı ara..." oninput="filterModalReportsUi()">
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label style="font-size:11px; font-weight:700;">📊 İşlem Türü Seç:</label>
+                        <select class="form-control" id="modalReportTypeSelect" onchange="filterModalReportsUi()">
+                            <option value="HEPSİ">HEPSİ</option>
+                            <option value="GİRİŞ">GİRİŞ</option>
+                            <option value="ÇIKIŞ">ÇIKIŞ</option>
+                            <option value="İMHA">İMHA</option>
+                            <option value="YENİ ÜRÜN">YENİ ÜRÜN</option>
+                            <option value="BİLGİ GÜNCELLEME">BİLGİ GÜNCELLEME</option>
+                            <option value="STOK + SKT GİRİŞİ">STOK + SKT GİRİŞİ</option>
+                            <option value="SKT OTOMATİK SİLME">SKT OTOMATİK SİLME</option>
+                        </select>
+                    </div>
+                </div>
+
                 <button class="btn-report-del" id="clearAllReportsBtn" onclick="clearAllReports()" style="display:none; margin-bottom:12px; float:right; padding:8px 12px; font-size:12px;">Tüm İşlem Geçmişini Sıfırla 🗑️</button>
                 <div style="clear:both;"></div>
                 <div class="table-responsive">
@@ -979,6 +1014,7 @@
         let currentModalProduct = null;
         let currentModalAction = "";
         let isNewPartyWithSkt = false;
+        let localCachedReports = []; // Filtreleme için yerel önbellek
         const definedDepots = ['HEPSİ', 'ET +4', 'ET -18', 'PASTANE +4', 'PASTANE -18', 'SEBZE +4', 'SEBZE -18', 'ŞARKÜTERİ', 'KURU GIDA', 'KİMYASAL', 'SARF DEPO'];
         
         function getTodayDateString() {
@@ -1022,7 +1058,7 @@
                     let todayTime = new Date(todayStr).getTime();
                     let sktTime = new Date(item.skt).getTime();
                     let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
-                    if(diffDays >= 0 && diffDays <= 1) { // KRİTER GÜNCELLENDİ: Bugün veya 1 gün kalanlar
+                    if(diffDays >= 0 && diffDays <= 1) {
                         sktUrgentCount++;
                     }
                 }
@@ -1058,7 +1094,6 @@
             });
         }
 
-        // SKT KRİTİK BUTONUNUN AKTİF ÇALIŞMASI (BUGÜN VE 1 GÜN KALA)
         function updateSktAlertBtnState() {
             const btn = document.getElementById('sktAlertButton');
             const tbody = document.getElementById('sktUrgentTableBody');
@@ -1074,7 +1109,7 @@
                     let sktTime = new Date(item.skt).getTime();
                     let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
                     
-                    if(diffDays >= 0 && diffDays <= 1) { // 7 Gün Devre Dışı Bırakıldı: Yalnızca 0 ve 1 gün kalanlar eklendi
+                    if(diffDays >= 0 && diffDays <= 1) {
                         urgentCount++;
                         const sParts = item.skt.split('-');
                         tbody.innerHTML += `<tr><td><strong>${item.name}</strong></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><span style="color:#b91c1c; font-weight:bold;">${diffDays === 0 ? 'Bugün Son!' : `1 Gün Kaldı`}</span></td><td>${sParts[2]}.${sParts[1]}.${sParts[0]}</td></tr>`;
@@ -1209,7 +1244,7 @@
                 
                 const tr = document.createElement('tr');
                 if (isCritical) tr.className = "row-critical-alert";
-                tr.innerHTML = `<td><strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}<span class="date-tag">Gnc: ${displayDate}</span></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><strong>${item.criticalLimit} ${item.unit}</strong></td><td>${sktHtml}</td><td>${statusHtml}</td><td class="action-btns" style="justify-content: center;">${fastButtonsHtml} ${moreActionTriggerHtml}</td>`;
+                tr.innerHTML = `<td><td><strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}<span class="date-tag">Gnc: ${displayDate}</span></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><strong>${item.criticalLimit} ${item.unit}</strong></td><td>${sktHtml}</td><td>${statusHtml}</td><td class="action-btns" style="justify-content: center;">${fastButtonsHtml} ${moreActionTriggerHtml}</td>`;
                 tbody.appendChild(tr);
             });
             
@@ -1395,48 +1430,75 @@
         const reportModal = document.getElementById('reportModal');
         const ordersListModal = document.getElementById('ordersListModal');
         
-        // --- TOPLU VE TEKLİ SİLME ALTYAPISI (İŞLEM GEÇMİŞİ) ---
+        // --- İŞLEM GEÇMİŞİ VE CANLI MODAL FİLTRELEME ---
         document.getElementById('openReportBtn').addEventListener('click', () => {
             db.ref('depo_rapor').once('value', (snapshot) => {
-                const tbody = document.getElementById('reportTableBody');
-                const clearAllBtn = document.getElementById('clearAllReportsBtn');
-                const batchDelBtn = document.getElementById('batchDeleteReportsBtn');
-                tbody.innerHTML = '';
-                document.getElementById('selectAllReports').checked = false;
-
-                if(currentRole === 'YÖNETİCİ') {
-                    clearAllBtn.style.display = 'block';
-                    batchDelBtn.style.display = 'block';
-                } else {
-                    clearAllBtn.style.display = 'none';
-                    batchDelBtn.style.display = 'none';
-                }
-
-                let modalReports = snapshot.val() ? Object.entries(snapshot.val()) : [];
-                if(modalReports.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">Kayıt bulunamadı.</td></tr>`;
-                } else {
-                    modalReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
-                    modalReports.forEach(([fbKey, rep]) => {
-                        let actionHtml = '---';
-                        let cbHtml = '';
-                        if(currentRole === 'YÖNETİCİ') {
-                            cbHtml = `<input type="checkbox" class="report-cb" value="${fbKey}">`;
-                            actionHtml = `<button class="btn-report-del" style="margin:0;" onclick="deleteReportRowDirect('${fbKey}')">Kayıt Sil</button>`;
-                        }
-                        tbody.innerHTML += `<tr><td style="text-align:center;">${cbHtml}</td><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order">${rep.type}</span></td><td><strong>${rep.qty}</strong></td><td style="text-align:right; padding-right:20px;">${actionHtml}</td></tr>`;
-                    });
-                }
+                // Gelen verileri yerel önbelleğe alıp sıralıyoruz
+                localCachedReports = snapshot.val() ? Object.entries(snapshot.val()) : [];
+                localCachedReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
+                
+                // Modal input alanlarını sıfırla
+                document.getElementById('modalReportSearchInput').value = '';
+                document.getElementById('modalReportTypeSelect').value = 'HEPSİ';
+                
+                // Rapor Arayüzünü Çizdir
+                filterModalReportsUi();
                 reportModal.style.display = 'flex';
             });
         });
+
+        // MODAL RAPORU FİLTRELEME FONKSİYONU
+        window.filterModalReportsUi = function() {
+            const tbody = document.getElementById('reportTableBody');
+            const clearAllBtn = document.getElementById('clearAllReportsBtn');
+            const batchDelBtn = document.getElementById('batchDeleteReportsBtn');
+            if(!tbody) return;
+            
+            tbody.innerHTML = '';
+            document.getElementById('selectAllReports').checked = false;
+
+            if(currentRole === 'YÖNETİCİ') {
+                clearAllBtn.style.display = 'block';
+                batchDelBtn.style.display = 'block';
+            } else {
+                clearAllBtn.style.display = 'none';
+                batchDelBtn.style.display = 'none';
+            }
+
+            const searchText = document.getElementById('modalReportSearchInput').value.toLowerCase();
+            const selectedType = document.getElementById('modalReportTypeSelect').value;
+
+            // Filtreleme Algoritması
+            let filtered = localCachedReports.filter(([fbKey, rep]) => {
+                let matchesSearch = rep.product && rep.product.toLowerCase().includes(searchText);
+                let matchesType = (selectedType === 'HEPSİ' || rep.type === selectedType);
+                return matchesSearch && matchesType;
+            });
+
+            if(filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">Aradığınız kriterlere uygun işlem kaydı bulunamadı.</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(([fbKey, rep]) => {
+                let actionHtml = '---';
+                let cbHtml = '';
+                if(currentRole === 'YÖNETİCİ') {
+                    cbHtml = `<input type="checkbox" class="report-cb" value="${fbKey}">`;
+                    actionHtml = `<button class="btn-report-del" style="margin:0;" onclick="deleteReportRowDirect('${fbKey}')">Kayıt Sil</button>`;
+                }
+                tbody.innerHTML += `<tr><td style="text-align:center;">${cbHtml}</td><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order">${rep.type}</span></td><td><strong>${rep.qty}</strong></td><td style="text-align:right; padding-right:20px;">${actionHtml}</td></tr>`;
+            });
+        };
 
         window.deleteReportRowDirect = function(fbKey) {
             if(currentRole !== 'YÖNETİCİ') return;
             if(confirm("Bu işlem kaydı kalıcı olarak silinsin mi?")) {
                 db.ref('depo_rapor/' + fbKey).remove().then(() => {
                     showToast("İşlem kaydı silindi.", "success");
-                    document.getElementById('openReportBtn').click();
+                    // Önbellekten de sil ve arayüzü güncelle
+                    localCachedReports = localCachedReports.filter(([key, val]) => key !== fbKey);
+                    filterModalReportsUi();
                 });
             }
         };
@@ -1449,12 +1511,14 @@
                 const promises = Array.from(checkboxes).map(cb => db.ref('depo_rapor/' + cb.value).remove());
                 Promise.all(promises).then(() => {
                     showToast("Seçilen kayıtlar toplu olarak temizlendi.", "success");
-                    document.getElementById('openReportBtn').click();
+                    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+                    localCachedReports = localCachedReports.filter(([key, val]) => !selectedIds.includes(key));
+                    filterModalReportsUi();
                 });
             }
         };
 
-        // --- TOPLU VE TEKLİ SİLME ALTYAPISI (VERİLEN SİPARİŞLER) ---
+        // --- SİPARİŞ GEÇMİŞİ LİSTELEME ---
         document.getElementById('openOrdersBtn').addEventListener('click', () => {
             db.ref('depo_siparisler').once('value', (snapshot) => {
                 const tbody = document.getElementById('ordersTableBody');
@@ -1513,7 +1577,6 @@
             }
         };
 
-        // Checkbox Hızlı Seçim Fonksiyonu
         window.toggleSelectAll = function(type) {
             const isChecked = document.getElementById(type === 'report' ? 'selectAllReports' : 'selectAllOrders').checked;
             const checkboxes = document.querySelectorAll(type === 'report' ? '.report-cb' : '.order-cb');
@@ -1523,7 +1586,10 @@
         window.clearAllReports = function() {
             if(currentRole !== 'YÖNETİCİ') return;
             if(confirm("Tüm işlem geçmişini kalıcı olarak silmek istediğinize emin misiniz?")) {
-                db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click());
+                db.ref('depo_rapor').remove().then(() => {
+                    localCachedReports = [];
+                    filterModalReportsUi();
+                });
             }
         };
 
