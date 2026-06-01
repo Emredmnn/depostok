@@ -76,23 +76,19 @@
             align-items: center;
             gap: 20px;
         }
-        /* LOGO ALANININ ALBENİSİNİ VE BOYUTUNU ZİRVEYE TAŞIYAN PREMIUM ETKİLEŞİM KATMANI */
         .header-logo {
             height: 74px;
-            /* Boyut ideal kurumsal ölçüye büyütüldü */
             width: auto;
             object-fit: contain;
             border-radius: 8px;
             background: #ffffff;
             padding: 4px;
-            /* Premium Derinlik ve Glow Efekti */
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 0 15px rgba(255, 255, 255, 0.15);
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
             cursor: pointer;
             will-change: transform, box-shadow;
         }
-        /* Fare ile üzerine gelindiğinde canlılık katan mikro animasyon */
         .header-logo:hover {
             transform: scale(1.05) translateY(-1px);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), 0 0 20px rgba(255, 255, 255, 0.3);
@@ -548,6 +544,24 @@
             margin-bottom: 6px;
             opacity: 0.6;
         }
+        .basket-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--table-border);
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+        .btn-remove-basket-item {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
         .depot-tag {
             background: #e2e8f0;
             color: #475569;
@@ -921,9 +935,9 @@
             <div class="stat-card-icon bg-orange-soft">⏳</div>
         </div>
     </div>
-    <div class="main-container" id="mainContainer">
+    <div class="main-container two-columns" id="mainContainer">
         <div id="addProductColumn" class="forms-stack">
-            <div class="card">
+            <div class="card" id="newProductCardPanel">
                 <div class="card-title">✨ Yeni Malzeme Tanımlama</div>
                 <form id="addForm">
                     <div class="form-group">
@@ -980,7 +994,8 @@
                     <button type="submit" class="btn-submit">Kayıt Aç ve Envantere Ekle 💾</button>
                 </form>
             </div>
-            <div class="card">
+            
+            <div class="card" id="basketCardPanel">
                 <div class="card-title">🛒 Malzeme Talep Listesi / Sepet <span id="basketCount" style="font-size:13px; color:var(--text-light); margin-left:5px;">(0 Ürün)</span></div>
                 <form id="orderForm">
                     <div class="form-group">
@@ -1016,7 +1031,8 @@
                 </form>
             </div>
         </div>
-        <div class="card">
+
+        <div class="card" id="inventoryTableColumn">
             <div class="card-title">🟢 Anlık Stok Durumu & Malzeme Listesi</div>
             <div class="depot-filter-bar" id="depotButtonsBar">
                 <button class="btn-depot-filter active" onclick="filterByDepot('HEPSİ')">HEPSİ</button>
@@ -1041,7 +1057,7 @@
                             <th>Kritik Limit</th>
                             <th>S.K.T.</th>
                             <th>Durum</th>
-                            <th class="action-btns" style="text-align: center; justify-content: center;">İşlemler</th>
+                            <th style="text-align: center;">İşlemler</th>
                         </tr>
                     </thead>
                     <tbody id="liveMaterialsBody">
@@ -1053,6 +1069,7 @@
             <button class="btn-print-system" onclick="window.print()">🖨️ Sayfayı Yazdır / Resmi PDF Raporu Al</button>
         </div>
     </div>
+
     <div class="modal-overlay" id="stockActionModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1086,6 +1103,7 @@
             </form>
         </div>
     </div>
+
     <div class="modal-overlay" id="productEditModal">
         <div class="modal-content">
             <div class="modal-header" style="background:#17a2b8; color:white;">
@@ -1125,6 +1143,7 @@
             </form>
         </div>
     </div>
+
     <div class="modal-overlay" id="sktUrgentModal">
         <div class="modal-content modal-large">
             <div class="modal-header" style="background:#fff3cd;">
@@ -1153,6 +1172,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal-overlay" id="reportModal">
         <div class="modal-content modal-large">
             <div class="modal-header">
@@ -1180,6 +1200,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal-overlay" id="ordersListModal">
         <div class="modal-content modal-large">
             <div class="modal-header">
@@ -1207,6 +1228,7 @@
             </div>
         </div>
     </div>
+
     <script>
         if(localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.replace('login.html');
@@ -1216,16 +1238,18 @@
         document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`;
         
         const mainContainer = document.getElementById('mainContainer');
-        const addProductColumn = document.getElementById('addProductColumn');
+        const newProductPanel = document.getElementById('newProductCardPanel');
         
+        // Rol yetki kontrolü ve tasarım sütun kurgusu düzeltmeleri
         if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
-            if(addProductColumn) {
-                addProductColumn.remove();
+            if (newProductPanel) {
+                newProductPanel.style.display = 'none'; // Elementi kaldırmak yerine gizliyoruz ki grid yapısı çökmesin
             }
-            mainContainer.classList.remove('two-columns');
+            mainContainer.classList.add('two-columns'); // İki sütun yapısını koruyoruz (Sepet sol tarafta kalacak)
         } else {
             mainContainer.classList.add('two-columns');
         }
+
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             if(!container) return;
@@ -1241,10 +1265,12 @@
                 }, 300);
             }, 3000);
         }
+
         if(localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             document.getElementById('themeToggleBtn').textContent = "☀️ Gündüz Modu";
         }
+
         window.toggleThemeMode = function() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const btn = document.getElementById('themeToggleBtn');
@@ -1260,6 +1286,7 @@
                 showToast("Gece moduna geçildi.", "success");
             }
         };
+
         window.toggleRowDropdown = function(event, id) {
             event.stopPropagation();
             document.querySelectorAll('.actions-dropdown').forEach(el => {
@@ -1269,6 +1296,7 @@
             if(!targetDrop) return;
             targetDrop.style.display = targetDrop.style.display === 'block' ? 'none' : 'block';
         };
+
         document.addEventListener('click', (event) => {
             document.querySelectorAll('.actions-dropdown').forEach(el => el.style.display = 'none');
             const selectContainer = document.getElementById('selectContainerBlock');
@@ -1276,11 +1304,13 @@
                 document.getElementById('customSelectOptionsPanel').style.display = 'none';
             }
         });
+
         window.openSelectDropdown = function(event) {
             if(event) event.stopPropagation();
             document.getElementById('customSelectOptionsPanel').style.display = 'block';
             filterSelectOptions();
         };
+
         window.filterSelectOptions = function() {
             const txt = document.getElementById('customSelectSearch').value.toUpperCase();
             const panel = document.getElementById('customSelectOptionsPanel');
@@ -1313,6 +1343,7 @@
                 panel.innerHTML = `<div style="padding:12px; font-size:12px; color:#aaa; text-align:center;">Uyuşan malzeme bulunamadı.</div>`;
             }
         };
+
         window.toggleAccordion = function(element) {
             const content = document.getElementById('advancedFormFields');
             const arrow = element.querySelector('span:last-child');
@@ -1324,6 +1355,7 @@
                 arrow.textContent = "⚙️ ▲";
             }
         };
+
         function startLiveClock() {
             const clockElement = document.getElementById('liveClockDisplay');
             setInterval(() => {
@@ -1334,6 +1366,7 @@
             }, 1000);
         }
         startLiveClock();
+
         const firebaseConfig = { databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -1351,6 +1384,7 @@
             const localNow = new Date(now.getTime() - (offset * 60 * 1000));
             return localNow.toISOString().split('T')[0];
         }
+
         db.ref('depo_stok').on('value', (snapshot) => {
             const rawData = snapshot.val();
             inventory = [];
@@ -1370,6 +1404,7 @@
             renderDepotFilterButtons();
             renderUi();
         });
+
         function calculateLiveDashboardMetrics() {
             document.getElementById('dashTotalItems').textContent = inventory.length;
             let criticalCount = inventory.filter(item => {
@@ -1391,6 +1426,7 @@
             });
             document.getElementById('dashSktItems').textContent = sktUrgentCount;
         }
+
         function renderDepotFilterButtons() {
             const bar = document.getElementById('depotButtonsBar');
             if(!bar) return;
@@ -1404,6 +1440,7 @@
                 bar.appendChild(btn);
             });
         }
+
         function checkExpiredProducts(rawData) {
             if (!rawData) return;
             const todayStr = getTodayDateString();
@@ -1417,6 +1454,7 @@
                 }
             });
         }
+
         function updateSktAlertBtnState() {
             const btn = document.getElementById('sktAlertButton');
             if(!btn) return;
@@ -1435,9 +1473,11 @@
             btn.style.display = urgentCount > 0 ? "block" : "none";
             if(urgentCount > 0) btn.textContent = `⚠️ SKT Kritik (${urgentCount} Ürün)`;
         }
+
         function updateOrderProductDropdown() {
             filterSelectOptions();
         }
+
         window.addItemToBasket = function() {
             const prodKey = document.getElementById('orderProductSelect').value;
             const qtyInput = document.getElementById('orderQty');
@@ -1471,11 +1511,13 @@
             renderBasketVisual();
             showToast("Malzeme talep sepetine eklendi.");
         };
+
         window.removeItemFromBasket = function(index) {
             orderBasket.splice(index, 1);
             renderBasketVisual();
             showToast("Ürün sepetten çıkarıldı.", "warning");
         };
+
         function renderBasketVisual() {
             const ul = document.getElementById('basketListVisual');
             const emptyBox = document.getElementById('emptyBasketBox');
@@ -1497,6 +1539,7 @@
                 ul.appendChild(li);
             });
         }
+
         function renderUi() {
             const tbody = document.getElementById('liveMaterialsBody');
             const tfoot = document.getElementById('tableTotalFooter');
@@ -1542,10 +1585,12 @@
                         sktHtml = (item.skt < todayStr) ? `<span class="skt-badge skt-expired">❌ ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>` : `<span class="skt-badge skt-ok">📅 ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>`;
                     }
                 }
+                
                 let itemUniqueId = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
                 let fastButtonsHtml = '';
                 let dropdownButtonsHtml = '';
                 
+                // Rol bazlı butonların tırnak işaretleri ve çalışma mantığı tamamen düzeltildi
                 if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
                     fastButtonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>`;
                 } else if (currentRole === 'DEPO') {
@@ -1555,10 +1600,12 @@
                     fastButtonsHtml = `<button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>`;
                     dropdownButtonsHtml = `<button class="dropdown-item item-edit" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button> <button class="dropdown-item item-delete" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button>`;
                 }
+                
                 let moreActionTriggerHtml = '';
                 if(dropdownButtonsHtml !== '') {
                     moreActionTriggerHtml = `<div style="position:relative; display:inline-block;"><button class="btn-more-trigger" type="button" onclick="toggleRowDropdown(event, '${itemUniqueId}')">⋮</button><div class="actions-dropdown" id="drop_${itemUniqueId}">${dropdownButtonsHtml}</div></div>`;
                 }
+                
                 const tr = document.createElement('tr');
                 if (isCritical) {
                     tr.className = "row-critical-alert";
@@ -1566,6 +1613,7 @@
                 tr.innerHTML = `<td><strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}<span class="date-tag">Gnc: ${displayDate}</span></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><strong>${item.criticalLimit} ${item.unit}</strong></td><td>${sktHtml}</td><td>${statusHtml}</td><td class="action-btns" style="justify-content: center;">${fastButtonsHtml} ${moreActionTriggerHtml}</td>`;
                 tbody.appendChild(tr);
             });
+            
             let totalStrings = [];
             for (const [unit, sum] of Object.entries(totalsByUnit)) {
                 totalStrings.push(`${sum.toFixed(2)} ${unit}`);
@@ -1577,6 +1625,7 @@
                 tfoot.appendChild(footTr);
             }
         }
+
         window.openStockModal = function(uniqueId, action) {
             const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId));
             if(!item) return;
@@ -1610,10 +1659,12 @@
             }
             modal.style.display = "flex";
         };
+
         window.closeStockActionModal = function() {
             document.getElementById('stockActionModal').style.display = "none";
             currentModalProduct = null;
         };
+
         document.getElementById('stockActionForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if(!currentModalProduct) return;
@@ -1653,6 +1704,7 @@
             showToast("Stok envanter kaydı güncellendi.");
             closeStockActionModal();
         });
+
         window.openProductEditModal = function(uniqueId) {
             const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId));
             if(!item) return;
@@ -1664,10 +1716,12 @@
             document.getElementById('editProdSkt').value = item.skt || "";
             document.getElementById('productEditModal').style.display = "flex";
         };
+
         window.closeProductEditModal = function() {
             document.getElementById('productEditModal').style.display = "none";
             currentModalProduct = null;
         };
+
         document.getElementById('productEditForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if(!currentModalProduct) return;
@@ -1696,6 +1750,7 @@
                 showToast("Hata: " + err.message, "error");
             });
         });
+
         const orderFormEl = document.getElementById('orderForm');
         if(orderFormEl) {
             orderFormEl.addEventListener('submit', function(e) {
@@ -1733,17 +1788,21 @@
                 }
             });
         }
+
         window.filterByDepot = function(depotName) {
             activeDepotFilter = depotName;
             renderDepotFilterButtons();
             renderUi();
         };
+
         window.clearDateFilter = function() {
             document.getElementById('dateFilterInput').value = '';
             renderUi();
         };
+
         document.getElementById('dateFilterInput').addEventListener('change', renderUi);
         document.getElementById('searchInput').addEventListener('input', renderUi);
+
         const addFormEl = document.getElementById('addForm');
         if(addFormEl) {
             addFormEl.addEventListener('submit', function(e) {
@@ -1777,6 +1836,7 @@
                 if(trigger) trigger.textContent = "⚙️ ▼";
             });
         }
+
         window.deleteProductDirect = function(uniqueId) {
             const item = inventory.find(i => i.dbKey === uniqueId);
             if(!item) {
@@ -1792,6 +1852,7 @@
                 showToast("Malzeme depodan kaldırıldı.", "error");
             }
         };
+
         window.undoDeletedProduct = function(reportFbKey, prodName, bKey, bDepot, bUnit, bQtyStr, bLimit, bSkt, bLot) {
             if(currentRole !== 'YÖNETİCİ') {
                 showToast("Geri alma yetkisi sadece yöneticilere aittir!", "error");
@@ -1807,8 +1868,10 @@
                 });
             }
         };
+
         const reportModal = document.getElementById('reportModal');
         const ordersListModal = document.getElementById('ordersListModal');
+        
         document.getElementById('openReportBtn').addEventListener('click', () => {
             db.ref('depo_rapor').once('value', (snapshot) => {
                 const tbody = document.getElementById('reportTableBody');
@@ -1838,18 +1901,21 @@
                 reportModal.style.display = 'flex';
             });
         });
+
         window.deleteReportRow = function(fbKey) {
             if(currentRole !== 'YÖNETİCİ') return;
             if(confirm("Bu işlem kaydı geçmişten silinsin mi?")) {
                 db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click());
             }
         };
+
         window.clearAllReports = function() {
             if(currentRole !== 'YÖNETİCİ') return;
             if(confirm("Tüm işlem geçmişini kalıcı olarak silmek istediğinize emin misiniz?")) {
                 db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click());
             }
         };
+
         document.getElementById('openOrdersBtn').addEventListener('click', () => {
             db.ref('depo_siparisler').once('value', (snapshot) => {
                 const tbody = document.getElementById('ordersTableBody');
@@ -1879,20 +1945,24 @@
                 ordersListModal.style.display = 'flex';
             });
         });
+
         window.deleteOrderRow = function(fbKey) {
             if(currentRole !== 'YÖNETİCİ') return;
             if(confirm("Bu sipariş kaydı listeden silinsin mi?")) {
                 db.ref('depo_siparisler/' + fbKey).remove().then(() => document.getElementById('openOrdersBtn').click());
             }
         };
+
         window.clearAllOrders = function() {
             if(currentRole !== 'YÖNETİCİ') return;
             if(confirm("Tüm sipariş geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) {
                 db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click());
             }
         };
+
         document.getElementById('closeReportBtn').addEventListener('click', () => reportModal.style.display = 'none');
         document.getElementById('closeOrdersBtn').addEventListener('click', () => ordersListModal.style.display = 'none');
+        
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('isLoggedIn');
             window.location.replace('login.html');
