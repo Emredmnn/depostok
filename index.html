@@ -7,7 +7,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
     <style>
         /* --- GENEL KURUMSAL RENK PALETİ VE DEĞİŞKENLER --- */
         :root {
@@ -26,7 +25,6 @@
             --dropdown-bg: #ffffff;
             --dropdown-hover: #f1f5f9;
         }
-
         /* --- GECE MODU (DARK MODE) AKTİF RENKLERİ --- */
         [data-theme="dark"] {
             --secondary-color: #0f172a;
@@ -39,7 +37,6 @@
             --dropdown-hover: #334155;
             --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -52,7 +49,6 @@
             color: var(--text-dark);
             padding: 15px;
         }
-
         /* --- ÜST PANEL (HEADER) DÜZENİ --- */
         header {
             background: #00338d;
@@ -67,7 +63,6 @@
             justify-content: space-between;
             gap: 15px;
         }
-
         .header-top-row {
             display: flex;
             justify-content: space-between;
@@ -81,10 +76,10 @@
             align-items: center;
             gap: 20px;
         }
-        
         /* LOGO ALANININ ALBENİSİNİ VE BOYUTUNU ZİRVEYE TAŞIYAN PREMIUM ETKİLEŞİM KATMANI */
         .header-logo {
-            height: 74px; /* Boyut ideal kurumsal ölçüye büyütüldü */
+            height: 74px;
+            /* Boyut ideal kurumsal ölçüye büyütüldü */
             width: auto;
             object-fit: contain;
             border-radius: 8px;
@@ -102,7 +97,6 @@
             transform: scale(1.05) translateY(-1px);
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), 0 0 20px rgba(255, 255, 255, 0.3);
         }
-
         .header-title h1 {
             font-size: 23px;
             font-weight: 700;
@@ -126,9 +120,12 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(5px);
         }
-        .badge { font-weight: bold; }
-        .live-clock { font-weight: 500; }
-
+        .badge {
+            font-weight: bold;
+        }
+        .live-clock {
+            font-weight: 500;
+        }
         .theme-toggle-btn {
             background: rgba(255, 255, 255, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -139,8 +136,9 @@
             font-size: 13px;
             font-weight: bold;
         }
-        .theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.25); }
-
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
         .header-actions-row {
             display: flex;
             gap: 12px;
@@ -170,26 +168,87 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 51, 141, 0.15);
         }
-        .btn-logout { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
-        .btn-logout:hover { background: #dc3545; color: white; border-color: #dc3545; }
-
+        .btn-logout {
+            background: #fce8e6;
+            color: #c5221f;
+            border: 1px solid #fad2cf;
+        }
+        .btn-logout:hover {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
         /* --- DASHBOARD ÖZET KARTLARI --- */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: var(--card-bg); border-radius: var(--border-radius); padding: 15px 20px; box-shadow: var(--box-shadow); border: 1px solid var(--table-border); display: flex; align-items: center; justify-content: space-between; }
-        .stat-card-info h3 { font-size: 11.5px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-card-info p { font-size: 24px; font-weight: 800; color: var(--text-dark); margin-top: 4px; }
-        .stat-card-icon { font-size: 24px; width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .bg-blue-soft { background: rgba(0, 51, 141, 0.06); color: #00338d; }
-        .bg-red-soft { background: rgba(220, 53, 69, 0.06); color: #dc3545; }
-        .bg-orange-soft { background: rgba(255, 152, 0, 0.06); color: #ff9800; }
-
-        @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; gap: 10px; } }
-
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 15px 20px;
+            box-shadow: var(--box-shadow);
+            border: 1px solid var(--table-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-card-info h3 {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-card-info p {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-top: 4px;
+        }
+        .stat-card-icon {
+            font-size: 24px;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bg-blue-soft {
+            background: rgba(0, 51, 141, 0.06);
+            color: #00338d;
+        }
+        .bg-red-soft {
+            background: rgba(220, 53, 69, 0.06);
+            color: #dc3545;
+        }
+        .bg-orange-soft {
+            background: rgba(255, 152, 0, 0.06);
+            color: #ff9800;
+        }
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
         /* --- ANA SÜTUNLAR --- */
-        .main-container { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        .two-columns { grid-template-columns: 380px 1fr; }
-        .forms-stack { display: flex; flex-direction: column; gap: 20px; }
-
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        .two-columns {
+            grid-template-columns: 380px 1fr;
+        }
+        .forms-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
         .card {
             background: var(--card-bg);
             border-radius: var(--border-radius);
@@ -208,179 +267,615 @@
             align-items: center;
             gap: 8px;
         }
-        [data-theme="dark"] .card-title { color: #f8fafc; }
-
+        [data-theme="dark"] .card-title {
+            color: #f8fafc;
+        }
         /* --- AKORDEON FORM ALTYAPISI --- */
         .accordion-trigger {
-            display: flex; align-items: center; justify-content: space-between; width: 100%;
-            background: var(--input-bg); border: 1px solid var(--table-border); padding: 10px 14px;
-            border-radius: 8px; font-size: 13px; font-weight: 700; color: var(--text-dark); cursor: pointer;
-            margin-top: 15px; margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--table-border);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            margin-top: 15px;
+            margin-bottom: 5px;
         }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; padding: 0 2px; }
-
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding: 0 2px;
+        }
         /* --- MODERN SEARCHABLE DROPDOWN KOMBİNASYONU --- */
-        .searchable-select-container { position: relative; width: 100%; }
-        .select-search-input { width: 100%; padding: 11px 12px; border: 2px solid var(--table-border); border-radius: 8px; font-size: 13.5px; outline: none; background: var(--input-bg); color: var(--text-dark); }
-        .select-search-input:focus { border-color: #00338d; background: var(--card-bg); }
-        
+        .searchable-select-container {
+            position: relative;
+            width: 100%;
+        }
+        .select-search-input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 2px solid var(--table-border);
+            border-radius: 8px;
+            font-size: 13.5px;
+            outline: none;
+            background: var(--input-bg);
+            color: var(--text-dark);
+        }
+        .select-search-input:focus {
+            border-color: #00338d;
+            background: var(--card-bg);
+        }
         .select-options-panel {
-            display: none; position: absolute; top: 46px; left: 0; width: 100%; max-height: 180px;
-            background: var(--dropdown-bg); border: 2px solid var(--table-border); border-radius: 8px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1); z-index: 1000; overflow-y: auto;
+            display: none;
+            position: absolute;
+            top: 46px;
+            left: 0;
+            width: 100%;
+            max-height: 180px;
+            background: var(--dropdown-bg);
+            border: 2px solid var(--table-border);
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+            overflow-y: auto;
         }
         .select-option-item {
-            padding: 10px 12px; font-size: 13px; font-weight: 600; color: var(--text-dark);
-            cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--table-border);
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--table-border);
         }
-        .select-option-item:hover { background: var(--dropdown-hover); }
-        .select-option-item span.qty-badge { font-size: 11px; background: rgba(0, 51, 141, 0.06); color: #00338d; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
-
+        .select-option-item:hover {
+            background: var(--dropdown-hover);
+        }
+        .select-option-item span.qty-badge {
+            font-size: 11px;
+            background: rgba(0, 51, 141, 0.06);
+            color: #00338d;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
         /* --- DEPO FİLTRELEME BAR --- */
-        .depot-filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 15px; scrollbar-width: thin; }
+        .depot-filter-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            scrollbar-width: thin;
+        }
         .btn-depot-filter {
-            background: var(--card-bg); color: var(--text-light); border: 1px solid var(--table-border);
-            padding: 8px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s;
+            background: var(--card-bg);
+            color: var(--text-light);
+            border: 1px solid var(--table-border);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
         }
-        .btn-depot-filter:hover { background: #f1f5f9; color: #00338d; }
-        .btn-depot-filter.active { background: #00338d; color: white; border-color: #00338d; box-shadow: 0 2px 4px rgba(0, 51, 141, 0.25); }
-        [data-theme="dark"] .btn-depot-filter.active { background: #38bdf8; border-color: #38bdf8; color: #0f172a; }
-
+        .btn-depot-filter:hover {
+            background: #f1f5f9;
+            color: #00338d;
+        }
+        .btn-depot-filter.active {
+            background: #00338d;
+            color: white;
+            border-color: #00338d;
+            box-shadow: 0 2px 4px rgba(0, 51, 141, 0.25);
+        }
+        [data-theme="dark"] .btn-depot-filter.active {
+            background: #38bdf8;
+            border-color: #38bdf8;
+            color: #0f172a;
+        }
         /* --- INPUT VE FORMLAR --- */
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--text-light); }
-        
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-light);
+        }
         .form-control {
-            width: 100%; padding: 10px; border: 2px solid var(--table-border); border-radius: 6px;
-            font-size: 14px; outline: none; transition: all 0.2s; background-color: var(--input-bg); color: var(--text-dark);
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--table-border);
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+            background-color: var(--input-bg);
+            color: var(--text-dark);
         }
-        .form-control:focus { border-color: #00338d; box-shadow: 0 0 0 3px rgba(0, 51, 141, 0.12); }
-        
+        .form-control:focus {
+            border-color: #00338d;
+            box-shadow: 0 0 0 3px rgba(0, 51, 141, 0.12);
+        }
         .btn-submit {
-            width: 100%; background: var(--success-color); color: white; border: none; padding: 12px;
-            border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s;
-            margin-top: 10px; box-shadow: 0 2px 4px rgba(40,167,69,0.15);
+            width: 100%;
+            background: var(--success-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(40,167,69,0.15);
         }
-        .btn-submit:hover { background: #218838; }
-
+        .btn-submit:hover {
+            background: #218838;
+        }
         /* --- CANLI ARAMA PANELI --- */
-        .search-filter-grid { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 15px; align-items: center; }
-        .search-wrapper { position: relative; width: 100%; }
-        .date-filter-wrapper { display: flex; align-items: center; gap: 5px; background: var(--card-bg); border: 2px solid var(--table-border); padding: 4px 8px; border-radius: 6px; }
-        .date-filter-wrapper input { border: none; outline: none; font-size: 13px; color: var(--text-dark); background: transparent; cursor: pointer; }
-        .btn-clear-date { background: none; border: none; color: #aaa; font-size: 16px; cursor: pointer; padding: 0 4px; }
-
-        /* --- TABLO TASARIMI --- */
-        .table-responsive { width: 100%; overflow-x: auto; border: 1px solid var(--table-border); border-radius: 6px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; background: var(--card-bg); }
-        th { background-color: var(--secondary-color); color: var(--text-light); font-weight: 600; padding: 11px 10px; border-bottom: 2px solid var(--table-border); white-space: nowrap; }
-        td { padding: 9px 10px; border-bottom: 1px solid var(--table-border); vertical-align: middle; color: var(--text-dark); }
-        tr:hover td { background-color: rgba(0, 51, 141, 0.01); }
-
-        .row-critical-alert td { background-color: rgba(220, 53, 69, 0.03) !important; animation: pulse-row-red 3s infinite ease-in-out; }
-        @keyframes pulse-row-red { 0%, 100% { background-color: rgba(220, 53, 69, 0.03); } 50% { background-color: rgba(220, 53, 69, 0.07); } }
-
-        @keyframes criticalPulseBtn { 0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6); } 70% { box-shadow: 0 0 0 5px rgba(40, 167, 69, 0); } 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); } }
-        .row-critical-alert .btn-add-stock { animation: criticalPulseBtn 1.5s infinite; font-weight: 800; }
-
-        /* --- EMPTY STATES --- */
-        .empty-state-container { text-align: center; padding: 45px 20px; color: var(--text-light); }
-        .empty-state-icon { font-size: 44px; color: var(--text-light); margin-bottom: 10px; opacity: 0.5; }
-        .empty-state-container h4 { font-size: 14.5px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
-        .empty-state-container p { font-size: 12.5px; }
-
-        .empty-basket-box {
-            border: 2px dashed var(--table-border); border-radius: 8px; padding: 25px 15px;
-            text-align: center; color: var(--text-light); background: var(--input-bg); margin-bottom: 12px;
+        .search-filter-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
         }
-        .empty-basket-box span.icon { font-size: 32px; display: block; margin-bottom: 6px; opacity: 0.6; }
-
-        .depot-tag { background: #e2e8f0; color: #475569; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-        .lot-tag { background: #e0f2fe; color: #0369a1; padding: 2px 5px; border-radius: 4px; font-size: 10.5px; font-weight: 700; display: inline-block; margin-top: 2px; border: 1px solid #bae6fd; }
-        .date-tag { display: block; font-size: 11px; color: #94a3b8; margin-top: 2px; font-weight: normal; }
-        
-        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
-        .status-safe { background: #d4edda; color: #155724; }
-        .status-critical { background: #f8d7da; color: #721c24; font-weight: 700; }
-
-        .skt-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
-        .skt-none { background: #f1f5f9; color: #64748b; }
-        .skt-ok { background: #e0f2fe; color: #0369a1; }
-        .skt-expired { background: #fee2e2; color: #b91c1c; }
-
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .date-filter-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: var(--card-bg);
+            border: 2px solid var(--table-border);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .date-filter-wrapper input {
+            border: none;
+            outline: none;
+            font-size: 13px;
+            color: var(--text-dark);
+            background: transparent;
+            cursor: pointer;
+        }
+        .btn-clear-date {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+        /* --- TABLO TASARIMI --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--table-border);
+            border-radius: 6px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+            background: var(--card-bg);
+        }
+        th {
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            font-weight: 600;
+            padding: 11px 10px;
+            border-bottom: 2px solid var(--table-border);
+            white-space: nowrap;
+        }
+        td {
+            padding: 9px 10px;
+            border-bottom: 1px solid var(--table-border);
+            vertical-align: middle;
+            color: var(--text-dark);
+        }
+        tr:hover td {
+            background-color: rgba(0, 51, 141, 0.01);
+        }
+        .row-critical-alert td {
+            background-color: rgba(220, 53, 69, 0.03) !important;
+            animation: pulse-row-red 3s infinite ease-in-out;
+        }
+        @keyframes pulse-row-red {
+            0%, 100% { background-color: rgba(220, 53, 69, 0.03); }
+            50% { background-color: rgba(220, 53, 69, 0.07); }
+        }
+        @keyframes criticalPulseBtn {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6); }
+            70% { box-shadow: 0 0 0 5px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+        .row-critical-alert .btn-add-stock {
+            animation: criticalPulseBtn 1.5s infinite;
+            font-weight: 800;
+        }
+        /* --- EMPTY STATES --- */
+        .empty-state-container {
+            text-align: center;
+            padding: 45px 20px;
+            color: var(--text-light);
+        }
+        .empty-state-icon {
+            font-size: 44px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+        .empty-state-container h4 {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .empty-state-container p {
+            font-size: 12.5px;
+        }
+        .empty-basket-box {
+            border: 2px dashed var(--table-border);
+            border-radius: 8px;
+            padding: 25px 15px;
+            text-align: center;
+            color: var(--text-light);
+            background: var(--input-bg);
+            margin-bottom: 12px;
+        }
+        .empty-basket-box span.icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 6px;
+            opacity: 0.6;
+        }
+        .depot-tag {
+            background: #e2e8f0;
+            color: #475569;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .lot-tag {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 10.5px;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 2px;
+            border: 1px solid #bae6fd;
+        }
+        .date-tag {
+            display: block;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 2px;
+            font-weight: normal;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .status-safe {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-critical {
+            background: #f8d7da;
+            color: #721c24;
+            font-weight: 700;
+        }
+        .skt-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .skt-none {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        .skt-ok {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+        .skt-expired {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
         /* --- SKELETON LOADER --- */
-        @keyframes skeletonShimmer { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
-        .skeleton-row td { padding: 15px 10px; }
-        .skeleton-block { height: 14px; background: #e2e8f0; background-image: linear-gradient(90deg, #e2e8f0 0px, #cbd5e1 40px, #e2e8f0 8px); background-size: 400px 100%; background-repeat: no-repeat; animation: skeletonShimmer 1.4s infinite linear; border-radius: 4px; width: 85%; }
-
+        @keyframes skeletonShimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: 200px 0; }
+        }
+        .skeleton-row td {
+            padding: 15px 10px;
+        }
+        .skeleton-block {
+            height: 14px;
+            background: #e2e8f0;
+            background-image: linear-gradient(90deg, #e2e8f0 0px, #cbd5e1 40px, #e2e8f0 8px);
+            background-size: 400px 100%;
+            background-repeat: no-repeat;
+            animation: skeletonShimmer 1.4s infinite linear;
+            border-radius: 4px;
+            width: 85%;
+        }
         /* --- DROPDOWN MENÜ YAPISI --- */
-        .action-btns { display: flex; gap: 5px; flex-wrap: nowrap; white-space: nowrap; align-items: center; position: relative; }
-        .action-btn { border: none; padding: 6px 11px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; }
-        .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
-        
+        .action-btns {
+            display: flex;
+            gap: 5px;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+            align-items: center;
+            position: relative;
+        }
+        .action-btn {
+            border: none;
+            padding: 6px 11px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(0.9);
+        }
         .btn-add-stock { background-color: var(--success-color); }
         .btn-drop-stock { background-color: #ff9800; }
         .btn-waste-stock { background-color: #795548; }
-
         .btn-more-trigger {
-            background: transparent; color: var(--text-light); border: 1px solid var(--table-border);
-            padding: 5px 10px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer;
-            display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--table-border);
+            padding: 5px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
         }
-        .btn-more-trigger:hover { background: var(--secondary-color); color: var(--text-dark); border-color: var(--text-light); }
-
+        .btn-more-trigger:hover {
+            background: var(--secondary-color);
+            color: var(--text-dark);
+            border-color: var(--text-light);
+        }
         .actions-dropdown {
-            display: none; position: absolute; right: 0; top: 32px; background: var(--dropdown-bg);
-            border: 1px solid var(--table-border); border-radius: 6px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            z-index: 100; min-width: 110px; overflow: hidden; animation: slideDropdown 0.15s ease-out;
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 32px;
+            background: var(--dropdown-bg);
+            border: 1px solid var(--table-border);
+            border-radius: 6px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            z-index: 100;
+            min-width: 110px;
+            overflow: hidden;
+            animation: slideDropdown 0.15s ease-out;
         }
-        @keyframes slideDropdown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-        
+        @keyframes slideDropdown {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .dropdown-item {
-            width: 100%; padding: 9px 12px; text-align: left; background: none; border: none;
-            font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;
+            width: 100%;
+            padding: 9px 12px;
+            text-align: left;
+            background: none;
+            border: none;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             color: var(--text-dark);
         }
-        .dropdown-item:hover { background: var(--dropdown-hover); }
+        .dropdown-item:hover {
+            background: var(--dropdown-hover);
+        }
         .item-edit { color: #17a2b8; }
         .item-delete { color: var(--danger-color); }
-
-        .total-row { background-color: var(--secondary-color); font-weight: bold; color: var(--text-dark); border-top: 2px solid #cbd5e1; }
-        .total-row td { padding: 14px 10px; font-size: 13px; }
-
-        /* --- SİSTEMİK TOAST BİLDİRİM MİMARİSİ --- */
-        #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .custom-toast {
-            background: #ffffff; color: #1e293b; padding: 14px 22px; border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15); font-size: 13px; font-weight: 700;
-            display: flex; align-items: center; gap: 10px; min-width: 280px; max-width: 380px;
-            pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; border-left: 5px solid #cbd5e1;
+        .total-row {
+            background-color: var(--secondary-color);
+            font-weight: bold;
+            color: var(--text-dark);
+            border-top: 2px solid #cbd5e1;
         }
-        @keyframes toastIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(40px); opacity: 0; } }
+        .total-row td {
+            padding: 14px 10px;
+            font-size: 13px;
+        }
+        /* --- SİSTEMİK TOAST BİLDİRİM MİMARİSİ --- */
+        #toastContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .custom-toast {
+            background: #ffffff;
+            color: #1e293b;
+            padding: 14px 22px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 280px;
+            max-width: 380px;
+            pointer-events: auto;
+            animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            border-left: 5px solid #cbd5e1;
+        }
+        @keyframes toastIn {
+            from { transform: translateX(40px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes toastOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(40px); opacity: 0; }
+        }
         .toast-success { border-left-color: var(--success-color); }
         .toast-error { border-left-color: var(--danger-color); }
         .toast-warning { border-left-color: var(--warning-color); }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px; }
-        .modal-content { background: var(--card-bg); border-radius: var(--border-radius); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.25s ease-out; overflow: hidden; border: 1px solid var(--table-border); }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15,23,42,0.6);
+            backdrop-filter: blur(3px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 15px;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15);
+            animation: slideDown 0.25s ease-out;
+            overflow: hidden;
+            border: 1px solid var(--table-border);
+        }
         .modal-large { max-width: 850px; }
-        .modal-header { background: var(--secondary-color); padding: 15px 20px; border-bottom: 1px solid var(--table-border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-header h3 { font-size: 16px; color: var(--text-dark); font-weight: 600; }
-        .modal-close-btn { background: none; border: none; font-size: 22px; color: #94a3b8; cursor: pointer; }
-        .modal-body { padding: 20px; max-height: 75vh; overflow-y: auto; }
-        .modal-footer-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
-        .btn-secondary { background: #e2e8f0; color: #475569; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .badge-order { padding: 3px 6px; border-radius: 4px; font-size: 11px; background: #e0f2fe; color: #0369a1; display: inline-block; }
-        .btn-undo { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; margin-right: 4px; }
-        .btn-report-del { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
-        .btn-print-system { background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; margin-top: 15px; width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; }
+        .modal-header {
+            background: var(--secondary-color);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--table-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            font-size: 16px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: #94a3b8;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 20px;
+            max-height: 75vh;
+            overflow-y: auto;
+        }
+        .modal-footer-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #475569;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .badge-order {
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            background: #e0f2fe;
+            color: #0369a1;
+            display: inline-block;
+        }
+        .btn-undo {
+            background: #e6f4ea;
+            color: #137333;
+            border: 1px solid #ceead6;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 4px;
+        }
+        .btn-report-del {
+            background: #fce8e6;
+            color: #c5221f;
+            border: 1px solid #fad2cf;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-print-system {
+            background: #6c757d;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: bold;
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-
     <div id="toastContainer"></div>
-
     <header>
         <div class="header-top-row">
             <div class="brand-container">
@@ -403,7 +898,6 @@
             <button class="nav-btn btn-logout" id="logoutBtn">❌ Güvenli Çıkış</button>
         </div>
     </header>
-
     <div class="dashboard-grid">
         <div class="stat-card">
             <div class="stat-card-info">
@@ -427,10 +921,8 @@
             <div class="stat-card-icon bg-orange-soft">⏳</div>
         </div>
     </div>
-
     <div class="main-container" id="mainContainer">
         <div id="addProductColumn" class="forms-stack">
-            
             <div class="card">
                 <div class="card-title">✨ Yeni Malzeme Tanımlama</div>
                 <form id="addForm">
@@ -471,9 +963,9 @@
                         <label>Kritik Stok Sınırı (Limit):</label>
                         <input type="number" step="0.01" class="form-control" id="newProdLimit" value="5" required>
                     </div>
-
                     <div class="accordion-trigger" type="button" onclick="toggleAccordion(this)">
-                        <span>Gelişmiş / Detaylı Bilgiler (Opsiyonel)</span> <span>⚙️ ▼</span>
+                        <span>Gelişmiş / Detaylı Bilgiler (Opsiyonel)</span>
+                        <span>⚙️ ▼</span>
                     </div>
                     <div class="accordion-content" id="advancedFormFields">
                         <div class="form-group" style="margin-top:8px;">
@@ -485,17 +977,14 @@
                             <input type="date" class="form-control" id="newProdSkt">
                         </div>
                     </div>
-
                     <button type="submit" class="btn-submit">Kayıt Aç ve Envantere Ekle 💾</button>
                 </form>
             </div>
-
             <div class="card">
                 <div class="card-title">🛒 Malzeme Talep Listesi / Sepet <span id="basketCount" style="font-size:13px; color:var(--text-light); margin-left:5px;">(0 Ürün)</span></div>
                 <form id="orderForm">
                     <div class="form-group">
                         <label>Malzeme Seçin:</label>
-                        
                         <div class="searchable-select-container" id="selectContainerBlock">
                             <input type="text" id="customSelectSearch" class="select-search-input" placeholder="🔍 Seçmek için malzeme adı yazın..." onfocus="openSelectDropdown(event)" onkeyup="filterSelectOptions()">
                             <input type="hidden" id="orderProductSelect" value="">
@@ -507,7 +996,6 @@
                         <input type="number" step="0.01" class="form-control" id="orderQty" placeholder="Talep Edilecek Adet/Kg">
                     </div>
                     <button type="button" class="btn-submit" style="background:#00338d; margin-bottom:15px;" onclick="addItemToBasket()">Listeye / Sepete Ekle ➕</button>
-                    
                     <div id="basketVisualWrapper">
                         <div class="empty-basket-box" id="emptyBasketBox">
                             <span class="icon">🛒</span>
@@ -516,7 +1004,6 @@
                         </div>
                         <ul id="basketListVisual" style="list-style: none; display:none; background: var(--input-bg); padding:10px; border-radius:8px;"></ul>
                     </div>
-
                     <div class="form-group" style="display: none;">
                         <label>Hedef E-Posta:</label>
                         <input type="email" class="form-control" id="orderEmail" value="bahcelievlermemorialct@gmail.com" required>
@@ -529,7 +1016,6 @@
                 </form>
             </div>
         </div>
-
         <div class="card">
             <div class="card-title">🟢 Anlık Stok Durumu & Malzeme Listesi</div>
             <div class="depot-filter-bar" id="depotButtonsBar">
@@ -567,7 +1053,6 @@
             <button class="btn-print-system" onclick="window.print()">🖨️ Sayfayı Yazdır / Resmi PDF Raporu Al</button>
         </div>
     </div>
-
     <div class="modal-overlay" id="stockActionModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -601,7 +1086,6 @@
             </form>
         </div>
     </div>
-
     <div class="modal-overlay" id="productEditModal">
         <div class="modal-content">
             <div class="modal-header" style="background:#17a2b8; color:white;">
@@ -641,7 +1125,6 @@
             </form>
         </div>
     </div>
-
     <div class="modal-overlay" id="sktUrgentModal">
         <div class="modal-content modal-large">
             <div class="modal-header" style="background:#fff3cd;">
@@ -670,7 +1153,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal-overlay" id="reportModal">
         <div class="modal-content modal-large">
             <div class="modal-header">
@@ -698,7 +1180,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal-overlay" id="ordersListModal">
         <div class="modal-content modal-large">
             <div class="modal-header">
@@ -726,12 +1207,11 @@
             </div>
         </div>
     </div>
-
     <script>
-        if(localStorage.getItem('isLoggedIn') !== 'true') { window.location.replace('login.html'); }
-
+        if(localStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.replace('login.html');
+        }
         emailjs.init("LzIhLTNYH47AasrBj");
-
         const currentRole = (localStorage.getItem('userRole') || 'YÖNETİCİ').toUpperCase();
         document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`;
         
@@ -739,12 +1219,13 @@
         const addProductColumn = document.getElementById('addProductColumn');
         
         if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
-            if(addProductColumn) { addProductColumn.remove(); }
+            if(addProductColumn) {
+                addProductColumn.remove();
+            }
             mainContainer.classList.remove('two-columns');
         } else {
             mainContainer.classList.add('two-columns');
         }
-
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             if(!container) return;
@@ -755,15 +1236,15 @@
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.animation = 'toastOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                setTimeout(() => { toast.remove(); }, 300);
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
             }, 3000);
         }
-
         if(localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             document.getElementById('themeToggleBtn').textContent = "☀️ Gündüz Modu";
         }
-
         window.toggleThemeMode = function() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const btn = document.getElementById('themeToggleBtn');
@@ -779,7 +1260,6 @@
                 showToast("Gece moduna geçildi.", "success");
             }
         };
-
         window.toggleRowDropdown = function(event, id) {
             event.stopPropagation();
             document.querySelectorAll('.actions-dropdown').forEach(el => {
@@ -789,7 +1269,6 @@
             if(!targetDrop) return;
             targetDrop.style.display = targetDrop.style.display === 'block' ? 'none' : 'block';
         };
-
         document.addEventListener('click', (event) => {
             document.querySelectorAll('.actions-dropdown').forEach(el => el.style.display = 'none');
             const selectContainer = document.getElementById('selectContainerBlock');
@@ -797,13 +1276,11 @@
                 document.getElementById('customSelectOptionsPanel').style.display = 'none';
             }
         });
-
         window.openSelectDropdown = function(event) {
             if(event) event.stopPropagation();
             document.getElementById('customSelectOptionsPanel').style.display = 'block';
             filterSelectOptions();
         };
-
         window.filterSelectOptions = function() {
             const txt = document.getElementById('customSelectSearch').value.toUpperCase();
             const panel = document.getElementById('customSelectOptionsPanel');
@@ -812,20 +1289,17 @@
             
             let sortedInv = [...inventory].sort((a,b) => a.name.localeCompare(b.name, 'tr'));
             let matchedCount = 0;
-
             sortedInv.forEach(item => {
                 let labelText = item.name;
                 if(item.lot) labelText += ` [LOT: ${item.lot}]`;
                 if(item.skt && !item.skt.includes('undefined')) {
                     labelText += ` (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})`;
                 }
-
                 if(labelText.toUpperCase().indexOf(txt) > -1) {
                     matchedCount++;
                     const div = document.createElement('div');
                     div.className = "select-option-item";
                     div.innerHTML = `<span>📦 ${labelText}</span> <span class="qty-badge">${item.quantity} ${item.unit}</span>`;
-                    
                     div.addEventListener('click', (e) => {
                         e.stopPropagation();
                         document.getElementById('customSelectSearch').value = labelText;
@@ -835,12 +1309,10 @@
                     panel.appendChild(div);
                 }
             });
-
             if(matchedCount === 0) {
                 panel.innerHTML = `<div style="padding:12px; font-size:12px; color:#aaa; text-align:center;">Uyuşan malzeme bulunamadı.</div>`;
             }
         };
-
         window.toggleAccordion = function(element) {
             const content = document.getElementById('advancedFormFields');
             const arrow = element.querySelector('span:last-child');
@@ -852,7 +1324,6 @@
                 arrow.textContent = "⚙️ ▲";
             }
         };
-
         function startLiveClock() {
             const clockElement = document.getElementById('liveClockDisplay');
             setInterval(() => {
@@ -863,34 +1334,32 @@
             }, 1000);
         }
         startLiveClock();
-
         const firebaseConfig = { databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
-
         let inventory = [];
         let activeDepotFilter = 'HEPSİ';
         let orderBasket = [];
         let currentModalProduct = null;
         let currentModalAction = "";
         let isNewPartyWithSkt = false;
-
         const definedDepots = ['HEPSİ', 'ET +4', 'ET -18', 'PASTANE +4', 'PASTANE -18', 'SEBZE +4', 'SEBZE -18', 'ŞARKÜTERİ', 'KURU GIDA', 'KİMYASAL', 'SARF DEPO'];
-
+        
         function getTodayDateString() {
             const now = new Date();
             const offset = now.getTimezoneOffset();
             const localNow = new Date(now.getTime() - (offset * 60 * 1000));
             return localNow.toISOString().split('T')[0];
         }
-
         db.ref('depo_stok').on('value', (snapshot) => {
             const rawData = snapshot.val();
             inventory = [];
             if (rawData) {
                 Object.keys(rawData).forEach(key => {
                     let item = rawData[key];
-                    if(!item.dbKey || item.dbKey.includes('undefined')) { item.dbKey = key; }
+                    if(!item.dbKey || item.dbKey.includes('undefined')) {
+                        item.dbKey = key;
+                    }
                     inventory.push(item);
                 });
             }
@@ -901,7 +1370,6 @@
             renderDepotFilterButtons();
             renderUi();
         });
-
         function calculateLiveDashboardMetrics() {
             document.getElementById('dashTotalItems').textContent = inventory.length;
             let criticalCount = inventory.filter(item => {
@@ -909,7 +1377,6 @@
                 return (item.quantity <= limit);
             }).length;
             document.getElementById('dashCriticalItems').textContent = criticalCount;
-
             const todayStr = getTodayDateString();
             let sktUrgentCount = 0;
             inventory.forEach(item => {
@@ -917,12 +1384,13 @@
                     let todayTime = new Date(todayStr).getTime();
                     let sktTime = new Date(item.skt).getTime();
                     let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
-                    if(diffDays >= 0 && diffDays <= 1) { sktUrgentCount++; }
+                    if(diffDays >= 0 && diffDays <= 1) {
+                        sktUrgentCount++;
+                    }
                 }
             });
             document.getElementById('dashSktItems').textContent = sktUrgentCount;
         }
-
         function renderDepotFilterButtons() {
             const bar = document.getElementById('depotButtonsBar');
             if(!bar) return;
@@ -936,7 +1404,6 @@
                 bar.appendChild(btn);
             });
         }
-
         function checkExpiredProducts(rawData) {
             if (!rawData) return;
             const todayStr = getTodayDateString();
@@ -944,16 +1411,12 @@
                 const item = rawData[key];
                 if (item.skt && item.skt < todayStr) {
                     const now = new Date();
-                    db.ref('depo_rapor').push({
-                        time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(), user: 'SİSTEM', product: item.name, type: 'SKT OTOMATİK SİLME', qty: `${item.quantity} ${item.unit}`,
-                        backupKey: key, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt, backupLot: item.lot || null
-                    });
+                    db.ref('depo_rapor').push({ time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(), user: 'SİSTEM', product: item.name, type: 'SKT OTOMATİK SİLME', qty: `${item.quantity} ${item.unit}`, backupKey: key, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt, backupLot: item.lot || null });
                     db.ref('depo_stok/' + key).remove();
                     showToast(`"${item.name}" SKT dolduğu için sistem tarafından otomatik temizlendi.`, "error");
                 }
             });
         }
-
         function updateSktAlertBtnState() {
             const btn = document.getElementById('sktAlertButton');
             if(!btn) return;
@@ -964,28 +1427,38 @@
                     let todayTime = new Date(todayStr).getTime();
                     let sktTime = new Date(item.skt).getTime();
                     let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
-                    if(diffDays >= 0 && diffDays <= 1) { urgentCount++; }
+                    if(diffDays >= 0 && diffDays <= 1) {
+                        urgentCount++;
+                    }
                 }
             });
             btn.style.display = urgentCount > 0 ? "block" : "none";
             if(urgentCount > 0) btn.textContent = `⚠️ SKT Kritik (${urgentCount} Ürün)`;
         }
-
         function updateOrderProductDropdown() {
             filterSelectOptions();
         }
-
         window.addItemToBasket = function() {
             const prodKey = document.getElementById('orderProductSelect').value;
             const qtyInput = document.getElementById('orderQty');
             const qty = parseFloat(qtyInput.value);
-            if(!prodKey) { showToast("Lütfen listeden bir malzeme seçin!", "warning"); return; }
-            if(isNaN(qty) || qty <= 0) { showToast("Lütfen geçerli bir sipariş miktarı girin!", "warning"); return; }
+            if(!prodKey) {
+                showToast("Lütfen listeden bir malzeme seçin!", "warning");
+                return;
+            }
+            if(isNaN(qty) || qty <= 0) {
+                showToast("Lütfen geçerli bir sipariş miktarı girin!", "warning");
+                return;
+            }
             const item = inventory.find(i => (i.dbKey === prodKey || i.name === prodKey));
             if(!item) return;
             let displayName = item.name;
-            if(item.lot) { displayName += ` [LOT: ${item.lot}]`; }
-            if(item.skt && !item.skt.includes('undefined')) { displayName += ` (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})`; }
+            if(item.lot) {
+                displayName += ` [LOT: ${item.lot}]`;
+            }
+            if(item.skt && !item.skt.includes('undefined')) {
+                displayName += ` (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})`;
+            }
             const existingIndex = orderBasket.findIndex(b => b.key === (item.dbKey || item.name));
             if(existingIndex > -1) {
                 orderBasket[existingIndex].qty = parseFloat((orderBasket[existingIndex].qty + qty).toFixed(2));
@@ -998,9 +1471,11 @@
             renderBasketVisual();
             showToast("Malzeme talep sepetine eklendi.");
         };
-
-        window.removeItemFromBasket = function(index) { orderBasket.splice(index, 1); renderBasketVisual(); showToast("Ürün sepetten çıkarıldı.", "warning"); };
-
+        window.removeItemFromBasket = function(index) {
+            orderBasket.splice(index, 1);
+            renderBasketVisual();
+            showToast("Ürün sepetten çıkarıldı.", "warning");
+        };
         function renderBasketVisual() {
             const ul = document.getElementById('basketListVisual');
             const emptyBox = document.getElementById('emptyBasketBox');
@@ -1008,7 +1483,6 @@
             if(!ul || !emptyBox || !countSpan) return;
             ul.innerHTML = "";
             countSpan.textContent = `(${orderBasket.length} Ürün)`;
-            
             if(orderBasket.length === 0) {
                 emptyBox.style.display = 'block';
                 ul.style.display = 'none';
@@ -1016,7 +1490,6 @@
             }
             emptyBox.style.display = 'none';
             ul.style.display = 'block';
-            
             orderBasket.forEach((item, index) => {
                 const li = document.createElement('li');
                 li.className = "basket-item";
@@ -1024,7 +1497,6 @@
                 ul.appendChild(li);
             });
         }
-
         function renderUi() {
             const tbody = document.getElementById('liveMaterialsBody');
             const tfoot = document.getElementById('tableTotalFooter');
@@ -1034,45 +1506,33 @@
             tbody.innerHTML = '';
             if(tfoot) tfoot.innerHTML = '';
             const todayStr = getTodayDateString();
-
+            
             let filteredInventory = inventory.filter(item => {
                 let matchesSearch = item.name.toLowerCase().includes(filterText) || (item.lot && item.lot.toLowerCase().includes(filterText));
                 let matchesDate = selectedDate ? (item.lastUpdatedDate === selectedDate) : true;
                 let matchesDepot = (activeDepotFilter === 'HEPSİ' || item.depot === activeDepotFilter);
                 return matchesSearch && matchesDepot && matchesDate;
             });
-
             if(filteredInventory.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7">
-                            <div class="empty-state-container">
-                                <div class="empty-state-icon">🔍</div>
-                                <h4>Aradığınız Malzeme Envanterde Yok</h4>
-                                <p>Arama kelimesini değiştirebilir veya filtre çubuğundan farklı bir depo seçerek arama yapabilirsiniz.</p>
-                            </div>
-                        </td>
-                    </tr>`;
+                tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state-container"><div class="empty-state-icon">🔍</div><h4>Aradığınız Malzeme Envanterde Yok</h4><p>Arama kelimesini değiştirebilir veya filtre çubuğundan farklı bir depo seçerek arama yapabilirsiniz.</p></div></td></tr>`;
                 return;
             }
-
             let totalsByUnit = {};
             filteredInventory.forEach((item) => {
                 if(item.criticalLimit === undefined) item.criticalLimit = 0;
                 let itemUnit = item.unit || "Adet";
                 let itemQty = parseFloat(item.quantity) || 0;
-                if(!totalsByUnit[itemUnit]) { totalsByUnit[itemUnit] = 0; }
+                if(!totalsByUnit[itemUnit]) {
+                    totalsByUnit[itemUnit] = 0;
+                }
                 totalsByUnit[itemUnit] += itemQty;
-
                 let isCritical = item.quantity <= item.criticalLimit;
                 let statusHtml = !isCritical ? `<span class="status-badge status-safe">🟢 Güvenli</span>` : `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
-                
                 let displayDate = "---";
                 if(item.lastUpdatedDate) {
                     const parts = item.lastUpdatedDate.split('-');
                     if(parts.length === 3) displayDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
                 }
-
                 let sktHtml = `<span class="skt-badge skt-none">Belirtilmedi</span>`;
                 if(item.skt) {
                     if(item.skt.includes('undefined')) {
@@ -1082,61 +1542,34 @@
                         sktHtml = (item.skt < todayStr) ? `<span class="skt-badge skt-expired">❌ ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>` : `<span class="skt-badge skt-ok">📅 ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>`;
                     }
                 }
-
                 let itemUniqueId = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
                 let fastButtonsHtml = '';
                 let dropdownButtonsHtml = '';
-
+                
                 if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
                     fastButtonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>`;
                 } else if (currentRole === 'DEPO') {
-                    fastButtonsHtml = `
-                        <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button>
-                        <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>
-                        <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>
-                    `;
+                    fastButtonsHtml = `<button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>`;
                     dropdownButtonsHtml = `<button class="dropdown-item item-edit" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>`;
                 } else {
-                    fastButtonsHtml = `
-                        <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button>
-                        <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>
-                        <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>
-                    `;
-                    dropdownButtonsHtml = `
-                        <button class="dropdown-item item-edit" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>
-                        <button class="dropdown-item item-delete" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button>
-                    `;
+                    fastButtonsHtml = `<button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>`;
+                    dropdownButtonsHtml = `<button class="dropdown-item item-edit" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button> <button class="dropdown-item item-delete" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button>`;
                 }
-
                 let moreActionTriggerHtml = '';
                 if(dropdownButtonsHtml !== '') {
-                    moreActionTriggerHtml = `
-                        <div style="position:relative; display:inline-block;">
-                            <button class="btn-more-trigger" type="button" onclick="toggleRowDropdown(event, '${itemUniqueId}')">⋮</button>
-                            <div class="actions-dropdown" id="drop_${itemUniqueId}">
-                                ${dropdownButtonsHtml}
-                            </div>
-                        </div>
-                    `;
+                    moreActionTriggerHtml = `<div style="position:relative; display:inline-block;"><button class="btn-more-trigger" type="button" onclick="toggleRowDropdown(event, '${itemUniqueId}')">⋮</button><div class="actions-dropdown" id="drop_${itemUniqueId}">${dropdownButtonsHtml}</div></div>`;
                 }
-
                 const tr = document.createElement('tr');
-                if (isCritical) { tr.className = "row-critical-alert"; }
-                
-                tr.innerHTML = `
-                    <td><strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}<span class="date-tag">Gnc: ${displayDate}</span></td>
-                    <td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td>
-                    <td><strong>${item.quantity} ${item.unit}</strong></td>
-                    <td><strong>${item.criticalLimit} ${item.unit}</strong></td>
-                    <td>${sktHtml}</td>
-                    <td>${statusHtml}</td>
-                    <td class="action-btns" style="justify-content: center;">${fastButtonsHtml} ${moreActionTriggerHtml}</td>
-                `;
+                if (isCritical) {
+                    tr.className = "row-critical-alert";
+                }
+                tr.innerHTML = `<td><strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}<span class="date-tag">Gnc: ${displayDate}</span></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><strong>${item.criticalLimit} ${item.unit}</strong></td><td>${sktHtml}</td><td>${statusHtml}</td><td class="action-btns" style="justify-content: center;">${fastButtonsHtml} ${moreActionTriggerHtml}</td>`;
                 tbody.appendChild(tr);
             });
-
             let totalStrings = [];
-            for (const [unit, sum] of Object.entries(totalsByUnit)) { totalStrings.push(`${sum.toFixed(2)} ${unit}`); }
+            for (const [unit, sum] of Object.entries(totalsByUnit)) {
+                totalStrings.push(`${sum.toFixed(2)} ${unit}`);
+            }
             if(tfoot) {
                 const footTr = document.createElement('tr');
                 footTr.className = "total-row";
@@ -1144,7 +1577,6 @@
                 tfoot.appendChild(footTr);
             }
         }
-
         window.openStockModal = function(uniqueId, action) {
             const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId));
             if(!item) return;
@@ -1159,7 +1591,7 @@
             
             document.getElementById('stockActionForm').reset();
             sktGroup.style.display = "none";
-
+            
             if(action === 'in') {
                 title.textContent = `📥 ${item.name} - Stok Ekleme`;
                 qtyLabel.textContent = `Giriş Yapılacak Miktar (${item.unit})`;
@@ -1178,57 +1610,49 @@
             }
             modal.style.display = "flex";
         };
-
         window.closeStockActionModal = function() {
             document.getElementById('stockActionModal').style.display = "none";
             currentModalProduct = null;
         };
-
         document.getElementById('stockActionForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if(!currentModalProduct) return;
             const item = currentModalProduct;
             const qty = parseFloat(document.getElementById('actionModalQty').value);
             let reportLabel = currentModalAction === 'in' ? 'GİRİŞ' : (currentModalAction === 'out' ? 'ÇIKIŞ' : 'İMHA');
-            if(isNaN(qty) || qty <= 0) { showToast("Geçerli bir miktar giriniz!", "warning"); return; }
-            
+            if(isNaN(qty) || qty <= 0) {
+                showToast("Geçerli bir miktar giriniz!", "warning");
+                return;
+            }
             let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
-
             if (currentModalAction === 'in' && isNewPartyWithSkt) {
                 const newSktVal = document.getElementById('actionModalSkt').value;
                 const newLotVal = document.getElementById('actionModalLot').value.trim().toUpperCase();
-                if(!newSktVal || newSktVal.includes('undefined')) { showToast("Lütfen geçerli bir Son Kullanma Tarihi seçin!", "warning"); return; }
-                
+                if(!newSktVal || newSktVal.includes('undefined')) {
+                    showToast("Lütfen geçerli bir Son Kullanma Tarihi seçin!", "warning");
+                    return;
+                }
                 let baseCleanName = item.name.replace(/[.#$\[\]]/g, "");
                 let targetKey = baseCleanName + "_" + newSktVal;
-                if(newLotVal) { targetKey += "_" + newLotVal; }
-                
+                if(newLotVal) {
+                    targetKey += "_" + newLotVal;
+                }
                 let matchExisting = inventory.find(i => i.dbKey === targetKey);
                 let finalQty = matchExisting ? parseFloat((matchExisting.quantity + qty).toFixed(2)) : qty;
-
-                db.ref('depo_stok/' + targetKey).set({
-                    dbKey: targetKey, name: item.name, depot: item.depot, unit: item.unit, quantity: finalQty, criticalLimit: item.criticalLimit, skt: newSktVal, lot: newLotVal || null, lastUpdatedDate: getTodayDateString()
-                });
-                db.ref('depo_rapor').push({
-                    time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'STOK + SKT GİRİŞİ', qty: `${qty} ${item.unit} (LOT: ${newLotVal || 'Yok'})`
-                });
+                db.ref('depo_stok/' + targetKey).set({ dbKey: targetKey, name: item.name, depot: item.depot, unit: item.unit, quantity: finalQty, criticalLimit: item.criticalLimit, skt: newSktVal, lot: newLotVal || null, lastUpdatedDate: getTodayDateString() });
+                db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'STOK + SKT GİRİŞİ', qty: `${qty} ${item.unit} (LOT: ${newLotVal || 'Yok'})` });
                 showToast(`"${item.name}" yeni SKT partisi başarıyla depoya kaydedildi.`);
                 closeStockActionModal();
                 return;
             }
-
             let newQty = currentModalAction === 'in' ? parseFloat((item.quantity + qty).toFixed(2)) : parseFloat((item.quantity - qty).toFixed(2));
             if(newQty < 0) newQty = 0;
-
             db.ref('depo_stok/' + itemUniqueKey + '/quantity').set(newQty);
             db.ref('depo_stok/' + itemUniqueKey + '/lastUpdatedDate').set(getTodayDateString());
-            db.ref('depo_rapor').push({
-                time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${item.name}`, type: reportLabel, qty: `${qty} ${item.unit} ${item.lot ? `[LOT: ${item.lot}]` : ''}`
-            });
+            db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${item.name}`, type: reportLabel, qty: `${qty} ${item.unit} ${item.lot ? `[LOT: ${item.lot}]` : ''}` });
             showToast("Stok envanter kaydı güncellendi.");
             closeStockActionModal();
         });
-
         window.openProductEditModal = function(uniqueId) {
             const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId));
             if(!item) return;
@@ -1240,12 +1664,10 @@
             document.getElementById('editProdSkt').value = item.skt || "";
             document.getElementById('productEditModal').style.display = "flex";
         };
-
         window.closeProductEditModal = function() {
             document.getElementById('productEditModal').style.display = "none";
             currentModalProduct = null;
         };
-
         document.getElementById('productEditForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if(!currentModalProduct) return;
@@ -1254,9 +1676,10 @@
             const newLimit = parseFloat(document.getElementById('editProdLimit').value);
             const newLot = document.getElementById('editProdLot').value.trim().toUpperCase() || null;
             const newSkt = document.getElementById('editProdSkt').value || null;
-
-            if(isNaN(newQty) || newQty < 0 || isNaN(newLimit) || newLimit < 0) { showToast("Lütfen geçerli sayılar giriniz!", "warning"); return; }
-
+            if(isNaN(newQty) || newQty < 0 || isNaN(newLimit) || newLimit < 0) {
+                showToast("Lütfen geçerli sayılar giriniz!", "warning");
+                return;
+            }
             let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
             const updates = {};
             updates['depo_stok/' + itemUniqueKey + '/quantity'] = newQty;
@@ -1264,59 +1687,63 @@
             updates['depo_stok/' + itemUniqueKey + '/lot'] = newLot;
             updates['depo_stok/' + itemUniqueKey + '/skt'] = newSkt;
             updates['depo_stok/' + itemUniqueKey + '/lastUpdatedDate'] = getTodayDateString();
-
+            
             db.ref().update(updates).then(() => {
-                db.ref('depo_rapor').push({
-                    time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'BİLGİ GÜNCELLEME', qty: `Stok: ${newQty}, Lim: ${newLimit}, LOT: ${newLot || 'Yok'}, SKT: ${newSkt || 'Yok'}`
-                });
+                db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'BİLGİ GÜNCELLEME', qty: `Stok: ${newQty}, Lim: ${newLimit}, LOT: ${newLot || 'Yok'}, SKT: ${newSkt || 'Yok'}` });
                 showToast("Malzeme kart bilgileri güncellendi.");
                 closeProductEditModal();
-            }).catch(err => { showToast("Hata: " + err.message, "error"); });
+            }).catch(err => {
+                showToast("Hata: " + err.message, "error");
+            });
         });
-
         const orderFormEl = document.getElementById('orderForm');
         if(orderFormEl) {
             orderFormEl.addEventListener('submit', function(e) {
                 e.preventDefault();
-                if(orderBasket.length === 0) { showToast("Sepete en az 1 ürün eklemelisiniz!", "warning"); return; }
+                if(orderBasket.length === 0) {
+                    showToast("Sepete en az 1 ürün eklemelisiniz!", "warning");
+                    return;
+                }
                 const targetMail = document.getElementById('orderEmail').value;
                 const notes = document.getElementById('orderNotes').value.trim() || "Yok";
-
                 if(confirm(`Listede bulunan ${orderBasket.length} malzemeyi sipariş olarak göndermek istiyor musunuz?`)) {
                     const nowStr = new Date().toLocaleString('tr-TR');
                     const timestampIso = new Date().toISOString();
                     let basketTextFormat = orderBasket.map(b => `• ${b.name} -> Miktar: ${b.qty} ${b.unit}`).join('\n');
                     let flatProductsNames = orderBasket.map(b => b.name).join(', ');
                     let flatQuantities = orderBasket.map(b => `${b.qty} ${b.unit}`).join(', ');
-
-                    const emailParams = {
-                        name: "Bahçelievler Memorial CT Canlı Stok Sistemi",
-                        email: targetMail, to_email: targetMail, product_name: flatProductsNames, quantity: flatQuantities,
-                        order_notes: `--- SİPARİŞ LİSTESİ ---\n${basketTextFormat}\n\nEkstra Talep Notu: ${notes}`,
-                        sender_role: currentRole, order_date: nowStr
-                    };
-
+                    const emailParams = { name: "Bahçelievler Memorial CT Canlı Stok Sistemi", email: targetMail, to_email: targetMail, product_name: flatProductsNames, quantity: flatQuantities, order_notes: `--- SİPARİŞ LİSTESİ ---\n${basketTextFormat}\n\nEkstra Talep Notu: ${notes}`, sender_role: currentRole, order_date: nowStr };
+                    
                     emailjs.send("service_wt1igmj", "template_ydhkoa6", emailParams)
-                    .then(() => { showToast(`Sipariş e-posta olarak başarıyla iletildi.`, "success"); })
-                    .catch((err) => { showToast(`E-Posta Hatası: ${JSON.stringify(err)}`, "error"); });
-
+                    .then(() => {
+                        showToast(`Sipariş e-posta olarak başarıyla iletildi.`, "success");
+                    })
+                    .catch((err) => {
+                        showToast(`E-Posta Hatası: ${JSON.stringify(err)}`, "error");
+                    });
+                    
                     orderBasket.forEach(bItem => {
                         db.ref('depo_siparisler').push({ time: nowStr, rawTime: timestampIso, user: currentRole, product: bItem.name, qty: `${bItem.qty} ${bItem.unit}`, notes: notes });
                         db.ref('depo_rapor').push({ time: nowStr, rawTime: timestampIso, user: currentRole, product: bItem.name, type: 'TALEP GÖNDERİLDİ', qty: `${bItem.qty} ${bItem.unit}` });
                     });
-
-                    orderBasket = []; renderBasketVisual(); orderFormEl.reset();
+                    orderBasket = [];
+                    renderBasketVisual();
+                    orderFormEl.reset();
                     document.getElementById('orderEmail').value = "bahcelievlermemorialct@gmail.com";
                 }
             });
         }
-
-        window.filterByDepot = function(depotName) { activeDepotFilter = depotName; renderDepotFilterButtons(); renderUi(); };
-        window.clearDateFilter = function() { document.getElementById('dateFilterInput').value = ''; renderUi(); };
-
+        window.filterByDepot = function(depotName) {
+            activeDepotFilter = depotName;
+            renderDepotFilterButtons();
+            renderUi();
+        };
+        window.clearDateFilter = function() {
+            document.getElementById('dateFilterInput').value = '';
+            renderUi();
+        };
         document.getElementById('dateFilterInput').addEventListener('change', renderUi);
         document.getElementById('searchInput').addEventListener('input', renderUi);
-
         const addFormEl = document.getElementById('addForm');
         if(addFormEl) {
             addFormEl.addEventListener('submit', function(e) {
@@ -1328,22 +1755,20 @@
                 const limit = parseFloat(document.getElementById('newProdLimit').value) || 0;
                 const lotVal = document.getElementById('newProdLot').value.trim().toUpperCase();
                 const sktVal = document.getElementById('newProdSkt').value;
-
                 let baseClean = name.replace(/[.#$\[\]]/g, "");
                 let targetKey = baseClean;
-                if(sktVal && !sktVal.includes('undefined')) { targetKey += "_" + sktVal; }
-                if(lotVal) { targetKey += "_" + lotVal; }
-
-                if(inventory.some(item => (item.dbKey === targetKey))) { showToast("Aynı isim, SKT ve LOT değerlerine sahip bir kayıt envanterde zaten mevcut!", "warning"); return; }
-
-                db.ref('depo_stok/' + targetKey).set({
-                    dbKey: targetKey, name: name, depot: depot, unit: unit, quantity: qty, criticalLimit: limit, skt: sktVal || null, lot: lotVal || null, lastUpdatedDate: getTodayDateString()
-                });
-
-                db.ref('depo_rapor').push({
-                    time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${name}`, type: 'YENİ ÜRÜN', qty: `${qty} ${unit} ${lotVal ? `(LOT: ${lotVal})` : ''}`
-                });
-
+                if(sktVal && !sktVal.includes('undefined')) {
+                    targetKey += "_" + sktVal;
+                }
+                if(lotVal) {
+                    targetKey += "_" + lotVal;
+                }
+                if(inventory.some(item => (item.dbKey === targetKey))) {
+                    showToast("Aynı isim, SKT ve LOT değerlerine sahip bir kayıt envanterde zaten mevcut!", "warning");
+                    return;
+                }
+                db.ref('depo_stok/' + targetKey).set({ dbKey: targetKey, name: name, depot: depot, unit: unit, quantity: qty, criticalLimit: limit, skt: sktVal || null, lot: lotVal || null, lastUpdatedDate: getTodayDateString() });
+                db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${name}`, type: 'YENİ ÜRÜN', qty: `${qty} ${unit} ${lotVal ? `(LOT: ${lotVal})` : ''}` });
                 showToast(`"${name}" başarıyla envantere eklendi.`);
                 addFormEl.reset();
                 const advancedFields = document.getElementById('advancedFormFields');
@@ -1352,49 +1777,48 @@
                 if(trigger) trigger.textContent = "⚙️ ▼";
             });
         }
-
         window.deleteProductDirect = function(uniqueId) {
             const item = inventory.find(i => i.dbKey === uniqueId);
             if(!item) {
-                if(confirm("Bu kayıt zorunlu olarak silinsin mi?")) { db.ref('depo_stok/' + uniqueId).remove(); }
+                if(confirm("Bu kayıt zorunlu olarak silinsin mi?")) {
+                    db.ref('depo_stok/' + uniqueId).remove();
+                }
                 return;
             }
             if(confirm(`"${item.name}" ürününü depodan kalıcı olarak silmek istediğinize emin misiniz?`)) {
                 const now = new Date();
-                db.ref('depo_rapor').push({
-                    time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(), user: currentRole, product: item.name, type: 'ÜRÜN SİLİNDİ', qty: `${item.quantity} ${item.unit}`,
-                    backupKey: item.dbKey || uniqueId, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt || null, backupLot: item.lot || null
-                });
+                db.ref('depo_rapor').push({ time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(), user: currentRole, product: item.name, type: 'ÜRÜN SİLİNDİ', qty: `${item.quantity} ${item.unit}`, backupKey: item.dbKey || uniqueId, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt || null, backupLot: item.lot || null });
                 db.ref('depo_stok/' + uniqueId).remove();
                 showToast("Malzeme depodan kaldırıldı.", "error");
             }
         };
-
         window.undoDeletedProduct = function(reportFbKey, prodName, bKey, bDepot, bUnit, bQtyStr, bLimit, bSkt, bLot) {
-            if(currentRole !== 'YÖNETİCİ') { showToast("Geri alma yetkisi sadece yöneticilere aittir!", "error"); return; }
+            if(currentRole !== 'YÖNETİCİ') {
+                showToast("Geri alma yetkisi sadece yöneticilere aittir!", "error");
+                return;
+            }
             if(confirm(`"${prodName}" ürününü depoya geri yüklemek istiyor musunuz?`)) {
                 let parsedQty = parseFloat(bQtyStr) || 0;
                 let targetKey = (bKey && bKey !== 'undefined') ? bKey : prodName.replace(/[.#$\[\]]/g, "");
-
-                db.ref('depo_stok/' + targetKey).set({
-                    dbKey: targetKey, name: prodName, depot: bDepot || 'KURU GIDA', unit: bUnit || 'Adet', quantity: parsedQty, criticalLimit: parseFloat(bLimit) || 0,
-                    skt: (bSkt && bSkt !== 'null' && bSkt !== 'undefined') ? bSkt : null, lot: (bLot && bLot !== 'null' && bLot !== 'undefined') ? bLot : null, lastUpdatedDate: getTodayDateString()
+                db.ref('depo_stok/' + targetKey).set({ dbKey: targetKey, name: prodName, depot: bDepot || 'KURU GIDA', unit: bUnit || 'Adet', quantity: parsedQty, criticalLimit: parseFloat(bLimit) || 0, skt: (bSkt && bSkt !== 'null' && bSkt !== 'undefined') ? bSkt : null, lot: (bLot && bLot !== 'null' && bLot !== 'undefined') ? bLot : null, lastUpdatedDate: getTodayDateString() });
+                db.ref('depo_rapor/' + reportFbKey).remove().then(() => {
+                    showToast("Ürün başarıyla depoya geri yüklendi!", "success");
+                    document.getElementById('openReportBtn').click();
                 });
-
-                db.ref('depo_rapor/' + reportFbKey).remove().then(() => { showToast("Ürün başarıyla depoya geri yüklendi!", "success"); document.getElementById('openReportBtn').click(); });
             }
         };
-
         const reportModal = document.getElementById('reportModal');
         const ordersListModal = document.getElementById('ordersListModal');
-
         document.getElementById('openReportBtn').addEventListener('click', () => {
             db.ref('depo_rapor').once('value', (snapshot) => {
                 const tbody = document.getElementById('reportTableBody');
                 const clearAllBtn = document.getElementById('clearAllReportsBtn');
                 tbody.innerHTML = '';
-                if(currentRole === 'YÖNETİCİ') { clearAllBtn.style.display = 'block'; } else { clearAllBtn.style.display = 'none'; }
-
+                if(currentRole === 'YÖNETİCİ') {
+                    clearAllBtn.style.display = 'block';
+                } else {
+                    clearAllBtn.style.display = 'none';
+                }
                 let modalReports = snapshot.val() ? Object.entries(snapshot.val()) : [];
                 if(modalReports.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">Kayıt bulunamadı.</td></tr>`;
@@ -1405,32 +1829,40 @@
                         if((rep.type === 'ÜRÜN SİLİNDİ' || rep.type === 'SKT OTOMATİK SİLME') && rep.backupKey && currentRole === 'YÖNETİCİ') {
                             actionButtonsHtml += `<button class="btn-undo" onclick="undoDeletedProduct('${fbKey}', '${rep.product}', '${rep.backupKey}', '${rep.backupDepot}', '${rep.backupUnit}', '${rep.qty}', '${rep.backupLimit}', '${rep.backupSkt}', '${rep.backupLot || null}')">↩ Geri Al</button> `;
                         }
-                        if(currentRole === 'YÖNETİCİ') { actionButtonsHtml += `<button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button>`; }
+                        if(currentRole === 'YÖNETİCİ') {
+                            actionButtonsHtml += `<button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button>`;
+                        }
                         tbody.innerHTML += `<tr><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order" style="${rep.type.includes('SİLİNDİ') ? 'background:#f8d7da; color:#721c24;' : ''}">${rep.type}</span></td><td><strong>${rep.qty}</strong></td><td>${actionButtonsHtml || '---'}</td></tr>`;
                     });
                 }
                 reportModal.style.display = 'flex';
             });
         });
-
         window.deleteReportRow = function(fbKey) {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Bu işlem kaydı geçmişten silinsin mi?")) { db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click()); }
+            if(confirm("Bu işlem kaydı geçmişten silinsin mi?")) {
+                db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click());
+            }
         };
-
         window.clearAllReports = function() {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Tüm işlem geçmişini kalıcı olarak silmek istediğinize emin misiniz?")) { db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click()); }
+            if(confirm("Tüm işlem geçmişini kalıcı olarak silmek istediğinize emin misiniz?")) {
+                db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click());
+            }
         };
-
         document.getElementById('openOrdersBtn').addEventListener('click', () => {
             db.ref('depo_siparisler').once('value', (snapshot) => {
                 const tbody = document.getElementById('ordersTableBody');
                 const headerAction = document.getElementById('orderActionHeader');
                 const clearAllBtn = document.getElementById('clearAllOrdersBtn');
                 tbody.innerHTML = '';
-                if(currentRole === 'YÖNETİCİ') { headerAction.style.display = 'table-cell'; clearAllBtn.style.display = 'block'; } else { headerAction.style.display = 'none'; clearAllBtn.style.display = 'none'; }
-
+                if(currentRole === 'YÖNETİCİ') {
+                    headerAction.style.display = 'table-cell';
+                    clearAllBtn.style.display = 'block';
+                } else {
+                    headerAction.style.display = 'none';
+                    clearAllBtn.style.display = 'none';
+                }
                 let modalOrders = snapshot.val() ? Object.entries(snapshot.val()) : [];
                 if(modalOrders.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="${currentRole === 'YÖNETİCİ' ? 6 : 5}" style="text-align:center; color:#888;">Henüz sipariş bulunmamaktadır.</td></tr>`;
@@ -1438,27 +1870,29 @@
                     modalOrders.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
                     modalOrders.forEach(([fbKey, ord]) => {
                         let deleteCellHtml = '';
-                        if(currentRole === 'YÖNETİCİ') { deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteOrderRow('${fbKey}')">Kayıt Sil</button></td>`; }
+                        if(currentRole === 'YÖNETİCİ') {
+                            deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteOrderRow('${fbKey}')">Kayıt Sil</button></td>`;
+                        }
                         tbody.innerHTML += `<tr><td>${ord.time || ord.date}</td><td><b>${ord.user}</b></td><td>${ord.product}</td><td><strong>${ord.qty}</strong></td><td><i style="color:#666;">${ord.notes}</i></td>${deleteCellHtml}</tr>`;
                     });
                 }
                 ordersListModal.style.display = 'flex';
             });
         });
-
         window.deleteOrderRow = function(fbKey) {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Bu sipariş kaydı listeden silinsin mi?")) { db.ref('depo_siparisler/' + fbKey).remove().then(() => document.getElementById('openOrdersBtn').click()); }
+            if(confirm("Bu sipariş kaydı listeden silinsin mi?")) {
+                db.ref('depo_siparisler/' + fbKey).remove().then(() => document.getElementById('openOrdersBtn').click());
+            }
         };
-
         window.clearAllOrders = function() {
             if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Tüm sipariş geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) { db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click()); }
+            if(confirm("Tüm sipariş geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) {
+                db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click());
+            }
         };
-
         document.getElementById('closeReportBtn').addEventListener('click', () => reportModal.style.display = 'none');
         document.getElementById('closeOrdersBtn').addEventListener('click', () => ordersListModal.style.display = 'none');
-
         document.getElementById('logoutBtn').addEventListener('click', () => {
             localStorage.removeItem('isLoggedIn');
             window.location.replace('login.html');
