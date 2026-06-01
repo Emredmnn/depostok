@@ -824,6 +824,7 @@
                             <option value="BİLGİ GÜNCELLEME">BİLGİ GÜNCELLEME</option>
                             <option value="STOK + SKT GİRİŞİ">STOK + SKT GİRİŞİ</option>
                             <option value="SKT OTOMATİK SİLME">SKT OTOMATİK SİLME</option>
+                            <option value="MALZEME KARTINI SİL">MALZEME KARTINI SİL</option>
                         </select>
                     </div>
                 </div>
@@ -1127,7 +1128,7 @@
                     if(diffDays >= 0 && diffDays <= 1) {
                         urgentCount++;
                         const sParts = item.skt.split('-');
-                        tbody.innerHTML += `<tr><td><strong>${item.name}</strong></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td>export <strong>${item.quantity} ${item.unit}</strong></td><td><span style="color:#b91c1c; font-weight:bold;">${diffDays === 0 ? 'Bugün Son!' : `1 Gün Kaldı`}</span></td><td>${sParts[2]}.${sParts[1]}.${sParts[0]}</td></tr>`;
+                        tbody.innerHTML += `<tr><td><strong>${item.name}</strong></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><span style="color:#b91c1c; font-weight:bold;">${diffDays === 0 ? 'Bugün Son!' : `1 Gün Kaldı`}</span></td><td>${sParts[2]}.${sParts[1]}.${sParts[0]}</td></tr>`;
                     }
                 }
             });
@@ -1430,15 +1431,29 @@
                 if(lotVal) targetKey += "_" + lotVal;
                 
                 db.ref('depo_stok/' + targetKey).set({ dbKey: targetKey, name: name, depot: depot, unit: unit, quantity: qty, criticalLimit: limit, skt: sktVal || null, lot: lotVal || null, lastUpdatedDate: getTodayDateString() });
+                db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: name, type: 'YENİ ÜRÜN', qty: `${qty} ${unit}` });
                 showToast(`"${name}" envantere eklendi.`);
                 addFormEl.reset();
             });
         }
 
+        // --- GÜNCELLEME: SİLME AKSİYONUNA RAPOR/LOG ENTEGRASYONU AKTİFLEŞTİRİLDİ ---
         window.deleteProductDirect = function(uniqueId) {
             if(confirm("Kayıt kalıcı olarak silinsin mi?")) {
+                const item = inventory.find(i => i.dbKey === uniqueId);
+                if(item) {
+                    // Silme işlemi Firebase'den gerçekleşmeden önce rapor geçmişine log düşülüyor
+                    db.ref('depo_rapor').push({
+                        time: new Date().toLocaleString('tr-TR'),
+                        rawTime: new Date().toISOString(),
+                        user: currentRole,
+                        product: item.name,
+                        type: 'MALZEME KARTINI SİL',
+                        qty: `${item.quantity} ${item.unit || 'Birim'}`
+                    });
+                }
                 db.ref('depo_stok/' + uniqueId).remove();
-                showToast("Silindi.", "error");
+                showToast("Malzeme kartı envanterden silindi ve rapora işlendi.", "error");
             }
         };
 
