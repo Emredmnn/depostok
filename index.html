@@ -158,15 +158,6 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 51, 141, 0.15);
         }
-        .btn-urgent {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-            font-weight: 700;
-        }
-        .btn-urgent:hover {
-            background: #ffe8a1;
-        }
         .btn-logout {
             background: #fce8e6;
             color: #c5221f;
@@ -406,18 +397,18 @@
         .date-filter-wrapper input { border: none; outline: none; font-size: 13px; color: var(--text-dark); background: transparent; cursor: pointer; }
         .btn-clear-date { background: none; border: none; color: #aaa; font-size: 16px; cursor: pointer; padding: 0 4px; }
         
-        /* --- TABLO TASARIMI VE YENİDEN OPTİMİZE EDİLMİŞ SÜTUN SİSTEMİ --- */
+        /* --- TABLO TASARIMI VE KUSURSUZ YAKINLAŞTIRMA KORUMALI SÜTUN SİSTEMİ --- */
         .table-responsive { width: 100%; overflow-x: auto; border: 1px solid var(--table-border); border-radius: 6px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; background: var(--card-bg); table-layout: fixed; }
         
-        /* Malzeme Adı daraltıldı (%18), Durum (%15) ve İşlemler (%18) ferahlatıldı */
-        th:nth-child(1), td:nth-child(1) { width: 25%; } /* Malzeme Adı */
-        th:nth-child(2), td:nth-child(2) { width: 10%; } /* Depo Birimi */
-        th:nth-child(3), td:nth-child(3) { width: 10%; } /* Mevcut Stok */
-        th:nth-child(4), td:nth-child(4) { width: 10%; } /* Kritik Limit */
+        /* Zoom kilitli sütun genişlik dağılım matrisi */
+        th:nth-child(1), td:nth-child(1) { width: 18%; } /* Malzeme Adı */
+        th:nth-child(2), td:nth-child(2) { width: 11%; } /* Depo Birimi */
+        th:nth-child(3), td:nth-child(3) { width: 11%; } /* Mevcut Stok */
+        th:nth-child(4), td:nth-child(4) { width: 11%; } /* Kritik Limit */
         th:nth-child(5), td:nth-child(5) { width: 11%; } /* S.K.T. */
-        th:nth-child(6), td:nth-child(6) { width: 14%; } /* Durum (Kritik Stok Gösterge Alanı Genişletildi) */
-        th:nth-child(7), td:nth-child(7) { width: 12%; text-align: right; padding-right: 15px; } /* İşlemler */
+        th:nth-child(6), td:nth-child(6) { width: 13%; } /* Durum Göstergesi */
+        th:nth-child(7), td:nth-child(7) { width: 25%; text-align: right; padding-right: 15px; } /* İşlemler (Genişletildi ve Hizalandı) */
 
         th { background-color: var(--secondary-color); color: var(--text-light); font-weight: 600; padding: 12px 10px; border-bottom: 2px solid var(--table-border); white-space: nowrap; }
         td { padding: 12px 10px; border-bottom: 1px solid var(--table-border); vertical-align: middle; color: var(--text-dark); word-wrap: break-word; }
@@ -428,7 +419,7 @@
             animation: pulse-row-red 3s infinite ease-in-out;
         }
         @keyframes pulse-row-red {
-            0%, 100 nudge { background-color: rgba(220, 53, 69, 0.03); }
+            0%, 100% { background-color: rgba(220, 53, 69, 0.03); }
             50% { background-color: rgba(220, 53, 69, 0.07); }
         }
         .basket-item {
@@ -463,8 +454,8 @@
         .lot-tag { background: #e0f2fe; color: #0369a1; padding: 2px 5px; border-radius: 4px; font-size: 10.5px; font-weight: 700; display: inline-block; margin-top: 2px; border: 1px solid #bae6fd; }
         .date-tag { display: block; font-size: 11px; color: #94a3b8; margin-top: 2px; font-weight: normal; }
         
-        /* GÖSTERGE STİL YAPISI */
-        .status-badge { padding: 5px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; max-width: 100%; text-overflow: ellipsis; overflow: hidden; }
+        /* GEÇMİŞ KAYMA PROBLEMİ ÇÖZÜLEN DURUM VE ROZET ALTYAPISI */
+        .status-badge { padding: 5px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
         .status-safe { background: #d4edda; color: #155724; }
         .status-critical { background: #f8d7da; color: #721c24; font-weight: 700; }
         .skt-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
@@ -472,15 +463,15 @@
         .skt-ok { background: #e0f2fe; color: #0369a1; }
         .skt-expired { background: #fee2e2; color: #b91c1c; }
         
-        /* --- BUTON AKSİYON ALANI --- */
-        .action-btns { display: flex; gap: 4px; justify-content: flex-end; align-items: center; white-space: nowrap; padding-right: 5px; }
-        .action-btn { border: none; padding: 6px 10px; border-radius: 4px; font-size: 11.5px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; }
+        /* --- BUTON AKSİYON ALANI (ZOOM KORUMALI SAĞA TAM HİZALAMA KONTEYNERİ) --- */
+        .action-btns { display: flex; gap: 4px; justify-content: flex-end; align-items: center; white-space: nowrap; width: 100%; }
+        .action-btn { border: none; padding: 6px 10px; border-radius: 4px; font-size: 11.5px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
         .btn-add-stock { background-color: var(--success-color); }
         .btn-drop-stock { background-color: #ff9800; }
         .btn-waste-stock { background-color: #795548; }
         .btn-more-trigger {
-            background: transparent; color: var(--text-light); border: 1px solid var(--table-border); padding: 5px 8px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1;
+            background: transparent; color: var(--text-light); border: 1px solid var(--table-border); padding: 5px 8px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1; flex-shrink: 0;
         }
         .btn-more-trigger:hover { background: var(--secondary-color); color: var(--text-dark); border-color: var(--text-light); }
         .actions-dropdown {
@@ -503,7 +494,7 @@
         .toast-error { border-left-color: var(--danger-color); }
         .toast-warning { border-left-color: var(--warning-color); }
         
-        /* --- MODAL YAPILARI --- */
+        /* --- MODAL PLANI VE YAPILARI --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px; }
         .modal-content { background: var(--card-bg); border-radius: var(--border-radius); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.25s ease-out; overflow: hidden; border: 1px solid var(--table-border); }
         .modal-large { max-width: 850px; }
@@ -520,7 +511,7 @@
         .btn-print-system { background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; margin-top: 15px; width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; }
         .skeleton-block { height: 14px; background: #e2e8f0; border-radius: 4px; width: 85%; }
         
-        /* --- GELİŞMİŞ RAPOR FİLTRELEME ALANI --- */
+        /* --- GELİŞMİŞ MODAL RAPOR FİLTRELEME ALANI --- */
         .modal-filter-zone {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1542,7 +1533,7 @@
             }
         };
 
-        // --- SİPARİŞ GEÇMİŞİ VE TEKLİ/TOPLU SİLME KATMANLARI ---
+        // --- SİPARİŞ GEÇMİŞİ LİSTESİ ---
         document.getElementById('openOrdersBtn').addEventListener('click', () => {
             db.ref('depo_siparisler').once('value', (snapshot) => {
                 const tbody = document.getElementById('ordersTableBody');
