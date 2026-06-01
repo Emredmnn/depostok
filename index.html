@@ -8,155 +8,155 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        /* --- GENEL KURUMSAL RENK PALETİ VE DEĞİŞKENLER --- */
+        /* --- GENEL KURUMSAL RENK PALETİ VE DEĞİŞKENLER [cite: 252] --- */
         :root {
-            --primary-blue: #00338d;
-            --secondary-color: #f4f7f6;
-            --text-dark: #1e293b;
-            --text-light: #64748b;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --border-radius: 12px;
-            --box-shadow: 0 4px 6px rgba(0, 51, 141, 0.04);
-            --card-bg: #ffffff;
-            --table-border: #eef2f5;
-            --input-bg: #fafafa;
-            --dropdown-bg: #ffffff;
-            --dropdown-hover: #f1f5f9;
+            --primary-blue: #00338d; /* cite: 252 */
+            --secondary-color: #f4f7f6; /* cite: 253 */
+            --text-dark: #1e293b; /* cite: 253 */
+            --text-light: #64748b; /* cite: 253 */
+            --success-color: #28a745; /* cite: 253 */
+            --danger-color: #dc3545; /* cite: 253 */
+            --warning-color: #ffc107; /* cite: 253 */
+            --border-radius: 12px; /* cite: 253 */
+            --box-shadow: 0 4px 6px rgba(0, 51, 141, 0.04); /* cite: 254 */
+            --card-bg: #ffffff; /* cite: 254 */
+            --table-border: #eef2f5; /* cite: 254 */
+            --input-bg: #fafafa; /* cite: 254 */
+            --dropdown-bg: #ffffff; /* cite: 254 */
+            --dropdown-hover: #f1f5f9; /* cite: 254 */
         }
-        /* --- GECE MODU (DARK MODE) AKTİF RENKLERİ --- */
+        /* --- GECE MODU (DARK MODE) AKTİF RENKLERİ [cite: 255] --- */
         [data-theme="dark"] {
-            --secondary-color: #0f172a;
-            --text-dark: #f8fafc;
-            --text-light: #94a3b8;
-            --card-bg: #1e293b;
-            --table-border: #334155;
-            --input-bg: #1e293b;
-            --dropdown-bg: #1e293b;
-            --dropdown-hover: #334155;
-            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            --secondary-color: #0f172a; /* cite: 255 */
+            --text-dark: #f8fafc; /* cite: 255 */
+            --text-light: #94a3b8; /* cite: 255 */
+            --card-bg: #1e293b; /* cite: 256 */
+            --table-border: #334155; /* cite: 256 */
+            --input-bg: #1e293b; /* cite: 256 */
+            --dropdown-bg: #1e293b; /* cite: 256 */
+            --dropdown-hover: #334155; /* cite: 256 */
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* cite: 256 */
         }
         * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+            box-sizing: border-box; /* cite: 257 */
+            margin: 0; /* cite: 257 */
+            padding: 0; /* cite: 257 */
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; /* cite: 257 */
+            transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease; /* cite: 258 */
         }
         body {
-            background-color: var(--secondary-color);
-            color: var(--text-dark);
-            padding: 15px;
+            background-color: var(--secondary-color); /* cite: 259 */
+            color: var(--text-dark); /* cite: 259 */
+            padding: 15px; /* cite: 259 */
         }
-        /* --- ÜST PANEL (HEADER) DÜZENİ --- */
+        /* --- ÜST PANEL (HEADER) DÜZENI [cite: 259] --- */
         header {
-            background: #00338d;
-            color: white;
-            padding: 22px 25px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            min-height: 155px;
-            justify-content: space-between;
-            gap: 15px;
+            background: #00338d; /* cite: 259 */
+            color: white; /* cite: 260 */
+            padding: 22px 25px; /* cite: 260 */
+            border-radius: var(--border-radius); /* cite: 260 */
+            box-shadow: var(--box-shadow); /* cite: 260 */
+            margin-bottom: 20px; /* cite: 260 */
+            display: flex; /* cite: 260 */
+            flex-direction: column; /* cite: 260 */
+            min-height: 155px; /* cite: 260 */
+            justify-content: space-between; /* cite: 260 */
+            gap: 15px; /* cite: 261 */
         }
         .header-top-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            width: 100%;
+            display: flex; /* cite: 261 */
+            justify-between: space-between; /* cite: 261 */
+            align-items: center; /* cite: 261 */
+            flex-wrap: wrap; /* cite: 261 */
+            gap: 15px; /* cite: 261 */
+            width: 100%; /* cite: 261 */
         }
         .brand-container {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+            display: flex; /* cite: 262 */
+            align-items: center; /* cite: 262 */
+            gap: 20px; /* cite: 262 */
         }
         .header-logo {
-            height: 74px;
-            width: auto;
-            object-fit: contain;
-            border-radius: 8px;
-            background: #ffffff;
-            padding: 4px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 0 15px rgba(255, 255, 255, 0.15);
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-            cursor: pointer;
-            will-change: transform, box-shadow;
+            height: 74px; /* cite: 262 */
+            width: auto; /* cite: 263 */
+            object-fit: contain; /* cite: 263 */
+            border-radius: 8px; /* cite: 263 */
+            background: #ffffff; /* cite: 263 */
+            padding: 4px; /* cite: 263 */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), 0 0 15px rgba(255, 255, 255, 0.15); /* cite: 264 */
+            image-rendering: -webkit-optimize-contrast; /* cite: 265 */
+            image-rendering: crisp-edges; /* cite: 265 */
+            cursor: pointer; /* cite: 265 */
+            will-change: transform, box-shadow; /* cite: 265 */
         }
         .header-logo:hover {
-            transform: scale(1.05) translateY(-1px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), 0 0 20px rgba(255, 255, 255, 0.3);
+            transform: scale(1.05) translateY(-1px); /* cite: 265 */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35), 0 0 20px rgba(255, 255, 255, 0.3); /* cite: 266 */
         }
         .header-title h1 {
-            font-size: 23px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin: 0;
+            font-size: 23px; /* cite: 267 */
+            font-weight: 700; /* cite: 267 */
+            letter-spacing: 0.5px; /* cite: 267 */
+            margin: 0; /* cite: 267 */
         }
         .header-title p {
-            font-size: 13px;
-            opacity: 0.85;
-            margin-top: 4px;
-            font-weight: 300;
+            font-size: 13px; /* cite: 267 */
+            opacity: 0.85; /* cite: 267 */
+            margin-top: 4px; /* cite: 268 */
+            font-weight: 300; /* cite: 268 */
         }
         .user-meta-zone {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.12);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12.5px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(5px);
+            display: flex; /* cite: 268 */
+            align-items: center; /* cite: 268 */
+            gap: 12px; /* cite: 268 */
+            background: rgba(255, 255, 255, 0.12); /* cite: 268 */
+            padding: 8px 16px; /* cite: 269 */
+            border-radius: 20px; /* cite: 269 */
+            font-size: 12.5px; /* cite: 269 */
+            border: 1px solid rgba(255, 255, 255, 0.15); /* cite: 269 */
+            backdrop-filter: blur(5px); /* cite: 269 */
         }
-        .badge { font-weight: bold; }
-        .live-clock { font-weight: 500; }
+        .badge { font-weight: bold; } /* cite: 270 */
+        .live-clock { font-weight: 500; } /* cite: 270 */
         .theme-toggle-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
+            background: rgba(255, 255, 255, 0.15); /* cite: 270 */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* cite: 271 */
+            color: white; /* cite: 271 */
+            padding: 6px 12px; /* cite: 271 */
+            border-radius: 15px; /* cite: 271 */
+            cursor: pointer; /* cite: 271 */
+            font-size: 13px; /* cite: 271 */
+            font-weight: bold; /* cite: 271 */
         }
-        .theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.25); }
+        .theme-toggle-btn:hover { background: rgba(255, 255, 255, 0.25); } /* cite: 272 */
         .header-actions-row {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            width: 100%;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-            align-items: center;
-            justify-content: flex-end;
+            display: flex; /* cite: 272 */
+            gap: 12px; /* cite: 272 */
+            flex-wrap: wrap; /* cite: 272 */
+            width: 100%; /* cite: 272 */
+            padding-top: 15px; /* cite: 273 */
+            border-top: 1px solid rgba(255, 255, 255, 0.15); /* cite: 273 */
+            align-items: center; /* cite: 273 */
+            justify-content: flex-end; /* cite: 273 */
         }
         .nav-btn {
-            background: white;
-            color: #00338d;
-            border: none;
-            padding: 11px 18px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 13.5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: white; /* cite: 273 */
+            color: #00338d; /* cite: 273 */
+            border: none; /* cite: 274 */
+            padding: 11px 18px; /* cite: 274 */
+            border-radius: 8px; /* cite: 274 */
+            font-weight: 600; /* cite: 274 */
+            font-size: 13.5px; /* cite: 274 */
+            cursor: pointer; /* cite: 274 */
+            display: flex; /* cite: 274 */
+            align-items: center; /* cite: 274 */
+            gap: 8px; /* cite: 274 */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* cite: 275 */
         }
         .nav-btn:hover {
-            background: #ebf1fa;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 51, 141, 0.15);
+            background: #ebf1fa; /* cite: 275 */
+            transform: translateY(-2px); /* cite: 275 */
+            box-shadow: 0 4px 8px rgba(0, 51, 141, 0.15); /* cite: 275 */
         }
         .btn-urgent {
             background: #fff3cd;
@@ -168,249 +168,252 @@
             background: #ffe8a1;
         }
         .btn-logout {
-            background: #fce8e6;
-            color: #c5221f;
-            border: 1px solid #fad2cf;
+            background: #fce8e6; /* cite: 276 */
+            color: #c5221f; /* cite: 276 */
+            border: 1px solid #fad2cf; /* cite: 276 */
         }
         .btn-logout:hover {
-            background: #dc3545;
-            color: white;
-            border-color: #dc3545;
+            background: #dc3545; /* cite: 276 */
+            color: white; /* cite: 276 */
+            border-color: #dc3545; /* cite: 276 */
         }
         /* --- DASHBOARD ÖZET KARTLARI --- */
         .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
+            display: grid; /* cite: 277 */
+            grid-template-columns: repeat(3, 1fr); /* cite: 277 */
+            gap: 15px; /* cite: 277 */
+            margin-bottom: 20px; /* cite: 277 */
         }
         .stat-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 15px 20px;
-            box-shadow: var(--box-shadow);
-            border: 1px solid var(--table-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            background: var(--card-bg); /* cite: 278 */
+            border-radius: var(--border-radius); /* cite: 278 */
+            padding: 15px 20px; /* cite: 278 */
+            box-shadow: var(--box-shadow); /* cite: 278 */
+            border: 1px solid var(--table-border); /* cite: 278 */
+            display: flex; /* cite: 278 */
+            align-items: center; /* cite: 278 */
+            justify-content: space-between; /* cite: 279 */
         }
         .stat-card-info h3 {
-            font-size: 11.5px;
-            font-weight: 700;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 11.5px; /* cite: 279 */
+            font-weight: 700; /* cite: 279 */
+            color: var(--text-light); /* cite: 279 */
+            text-transform: uppercase; /* cite: 279 */
+            letter-spacing: 0.5px; /* cite: 279 */
         }
         .stat-card-info p {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-top: 4px;
+            font-size: 24px; /* cite: 280 */
+            font-weight: 800; /* cite: 280 */
+            color: var(--text-dark); /* cite: 280 */
+            margin-top: 4px; /* cite: 280 */
         }
         .stat-card-icon {
-            font-size: 24px;
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 24px; /* cite: 280 */
+            width: 46px; /* cite: 280 */
+            height: 46px; /* cite: 281 */
+            border-radius: 50%; /* cite: 281 */
+            display: flex; /* cite: 281 */
+            align-items: center; /* cite: 281 */
+            justify-content: center; /* cite: 281 */
         }
-        .bg-blue-soft { background: rgba(0, 51, 141, 0.06); color: #00338d; }
-        .bg-red-soft { background: rgba(220, 53, 69, 0.06); color: #dc3545; }
-        .bg-orange-soft { background: rgba(255, 152, 0, 0.06); color: #ff9800; }
+        .bg-blue-soft { background: rgba(0, 51, 141, 0.06); color: #00338d; } /* cite: 281 */
+        .bg-red-soft { background: rgba(220, 53, 69, 0.06); color: #dc3545; } /* cite: 282 */
+        .bg-orange-soft { background: rgba(255, 152, 0, 0.06); color: #ff9800; } /* cite: 282 */
         
         @media (max-width: 768px) {
-            .dashboard-grid { grid-template-columns: 1fr; gap: 10px; }
+            .dashboard-grid { grid-template-columns: 1fr; gap: 10px; } /* cite: 283 */
         }
         /* --- ANA SÜTUNLAR --- */
         .main-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+            display: grid; /* cite: 284 */
+            grid-template-columns: 1fr; /* cite: 284 */
+            gap: 20px; /* cite: 284 */
         }
         .two-columns {
-            grid-template-columns: 380px 1fr;
+            grid-template-columns: 380px 1fr; /* cite: 285 */
         }
         .forms-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            display: flex; /* cite: 285 */
+            flex-direction: column; /* cite: 285 */
+            gap: 20px; /* cite: 285 */
         }
         .card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: var(--box-shadow);
-            border: 1px solid var(--table-border);
+            background: var(--card-bg); /* cite: 285 */
+            border-radius: var(--border-radius); /* cite: 286 */
+            padding: 20px; /* cite: 286 */
+            box-shadow: var(--box-shadow); /* cite: 286 */
+            border: 1px solid var(--table-border); /* cite: 286 */
         }
         .card-title {
-            font-size: 14.5px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #00338d;
-            border-bottom: 2px solid var(--table-border);
-            padding-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 14.5px; /* cite: 286 */
+            font-weight: 700; /* cite: 286 */
+            margin-bottom: 15px; /* cite: 286 */
+            color: #00338d; /* cite: 287 */
+            border-bottom: 2px solid var(--table-border); /* cite: 287 */
+            padding-bottom: 8px; /* cite: 287 */
+            display: flex; /* cite: 287 */
+            align-items: center; /* cite: 287 */
+            gap: 8px; /* cite: 287 */
         }
-        [data-theme="dark"] .card-title { color: #f8fafc; }
+        [data-theme="dark"] .card-title { color: #f8fafc; } /* cite: 287 */
+        
         /* --- AKORDEON FORM ALTYAPISI --- */
         .accordion-trigger {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            background: var(--input-bg);
-            border: 1px solid var(--table-border);
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-dark);
-            cursor: pointer;
-            margin-top: 15px;
-            margin-bottom: 5px;
+            display: flex; /* cite: 288 */
+            align-items: center; /* cite: 288 */
+            justify-content: space-between; /* cite: 288 */
+            width: 100%; /* cite: 288 */
+            background: var(--input-bg); /* cite: 288 */
+            border: 1px solid var(--table-border); /* cite: 289 */
+            padding: 10px 14px; /* cite: 289 */
+            border-radius: 8px; /* cite: 289 */
+            font-size: 13px; /* cite: 289 */
+            font-weight: 700; /* cite: 289 */
+            color: var(--text-dark); /* cite: 289 */
+            cursor: pointer; /* cite: 289 */
+            margin-top: 15px; /* cite: 289 */
+            margin-bottom: 5px; /* cite: 290 */
         }
         .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            padding: 0 2px;
+            max-height: 0; /* cite: 0 */
+            overflow: hidden; /* cite: 290 */
+            transition: max-height 0.3s ease-out; /* cite: 290 */
+            padding: 0 2px; /* cite: 290 */
         }
         /* --- MODERN SEARCHABLE DROPDOWN KOMBİNASYONU --- */
-        .searchable-select-container { position: relative; width: 100%; }
+        .searchable-select-container { position: relative; width: 100%; } /* cite: 291 */
         .select-search-input {
-            width: 100%;
-            padding: 11px 12px;
-            border: 2px solid var(--table-border);
-            border-radius: 8px;
-            font-size: 13.5px;
-            outline: none;
-            background: var(--input-bg);
-            color: var(--text-dark);
+            width: 100%; /* cite: 291 */
+            padding: 11px 12px; /* cite: 292 */
+            border: 2px solid var(--table-border); /* cite: 292 */
+            border-radius: 8px; /* cite: 292 */
+            font-size: 13.5px; /* cite: 292 */
+            outline: none; /* cite: 292 */
+            background: var(--input-bg); /* cite: 292 */
+            color: var(--text-dark); /* cite: 292 */
         }
-        .select-search-input:focus { border-color: #00338d; background: var(--card-bg); }
+        .select-search-input:focus { border-color: #00338d; background: var(--card-bg); } /* cite: 293 */
         .select-options-panel {
-            display: none;
-            position: absolute;
-            top: 46px;
-            left: 0;
-            width: 100%;
-            max-height: 180px;
-            background: var(--dropdown-bg);
-            border: 2px solid var(--table-border);
-            border-radius: 8px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            z-index: 1000;
-            overflow-y: auto;
+            display: none; /* cite: 293 */
+            position: absolute; /* cite: 293 */
+            top: 46px; /* cite: 293 */
+            left: 0; /* cite: 293 */
+            width: 100%; /* cite: 294 */
+            max-height: 180px; /* cite: 294 */
+            background: var(--dropdown-bg); /* cite: 294 */
+            border: 2px solid var(--table-border); /* cite: 294 */
+            border-radius: 8px; /* cite: 294 */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* cite: 294 */
+            z-index: 1000; /* cite: 294 */
+            overflow-y: auto; /* cite: 295 */
         }
         .select-option-item {
-            padding: 10px 12px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-dark);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--table-border);
+            padding: 10px 12px; /* cite: 295 */
+            font-size: 13px; /* cite: 295 */
+            font-weight: 600; /* cite: 295 */
+            color: var(--text-dark); /* cite: 295 */
+            cursor: pointer; /* cite: 295 */
+            display: flex; /* cite: 295 */
+            justify-content: space-between; /* cite: 295 */
+            align-items: center; /* cite: 296 */
+            border-bottom: 1px solid var(--table-border); /* cite: 296 */
         }
-        .select-option-item:hover { background: var(--dropdown-hover); }
+        .select-option-item:hover { background: var(--dropdown-hover); } /* cite: 296 */
         .select-option-item span.qty-badge {
-            font-size: 11px;
-            background: rgba(0, 51, 141, 0.06);
-            color: #00338d;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 700;
+            font-size: 11px; /* cite: 296 */
+            background: rgba(0, 51, 141, 0.06); /* cite: 297 */
+            color: #00338d; /* cite: 297 */
+            padding: 2px 6px; /* cite: 297 */
+            border-radius: 4px; /* cite: 297 */
+            font-weight: 700; /* cite: 297 */
         }
         /* --- DEPO FİLTRELEME BAR --- */
         .depot-filter-bar {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-            margin-bottom: 15px;
-            scrollbar-width: thin;
+            display: flex; /* cite: 298 */
+            gap: 8px; /* cite: 298 */
+            overflow-x: auto; /* cite: 298 */
+            padding-bottom: 5px; /* cite: 298 */
+            margin-bottom: 15px; /* cite: 298 */
+            scrollbar-width: thin; /* cite: 299 */
         }
         .btn-depot-filter {
-            background: var(--card-bg);
-            color: var(--text-light);
-            border: 1px solid var(--table-border);
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 12.5px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
+            background: var(--card-bg); /* cite: 299 */
+            color: var(--text-light); /* cite: 299 */
+            border: 1px solid var(--table-border); /* cite: 299 */
+            padding: 8px 14px; /* cite: 299 */
+            border-radius: 20px; /* cite: 299 */
+            font-size: 12.5px; /* cite: 299 */
+            font-weight: 600; /* cite: 300 */
+            cursor: pointer; /* cite: 300 */
+            white-space: nowrap; /* cite: 300 */
+            transition: all 0.2s; /* cite: 300 */
         }
-        .btn-depot-filter:hover { background: #f1f5f9; color: #00338d; }
+        .btn-depot-filter:hover { background: #f1f5f9; color: #00338d; } /* cite: 300 */
         .btn-depot-filter.active {
-            background: #00338d;
-            color: white;
-            border-color: #00338d;
-            box-shadow: 0 2px 4px rgba(0, 51, 141, 0.25);
+            background: #00338d; /* cite: 301 */
+            color: white; /* cite: 301 */
+            border-color: #00338d; /* cite: 301 */
+            box-shadow: 0 2px 4px rgba(0, 51, 141, 0.25); /* cite: 301 */
         }
-        [data-theme="dark"] .btn-depot-filter.active { background: #38bdf8; border-color: #38bdf8; color: #0f172a; }
+        [data-theme="dark"] .btn-depot-filter.active { background: #38bdf8; border-color: #38bdf8; color: #0f172a; } /* cite: 302 */
+        
         /* --- INPUT VE FORMLAR --- */
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--text-light); }
+        .form-group { margin-bottom: 12px; } /* cite: 303 */
+        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--text-light); } /* cite: 303, 304 */
         .form-control {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid var(--table-border);
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.2s;
-            background-color: var(--input-bg);
-            color: var(--text-dark);
+            width: 100%; /* cite: 304 */
+            padding: 10px; /* cite: 304 */
+            border: 2px solid var(--table-border); /* cite: 304 */
+            border-radius: 6px; /* cite: 304 */
+            font-size: 14px; /* cite: 305 */
+            outline: none; /* cite: 305 */
+            transition: all 0.2s; /* cite: 305 */
+            background-color: var(--input-bg); /* cite: 305 */
+            color: var(--text-dark); /* cite: 305 */
         }
-        .form-control:focus { border-color: #00338d; box-shadow: 0 0 0 3px rgba(0, 51, 141, 0.12); }
+        .form-control:focus { border-color: #00338d; box-shadow: 0 0 0 3px rgba(0, 51, 141, 0.12); } /* cite: 305, 306 */
         .btn-submit {
-            width: 100%;
-            background: var(--success-color);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 10px;
-            box-shadow: 0 2px 4px rgba(40,167,69,0.15);
+            width: 100%; /* cite: 306 */
+            background: var(--success-color); /* cite: 306 */
+            color: white; /* cite: 306 */
+            border: none; /* cite: 307 */
+            padding: 12px; /* cite: 307 */
+            border-radius: 8px; /* cite: 307 */
+            font-size: 14px; /* cite: 307 */
+            font-weight: 600; /* cite: 307 */
+            cursor: pointer; /* cite: 307 */
+            transition: background 0.2s; /* cite: 307 */
+            margin-top: 10px; /* cite: 307 */
+            box-shadow: 0 2px 4px rgba(40,167,69,0.15); /* cite: 308 */
         }
-        .btn-submit:hover { background: #218838; }
+        .btn-submit:hover { background: #218838; } /* cite: 308 */
+        
         /* --- CANLI ARAMA PANELI --- */
         .search-filter-grid {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 10px;
-            margin-bottom: 15px;
-            align-items: center;
+            display: grid; /* cite: 309 */
+            grid-template-columns: 1fr auto; /* cite: 309 */
+            gap: 10px; /* cite: 309 */
+            margin-bottom: 15px; /* cite: 309 */
+            align-items: center; /* cite: 310 */
         }
-        .search-wrapper { position: relative; width: 100%; }
+        .search-wrapper { position: relative; width: 100%; } /* cite: 310 */
         .date-filter-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            background: var(--card-bg);
-            border: 2px solid var(--table-border);
-            padding: 4px 8px;
-            border-radius: 6px;
+            display: flex; /* cite: 310 */
+            align-items: center; /* cite: 310 */
+            gap: 5px; /* cite: 310 */
+            background: var(--card-bg); /* cite: 310 */
+            border: 2px solid var(--table-border); /* cite: 311 */
+            padding: 4px 8px; /* cite: 311 */
+            border-radius: 6px; /* cite: 311 */
         }
-        .date-filter-wrapper input { border: none; outline: none; font-size: 13px; color: var(--text-dark); background: transparent; cursor: pointer; }
-        .btn-clear-date { background: none; border: none; color: #aaa; font-size: 16px; cursor: pointer; padding: 0 4px; }
+        .date-filter-wrapper input { border: none; outline: none; font-size: 13px; color: var(--text-dark); background: transparent; cursor: pointer; } /* cite: 311, 312 */
+        .btn-clear-date { background: none; border: none; color: #aaa; font-size: 16px; cursor: pointer; padding: 0 4px; } /* cite: 312, 313 */
         
-        /* --- TABLO TASARIMI VE KUSURSUZ HİZALAMA KATMANI --- */
-        .table-responsive { width: 100%; overflow-x: auto; border: 1px solid var(--table-border); border-radius: 6px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; background: var(--card-bg); table-layout: fixed; }
+        /* --- KUSURSUZ TABLO TASARIMI VE SAĞLAM HİZALAMA KATMANI --- */
+        .table-responsive { width: 100%; overflow-x: auto; border: 1px solid var(--table-border); border-radius: 6px; } /* cite: 313, 314 */
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; background: var(--card-bg); table-layout: fixed; } /* cite: 314 */
         
-        /* Tablo sütun genişlikleri ss.png görselindeki oranlara göre netleştirildi */
+        /* th ve td sütunlarının genişliklerini yüzdesel olarak sabitleyerek görsel kaymayı önlüyoruz */
         th:nth-child(1), td:nth-child(1) { width: 24%; } /* Malzeme Adı */
         th:nth-child(2), td:nth-child(2) { width: 13%; } /* Depo Birimi */
         th:nth-child(3), td:nth-child(3) { width: 13%; } /* Mevcut Stok */
@@ -419,119 +422,88 @@
         th:nth-child(6), td:nth-child(6) { width: 11%; } /* Durum */
         th:nth-child(7), td:nth-child(7) { width: 14%; text-align: right; padding-right: 15px; } /* İşlemler */
 
-        th { background-color: var(--secondary-color); color: var(--text-light); font-weight: 600; padding: 12px 10px; border-bottom: 2px solid var(--table-border); white-space: nowrap; }
-        td { padding: 12px 10px; border-bottom: 1px solid var(--table-border); vertical-align: middle; color: var(--text-dark); word-wrap: break-word; }
-        tr:hover td { background-color: rgba(0, 51, 141, 0.01); }
+        th { background-color: var(--secondary-color); color: var(--text-light); font-weight: 600; padding: 11px 10px; border-bottom: 2px solid var(--table-border); white-space: nowrap; } /* cite: 314, 315 */
+        td { padding: 9px 10px; border-bottom: 1px solid var(--table-border); vertical-align: middle; color: var(--text-dark); word-wrap: break-word; } /* cite: 315, 316 */
+        tr:hover td { background-color: rgba(0, 51, 141, 0.01); } /* cite: 316 */
         
-        .row-critical-alert td {
-            background-color: rgba(220, 53, 69, 0.03) !important;
-            animation: pulse-row-red 3s infinite ease-in-out;
-        }
+        .row-critical-alert td { background-color: rgba(220, 53, 69, 0.03) !important; animation: pulse-row-red 3s infinite ease-in-out; } /* cite: 317 */
         @keyframes pulse-row-red {
-            0%, 100% { background-color: rgba(220, 53, 69, 0.03); }
-            50% { background-color: rgba(220, 53, 69, 0.07); }
+            0%, 100% { background-color: rgba(220, 53, 69, 0.03); } /* cite: 318 */
+            50% { background-color: rgba(220, 53, 69, 0.07); } /* cite: 318 */
         }
-        .basket-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 10px;
-            border-bottom: 1px solid var(--table-border);
-            font-size: 13px;
-            color: var(--text-dark);
+        @keyframes criticalPulseBtn {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6); } /* cite: 319 */
+            70% { box-shadow: 0 0 0 5px rgba(40, 167, 69, 0); } /* cite: 320 */
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); } /* cite: 321 */
         }
-        .btn-remove-basket-item {
-            background: none;
-            border: none;
-            color: var(--danger-color);
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            margin-left: 8px;
-        }
-        .empty-basket-box {
-            border: 2px dashed var(--table-border);
-            border-radius: 8px;
-            padding: 25px 15px;
-            text-align: center;
-            color: var(--text-light);
-            background: var(--input-bg);
-            margin-bottom: 12px;
-        }
-        .empty-basket-box span.icon { font-size: 32px; display: block; margin-bottom: 6px; opacity: 0.6; }
-        .depot-tag { background: #e2e8f0; color: #475569; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; }
-        .lot-tag { background: #e0f2fe; color: #0369a1; padding: 2px 5px; border-radius: 4px; font-size: 10.5px; font-weight: 700; display: inline-block; margin-top: 2px; border: 1px solid #bae6fd; }
-        .date-tag { display: block; font-size: 11px; color: #94a3b8; margin-top: 2px; font-weight: normal; }
-        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
-        .status-safe { background: #d4edda; color: #155724; }
-        .status-critical { background: #f8d7da; color: #721c24; font-weight: 700; }
-        .skt-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; }
-        .skt-none { background: #f1f5f9; color: #64748b; }
-        .skt-ok { background: #e0f2fe; color: #0369a1; }
-        .skt-expired { background: #fee2e2; color: #b91c1c; }
+        .row-critical-alert .btn-add-stock { animation: criticalPulseBtn 1.5s infinite; font-weight: 800; } /* cite: 322 */
         
-        /* --- BUTON AKSİYON KATMANI (SAĞA TAM HİZALI DURUŞ) --- */
-        .action-btns { display: flex; gap: 4px; justify-content: flex-end; align-items: center; white-space: nowrap; }
-        .action-btn { border: none; padding: 6px 10px; border-radius: 4px; font-size: 11.5px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; }
-        .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); }
-        .btn-add-stock { background-color: var(--success-color); }
-        .btn-drop-stock { background-color: #ff9800; }
-        .btn-waste-stock { background-color: #795548; }
-        .btn-more-trigger {
-            background: transparent; color: var(--text-light); border: 1px solid var(--table-border); padding: 5px 8px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1;
-        }
-        .btn-more-trigger:hover { background: var(--secondary-color); color: var(--text-dark); border-color: var(--text-light); }
-        .actions-dropdown {
-            display: none; position: absolute; right: 0; top: 32px; background: var(--dropdown-bg); border: 1px solid var(--table-border); border-radius: 6px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 100; min-width: 110px; overflow: hidden; animation: slideDropdown 0.15s ease-out;
-        }
-        @keyframes slideDropdown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-        .dropdown-item { width: 100%; padding: 9px 12px; text-align: left; background: none; border: none; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--text-dark); }
-        .dropdown-item:hover { background: var(--dropdown-hover); }
-        .item-edit { color: #17a2b8; }
-        .item-delete { color: var(--danger-color); }
-        .total-row { background-color: var(--secondary-color); font-weight: bold; color: var(--text-dark); border-top: 2px solid #cbd5e1; }
-        .total-row td { padding: 14px 10px; font-size: 13px; }
+        /* --- EMPTY STATES --- */
+        .empty-state-container { text-align: center; padding: 45px 20px; color: var(--text-light); } /* cite: 323 */
+        .empty-state-icon { font-size: 44px; color: var(--text-light); margin-bottom: 10px; opacity: 0.5; } /* cite: 324 */
+        .empty-state-container h4 { font-size: 14.5px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; } /* cite: 324, 325 */
+        .empty-state-container p { font-size: 12.5px; } /* cite: 325 */
+        .empty-basket-box { border: 2px dashed var(--table-border); border-radius: 8px; padding: 25px 15px; text-align: center; color: var(--text-light); background: var(--input-bg); margin-bottom: 12px; } /* cite: 325, 326 */
+        .empty-basket-box span.icon { font-size: 32px; display: block; margin-bottom: 6px; opacity: 0.6; } /* cite: 326, 327 */
         
-        /* --- BİLDİRİM TOAST ALTYAPISI --- */
-        #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .custom-toast { background: #ffffff; color: #1e293b; padding: 14px 22px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 10px; min-width: 280px; max-width: 380px; pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; border-left: 5px solid #cbd5e1; }
-        @keyframes toastIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(40px); opacity: 0; } }
-        .toast-success { border-left-color: var(--success-color); }
-        .toast-error { border-left-color: var(--danger-color); }
-        .toast-warning { border-left-color: var(--warning-color); }
+        .depot-tag { background: #e2e8f0; color: #475569; padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; } /* cite: 327 */
+        .lot-tag { background: #e0f2fe; color: #0369a1; padding: 2px 5px; border-radius: 4px; font-size: 10.5px; font-weight: 700; display: inline-block; margin-top: 2px; border: 1px solid #bae6fd; } /* cite: 328, 329 */
+        .date-tag { display: block; font-size: 11px; color: #94a3b8; margin-top: 2px; font-weight: normal; } /* cite: 329, 330 */
+        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; } /* cite: 330 */
+        .status-safe { background: #d4edda; color: #155724; } /* cite: 331 */
+        .status-critical { background: #f8d7da; color: #721c24; font-weight: 700; } /* cite: 331, 332 */
+        .skt-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; display: inline-block; white-space: nowrap; } /* cite: 332, 333 */
+        .skt-none { background: #f1f5f9; color: #64748b; } /* cite: 333 */
+        .skt-ok { background: #e0f2fe; color: #0369a1; } /* cite: 333 */
+        .skt-expired { background: #fee2e2; color: #b91c1c; } /* cite: 333, 334 */
         
-        /* --- MODAL PLANI VE YAPILARI --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px; }
-        .modal-content { background: var(--card-bg); border-radius: var(--border-radius); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.25s ease-out; overflow: hidden; border: 1px solid var(--table-border); }
-        .modal-large { max-width: 850px; }
-        .modal-header { background: var(--secondary-color); padding: 15px 20px; border-bottom: 1px solid var(--table-border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-header h3 { font-size: 16px; color: var(--text-dark); font-weight: 600; }
-        .modal-close-btn { background: none; border: none; font-size: 22px; color: #94a3b8; cursor: pointer; }
-        .modal-body { padding: 20px; max-height: 75vh; overflow-y: auto; }
-        .modal-footer-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
-        .btn-secondary { background: #e2e8f0; color: #475569; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; }
-        .badge-order { padding: 3px 6px; border-radius: 4px; font-size: 11px; background: #e0f2fe; color: #0369a1; display: inline-block; }
-        .btn-undo { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; margin-right: 4px; }
-        .btn-report-del { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
-        .btn-report-batch { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; display: none; }
-        .btn-print-system { background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; margin-top: 15px; width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; }
-        .skeleton-block { height: 14px; background: #e2e8f0; border-radius: 4px; width: 85%; }
+        /* --- SKELETON LOADER --- */
+        @keyframes skeletonShimmer { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } } /* cite: 334, 335 */
+        .skeleton-block { height: 14px; background: #e2e8f0; background-image: linear-gradient(90deg, #e2e8f0 0px, #cbd5e1 40px, #e2e8f0 8px); background-size: 400px 100%; background-repeat: no-repeat; animation: skeletonShimmer 1.4s infinite linear; border-radius: 4px; width: 85%; } /* cite: 335, 336 */
         
-        /* --- GELİŞMİŞ MODAL RAPOR FİLTRELEME ALANI --- */
-        .modal-filter-zone {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            background: var(--secondary-color);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border: 1px solid var(--table-border);
-        }
-        @media (max-width: 580px) {
-            .modal-filter-zone { grid-template-columns: 1fr; }
-        }
+        /* --- AKSİYON BUTONLARI KATMANI (SAĞA TAM HİZALI DURUŞ) --- */
+        .action-btns { display: flex; gap: 4px; justify-content: flex-end; white-space: nowrap; align-items: center; position: relative; } /* cite: 337, 338 */
+        .action-btn { border: none; padding: 6px 11px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; color: white; display: inline-flex; align-items: center; justify-content: center; } /* cite: 338, 339 */
+        .action-btn:hover { transform: translateY(-1px); filter: brightness(0.9); } /* cite: 339 */
+        .btn-add-stock { background-color: var(--success-color); } /* cite: 340 */
+        .btn-drop-stock { background-color: #ff9800; } /* cite: 340 */
+        .btn-waste-stock { background-color: #795548; } /* cite: 340, 341 */
+        
+        .btn-more-trigger { background: transparent; color: var(--text-light); border: 1px solid var(--table-border); padding: 5px 10px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; line-height: 1; } /* cite: 341, 342 */
+        .btn-more-trigger:hover { background: var(--secondary-color); color: var(--text-dark); border-color: var(--text-light); } /* cite: 342, 343 */
+        .actions-dropdown { display: none; position: absolute; right: 0; top: 32px; background: var(--dropdown-bg); border: 1px solid var(--table-border); border-radius: 6px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 100; min-width: 110px; overflow: hidden; animation: slideDropdown 0.15s ease-out; } /* cite: 343, 344 */
+        @keyframes slideDropdown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } } /* cite: 345, 346 */
+        .dropdown-item { width: 100%; padding: 9px 12px; text-align: left; background: none; border: none; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; color: var(--text-dark); } /* cite: 346, 347 */
+        .dropdown-item:hover { background: var(--dropdown-hover); } /* cite: 347 */
+        .item-edit { color: #17a2b8; } /* cite: 347 */
+        .item-delete { color: var(--danger-color); } /* cite: 348 */
+        
+        .total-row { background-color: var(--secondary-color); font-weight: bold; color: var(--text-dark); border-top: 2px solid #cbd5e1; } /* cite: 348 */
+        .total-row td { padding: 14px 10px; font-size: 13px; } /* cite: 349 */
+        
+        /* --- SİSTEMİK TOAST BİLDİRİM MİMARİSİ --- */
+        #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; } /* cite: 349, 350 */
+        .custom-toast { background: #ffffff; color: #1e293b; padding: 14px 22px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 10px; min-width: 280px; max-width: 380px; pointer-events: auto; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; border-left: 5px solid #cbd5e1; } /* cite: 350, 351, 352 */
+        @keyframes toastIn { from { transform: translateX(40px); opacity: 0; } to { transform: translateX(0); opacity: 1; } } /* cite: 353, 354 */
+        @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(40px); opacity: 0; } } /* cite: 354, 355 */
+        .toast-success { border-left-color: var(--success-color); } /* cite: 355 */
+        .toast-error { border-left-color: var(--danger-color); } /* cite: 355 */
+        .toast-warning { border-left-color: var(--warning-color); } /* cite: 355 */
+        
+        /* --- MODALLAR --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(3px); display: none; justify-content: center; align-items: center; z-index: 9999; padding: 15px; } /* cite: 356, 357 */
+        .modal-content { background: var(--card-bg); border-radius: var(--border-radius); width: 100%; max-width: 500px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.25s ease-out; overflow: hidden; border: 1px solid var(--table-border); } /* cite: 357, 358 */
+        .modal-large { max-width: 850px; } /* cite: 359 */
+        .modal-header { background: var(--secondary-color); padding: 15px 20px; border-bottom: 1px solid var(--table-border); display: flex; justify-content: space-between; align-items: center; } /* cite: 359, 360 */
+        .modal-header h3 { font-size: 16px; color: var(--text-dark); font-weight: 600; } /* cite: 360 */
+        .modal-close-btn { background: none; border: none; font-size: 22px; color: #94a3b8; cursor: pointer; } /* cite: 360, 361 */
+        .modal-body { padding: 20px; max-height: 75vh; overflow-y: auto; } /* cite: 361, 362 */
+        .modal-footer-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; } /* cite: 362 */
+        .btn-secondary { background: #e2e8f0; color: #475569; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; } /* cite: 362, 363 */
+        .badge-order { padding: 3px 6px; border-radius: 4px; font-size: 11px; background: #e0f2fe; color: #0369a1; display: inline-block; } /* cite: 363, 364 */
+        .btn-undo { background: #e6f4ea; color: #137333; border: 1px solid #ceead6; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; margin-right: 4px; } /* cite: 364, 365 */
+        .btn-report-del { background: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; } /* cite: 365, 366 */
+        .btn-print-system { background: #6c757d; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; margin-top: 15px; width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; } /* cite: 366, 367, 368 */
     </style>
 </head>
 <body>
@@ -539,345 +511,150 @@
     <header>
         <div class="header-top-row">
             <div class="brand-container">
-                <img src="akilli_depo_logo.jpeg.jpeg" alt="Logo" class="header-logo" title="Akıllı Depo Otomasyon Sistemi">
-                <div class="header-title">
-                    <h1>Bahçelievler Memorial CT</h1>
-                    <p>Akıllı Depo Otomasyon & Canlı Stok Takip Sistemi</p>
-                </div>
+                <img src="akilli_depo_logo.jpeg.jpeg" alt="Logo" class="header-logo" title="Akıllı Depo Otomasyon Sistemi"> <div class="header-title">
+                    <h1>Bahçelievler Memorial CT</h1> <p>Akıllı Depo Otomasyon & Canlı Stok Takip Sistemi</p> </div>
             </div>
             <div class="user-meta-zone">
-                <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleThemeMode()">🌙 Gece Modu</button>
-                <span class="badge" id="roleBadge">👤 Rol: YÖNETİCİ</span>
-                <span class="live-clock" id="liveClockDisplay">📅 --.--.---- | 🕒 --:--:--</span>
-            </div>
+                <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleThemeMode()">🌙 Gece Modu</button> <span class="badge" id="roleBadge">👤 Rol: YÖNETİCİ</span> <span class="live-clock" id="liveClockDisplay">📅 --.--.---- | 🕒 --:--:--</span> </div>
         </div>
         <div class="header-actions-row">
             <button class="nav-btn btn-urgent" id="sktAlertButton" onclick="openSktUrgentModal()">⚠️ SKT Kritik (0 Ürün)</button>
-            <button class="nav-btn" id="openReportBtn">📋 İşlem Geçmişi Raporu</button>
-            <button class="nav-btn" id="openOrdersBtn">🛒 Verilen Siparişler</button>
-            <button class="nav-btn btn-logout" id="logoutBtn">❌ Güvenli Çıkış</button>
-        </div>
+            <button class="nav-btn" id="openReportBtn">📋 İşlem Geçmişi Raporu</button> <button class="nav-btn" id="openOrdersBtn">🛒 Verilen Siparişler</button> <button class="nav-btn btn-logout" id="logoutBtn">❌ Güvenli Çıkış</button> </div>
     </header>
 
     <div class="dashboard-grid">
         <div class="stat-card">
-            <div class="stat-card-info"><h3>Toplam Ürün Çeşidi</h3><p id="dashTotalItems">0</p></div>
-            <div class="stat-card-icon bg-blue-soft">📦</div>
-        </div>
+            <div class="stat-card-info"><h3>Toplam Ürün Çeşidi</h3><p id="dashTotalItems">0</p></div> <div class="stat-card-icon bg-blue-soft">📦</div> </div>
         <div class="stat-card">
-            <div class="stat-card-info"><h3>Kritik Stok Alarmları</h3><p id="dashCriticalItems" style="color: #dc3545;">0</p></div>
-            <div class="stat-card-icon bg-red-soft">🚨</div>
-        </div>
+            <div class="stat-card-info"><h3>Kritik Stok Alarmları</h3><p id="dashCriticalItems" style="color: #dc3545;">0</p></div> <div class="stat-card-icon bg-red-soft">🚨</div> </div>
         <div class="stat-card">
-            <div class="stat-card-info"><h3>SKT Yaklaşan / Dolan</h3><p id="dashSktItems" style="color: #ff9800;">0</p></div>
-            <div class="stat-card-icon bg-orange-soft">⏳</div>
-        </div>
+            <div class="stat-card-info"><h3>SKT Yaklaşan / Dolan</h3><p id="dashSktItems" style="color: #ff9800;">0</p></div> <div class="stat-card-icon bg-orange-soft">⏳</div> </div>
     </div>
 
-    <div class="main-container two-columns" id="mainContainer">
-        <div id="addProductColumn" class="forms-stack">
-            <div class="card" id="newProductCardPanel">
-                <div class="card-title">✨ Yeni Malzeme Tanımlama</div>
-                <form id="addForm">
+    <div class="main-container two-columns" id="mainContainer"> <div id="addProductColumn" class="forms-stack"> <div class="card">
+                <div class="card-title">✨ Yeni Malzeme Tanımlama</div> <form id="addForm"> <div class="form-group">
+                        <label>Malzeme Adı:</label> <input type="text" class="form-control" id="newProdName" placeholder="Örn: SÜT 1 LT" required style="text-transform: uppercase;"> </div>
                     <div class="form-group">
-                        <label>Malzeme Adı:</label>
-                        <input type="text" class="form-control" id="newProdName" placeholder="Örn: SÜT 1 LT" required style="text-transform: uppercase;">
+                        <label>Depo / Konum:</label> <select class="form-control" id="newProdDepot"> <option value="ET +4">ET +4</option><option value="ET -18">ET -18</option><option value="PASTANE +4">PASTANE +4</option><option value="PASTANE -18">PASTANE -18</option><option value="SEBZE +4">SEBZE +4</option><option value="SEBZE -18">SEBZE -18</option><option value="ŞARKÜTERİ">ŞARKÜTERİ</option><option value="KURU GIDA">KURU GIDA</option><option value="KİMYASAL">KİMYASAL</option><option value="SARF DEPO">SARF DEPO</option> </select>
                     </div>
                     <div class="form-group">
-                        <label>Depo / Konum:</label>
-                        <select class="form-control" id="newProdDepot">
-                            <option value="ET +4">ET +4</option><option value="ET -18">ET -18</option><option value="PASTANE +4">PASTANE +4</option><option value="PASTANE -18">PASTANE -18</option><option value="SEBZE +4">SEBZE +4</option><option value="SEBZE -18">SEBZE -18</option><option value="ŞARKÜTERİ">ŞARKÜTERİ</option><option value="KURU GIDA">KURU GIDA</option><option value="KİMYASAL">KİMYASAL</option><option value="SARF DEPO">SARF DEPO</option>
-                        </select>
+                        <label>Ölçü Birimi:</label> <select class="form-control" id="newProdUnit"> <option value="Adet">Adet</option><option value="Kg">Kg</option><option value="Litre">Litre</option><option value="Koli">Koli</option><option value="Paket">Paket</option> </select>
                     </div>
                     <div class="form-group">
-                        <label>Ölçü Birimi:</label>
-                        <select class="form-control" id="newProdUnit">
-                            <option value="Adet">Adet</option><option value="Kg">Kg</option><option value="Litre">Litre</option><option value="Koli">Koli</option><option value="Paket">Paket</option>
-                        </select>
-                    </div>
+                        <label>Başlangıç Stok Miktarı:</label> <input type="number" step="0.01" class="form-control" id="newProdQty" value="0" required> </div>
                     <div class="form-group">
-                        <label>Başlangıç Stok Miktarı:</label>
-                        <input type="number" step="0.01" class="form-control" id="newProdQty" value="0" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Kritik Stok Sınırı (Limit):</label>
-                        <input type="number" step="0.01" class="form-control" id="newProdLimit" value="5" required>
-                    </div>
-                    <div class="accordion-trigger" type="button" onclick="toggleAccordion(this)">
-                        <span>Gelişmiş / Detaylı Bilgiler (Opsiyonel)</span><span>⚙️ ▼</span>
-                    </div>
-                    <div class="accordion-content" id="advancedFormFields">
-                        <div class="form-group" style="margin-top:8px;">
-                            <label>Lot / Parti No:</label>
-                            <input type="text" class="form-control" id="newProdLot" placeholder="Örn: LOT2026A" style="text-transform: uppercase;">
-                        </div>
+                        <label>Kritik Stok Sınırı (Limit):</label> <input type="number" step="0.01" class="form-control" id="newProdLimit" value="5" required> </div>
+                    <div class="accordion-trigger" type="button" onclick="toggleAccordion(this)"> <span>Gelişmiş / Detaylı Bilgiler (Opsiyonel)</span> <span>⚙️ ▼</span> </div>
+                    <div class="accordion-content" id="advancedFormFields"> <div class="form-group" style="margin-top:8px;">
+                            <label>Lot / Parti No:</label> <input type="text" class="form-control" id="newProdLot" placeholder="Örn: LOT2026A" style="text-transform: uppercase;"> </div>
                         <div class="form-group">
-                            <label>Son Kullanma Tarihi (SKT):</label>
-                            <input type="date" class="form-control" id="newProdSkt">
-                        </div>
+                            <label>Son Kullanma Tarihi (SKT):</label> <input type="date" class="form-control" id="newProdSkt"> </div>
                     </div>
-                    <button type="submit" class="btn-submit">Kayıt Aç ve Envantere Ekle 💾</button>
-                </form>
+                    <button type="submit" class="btn-submit">Kayıt Aç ve Envantere Ekle 💾</button> </form>
             </div>
-            
-            <div class="card" id="basketCardPanel">
-                <div class="card-title">🛒 Malzeme Talep Listesi / Sepet <span id="basketCount" style="font-size:13px; color:var(--text-light); margin-left:5px;">(0 Ürün)</span></div>
-                <form id="orderForm">
-                    <div class="form-group">
-                        <label>Malzeme Seçin:</label>
-                        <div class="searchable-select-container" id="selectContainerBlock">
-                            <input type="text" id="customSelectSearch" class="select-search-input" placeholder="🔍 Seçmek için malzeme adı yazın..." onfocus="openSelectDropdown(event)" onkeyup="filterSelectOptions()">
-                            <input type="hidden" id="orderProductSelect" value="">
-                            <div class="select-options-panel" id="customSelectOptionsPanel"></div>
-                        </div>
+
+            <div class="card">
+                <div class="card-title">🛒 Malzeme Talep Listesi / Sepet <span id="basketCount" style="font-size:13px; color:var(--text-light); margin-left:5px;">(0 Ürün)</span></div> <form id="orderForm"> <div class="form-group">
+                        <label>Malzeme Seçin:</label> <div class="searchable-select-container" id="selectContainerBlock"> <input type="text" id="customSelectSearch" class="select-search-input" placeholder="🔍 Seçmek için malzeme adı yazın..." onfocus="openSelectDropdown(event)" onkeyup="filterSelectOptions()"> <input type="hidden" id="orderProductSelect" value=""> <div class="select-options-panel" id="customSelectOptionsPanel"></div> </div>
                     </div>
                     <div class="form-group" style="margin-top: 12px;">
-                        <label>Miktar:</label>
-                        <input type="number" step="0.01" class="form-control" id="orderQty" placeholder="Talep Edilecek Adet/Kg">
-                    </div>
-                    <button type="button" class="btn-submit" style="background:#00338d; margin-bottom:15px;" onclick="addItemToBasket()">Listeye / Sepete Ekle ➕</button>
-                    <div id="basketVisualWrapper">
-                        <div class="empty-basket-box" id="emptyBasketBox">
-                            <span class="icon">🛒</span>
-                            <p style="font-size:12.5px; font-weight:700; margin-bottom:2px;">Talep Sepetiniz Boş</p>
-                            <p style="font-size:11px; opacity:0.8;">Yukarıdan malzeme ve miktar seçerek listenizi oluşturmaya başlayabilirsiniz.</p>
-                        </div>
-                        <ul id="basketListVisual" style="list-style: none; display:none; background: var(--input-bg); padding:10px; border-radius:8px;"></ul>
-                    </div>
+                        <label>Miktar:</label> <input type="number" step="0.01" class="form-control" id="orderQty" placeholder="Talep Edilecek Adet/Kg"> </div>
+                    <button type="button" class="btn-submit" style="background:#00338d; margin-bottom:15px;" onclick="addItemToBasket()">Listeye / Sepete Ekle ➕</button> <div id="basketVisualWrapper"> <div class="empty-basket-box" id="emptyBasketBox"> <span class="icon">🛒</span> <p style="font-size:12.5px; font-weight:700; margin-bottom:2px;">Talep Sepetiniz Boş</p> <p style="font-size:11px; opacity:0.8;">Yukarıdan malzeme ve miktar seçerek listenizi oluşturmaya başlayabilirsiniz.</p> </div>
+                        <ul id="basketListVisual" style="list-style: none; display:none; background: var(--input-bg); padding:10px; border-radius:8px;"></ul> </div>
                     <div class="form-group" style="display: none;">
-                        <label>Hedef E-Posta:</label>
-                        <input type="email" class="form-control" id="orderEmail" value="bahcelievlermemorialct@gmail.com" required>
-                    </div>
+                        <label>Hedef E-Posta:</label> <input type="email" class="form-control" id="orderEmail" value="bahcelievlermemorialct@gmail.com" required> </div>
                     <div class="form-group">
-                        <label>Talep / Teslimat Notu:</label>
-                        <input type="text" class="form-control" id="orderNotes" placeholder="Varsa mutfak notu veya detay yazın...">
-                    </div>
-                    <button type="submit" class="btn-submit">Talep Listesini Tamamla ve E-Posta Gönder 🚀</button>
-                </form>
+                        <label>Talep / Teslimat Notu:</label> <input type="text" class="form-control" id="orderNotes" placeholder="Varsa mutfak notu veya detay yazın..."> </div>
+                    <button type="submit" class="btn-submit">Talep Listesini Tamamla ve E-Posta Gönder 🚀</button> </form>
             </div>
         </div>
 
-        <div class="card" id="inventoryTableColumn">
-            <div class="card-title">🟢 Anlık Stok Durumu & Malzeme Listesi</div>
-            <div class="depot-filter-bar" id="depotButtonsBar">
-                <button class="btn-depot-filter active" onclick="filterByDepot('HEPSİ')">HEPSİ</button>
+        <div class="card">
+            <div class="card-title">🟢 Anlık Stok Durumu & Malzeme Listesi</div> <div class="depot-filter-bar" id="depotButtonsBar"> <button class="btn-depot-filter active" onclick="filterByDepot('HEPSİ')">HEPSİ</button> </div>
+            <div class="search-filter-grid"> <div class="search-wrapper"> <input type="text" class="form-control" id="searchInput" placeholder="🔍 Malzeme adı ile canlı ara..."> </div>
+                <div class="date-filter-wrapper"> <span style="font-size:11px; font-weight:bold; color:#666;">Güncelleme:</span> <input type="date" id="dateFilterInput"> <button class="btn-clear-date" onclick="clearDateFilter()" title="Tarih Filtresini Temizle">&times;</button> </div>
             </div>
-            <div class="search-filter-grid">
-                <div class="search-wrapper">
-                    <input type="text" class="form-control" id="searchInput" placeholder="🔍 Malzeme adı ile canlı ara...">
-                </div>
-                <div class="date-filter-wrapper">
-                    <span style="font-size:11px; font-weight:bold; color:#666;">Güncelleme:</span>
-                    <input type="date" id="dateFilterInput">
-                    <button class="btn-clear-date" onclick="clearDateFilter()" title="Tarih Filtresini Temizle">&times;</button>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table>
+            <div class="table-responsive"> <table>
                     <thead>
                         <tr>
-                            <th>Malzeme Adı</th>
-                            <th>Depo Birimi</th>
-                            <th>Mevcut Stok</th>
-                            <th>Kritik Limit</th>
-                            <th>S.K.T.</th>
-                            <th>Durum</th>
-                            <th style="text-align: right; padding-right: 15px;">İşlemler</th>
+                            <th>Malzeme Adı</th> <th>Depo Birimi</th> <th>Mevcut Stok</th> <th>Kritik Limit</th> <th>S.K.T.</th> <th>Durum</th> <th style="text-align: right; padding-right: 15px;">İşlemler</th>
                         </tr>
                     </thead>
-                    <tbody id="liveMaterialsBody">
-                        <tr><td colspan="7"><div class="skeleton-block"></div></td></tr>
-                    </tbody>
-                    <tfoot id="tableTotalFooter"></tfoot>
-                </table>
+                    <tbody id="liveMaterialsBody"> <tr class="skeleton-row"><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td><td><div class="skeleton-block"></div></td></tr> </tbody>
+                    <tfoot id="tableTotalFooter"></tfoot> </table>
             </div>
-            <button class="btn-print-system" onclick="window.print()">🖨️ Sayfayı Yazdır / Resmi PDF Raporu Al</button>
-        </div>
+            <button class="btn-print-system" onclick="window.print()">🖨️ Sayfayı Yazdır / Resmi PDF Raporu Al</button> </div>
     </div>
 
-    <div class="modal-overlay" id="stockActionModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="actionModalTitle">Stok İşlemi</h3>
-                <button class="modal-close-btn" onclick="closeStockActionModal()">&times;</button>
-            </div>
-            <form id="stockActionForm">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label id="actionQtyLabel">Miktar:</label>
-                        <input type="number" step="0.01" class="form-control" id="actionModalQty" required placeholder="0.00">
-                    </div>
-                    <div id="partySktGroup" style="display:none; background:#f0f7ff; padding:12px; border-radius:6px; border:1px solid #b3d7ff; margin-top:10px;">
-                        <div class="form-group">
-                            <label style="color:#00338d; font-weight:bold;">✨ Giriş Lot / Parti No:</label>
-                            <input type="text" class="form-control" id="actionModalLot" placeholder="Örn: LOT34" style="text-transform: uppercase;">
-                        </div>
+    <div class="modal-overlay" id="stockActionModal"> <div class="modal-content"> <div class="modal-header"> <h3 id="actionModalTitle">Stok İşlemi</h3> <button class="modal-close-btn" onclick="closeStockActionModal()">&times;</button> </div>
+            <form id="stockActionForm"> <div class="modal-body"> <div class="form-group">
+                        <label id="actionQtyLabel">Miktar:</label> <input type="number" step="0.01" class="form-control" id="actionModalQty" required placeholder="0.00"> </div>
+                    <div id="partySktGroup" style="display:none; background:#f0f7ff; padding:12px; border-radius:6px; border:1px solid #b3d7ff; margin-top:10px;"> <div class="form-group">
+                            <label style="color:#00338d; font-weight:bold;">✨ Giriş Lot / Parti No:</label> <input type="text" class="form-control" id="actionModalLot" placeholder="Örn: LOT34" style="text-transform: uppercase;"> </div>
                         <div class="form-group" style="margin-bottom: 0;">
-                            <label style="color:#00338d; font-weight:bold;">✨ Son Kullanma Tarihi Seçin:</label>
-                            <input type="date" class="form-control" id="actionModalSkt">
-                        </div>
+                            <label style="color:#00338d; font-weight:bold;">✨ Son Kullanma Tarihi Seçin:</label> <input type="date" class="form-control" id="actionModalSkt"> </div>
                     </div>
                 </div>
-                <div class="modal-header" style="border-top: 1px solid #e2e8f0; border-bottom: none;">
-                    <div></div>
-                    <div class="modal-footer-btns">
-                        <button type="button" class="btn-secondary" onclick="closeStockActionModal()">İptal</button>
-                        <button type="submit" class="btn-submit" style="margin:0; width:auto; padding: 10px 20px;">Onayla ve Kaydet 🚀</button>
-                    </div>
+                <div class="modal-header" style="border-top: 1px solid #e2e8f0; border-bottom: none;"> <div></div>
+                    <div class="modal-footer-btns"> <button type="button" class="btn-secondary" onclick="closeStockActionModal()">İptal</button> <button type="submit" class="btn-submit" style="margin:0; width:auto; padding: 10px 20px;">Onayla ve Kaydet 🚀</button> </div>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="modal-overlay" id="productEditModal">
-        <div class="modal-content">
-            <div class="modal-header" style="background:#17a2b8; color:white;">
-                <h3 id="editModalTitle" style="color:white;">✏️ Malzeme Bilgilerini Düzenle</h3>
-                <button class="modal-close-btn" onclick="closeProductEditModal()" style="color:white;">&times;</button>
-            </div>
-            <form id="productEditForm">
-                <div class="modal-body">
+    <div class="modal-overlay" id="productEditModal"> <div class="modal-content"> <div class="modal-header" style="background:#17a2b8; color:white;"> <h3 id="editModalTitle" style="color:white;">✏️ Malzeme Bilgilerini Düzenle</h3> <button class="modal-close-btn" onclick="closeProductEditModal()" style="color:white;">&times;</button> </div>
+            <form id="productEditForm"> <div class="modal-body"> <div class="form-group">
+                        <label>Malzeme Adı:</label> <input type="text" class="form-control" id="editProdName" disabled style="background:#e9ecef;"> </div>
                     <div class="form-group">
-                        <label>Malzeme Adı:</label>
-                        <input type="text" class="form-control" id="editProdName" disabled style="background:#e9ecef;">
-                    </div>
+                        <label>Mevcut Stok Miktarı:</label> <input type="number" step="0.01" class="form-control" id="editProdQty" required> </div>
                     <div class="form-group">
-                        <label>Mevcut Stok Miktarı:</label>
-                        <input type="number" step="0.01" class="form-control" id="editProdQty" required>
-                    </div>
+                        <label>Kritik Stok Sınırı (Limit):</label> <input type="number" step="0.01" class="form-control" id="editProdLimit" required> </div>
                     <div class="form-group">
-                        <label>Kritik Stok Sınırı (Limit):</label>
-                        <input type="number" step="0.01" class="form-control" id="editProdLimit" required>
-                    </div>
+                        <label>Lot / Parti No:</label> <input type="text" class="form-control" id="editProdLot" style="text-transform: uppercase;"> </div>
                     <div class="form-group">
-                        <label>Lot / Parti No:</label>
-                        <input type="text" class="form-control" id="editProdLot" style="text-transform: uppercase;">
-                    </div>
-                    <div class="form-group">
-                        <label>Son Kullanma Tarihi (SKT):</label>
-                        <input type="date" class="form-control" id="editProdSkt">
-                    </div>
+                        <label>Son Kullanma Tarihi (SKT):</label> <input type="date" class="form-control" id="editProdSkt"> </div>
                 </div>
-                <div class="modal-header" style="border-top: 1px solid #e2e8f0; border-bottom: none;">
-                    <div></div>
-                    <div class="modal-footer-btns">
-                        <button type="button" class="btn-secondary" onclick="closeProductEditModal()">İptal</button>
-                        <button type="submit" class="btn-submit" style="margin:0; width:auto; background:#17a2b8; padding: 10px 20px;">Değişiklikleri Kaydet 💾</button>
-                    </div>
+                <div class="modal-header" style="border-top: 1px solid #e2e8f0; border-bottom: none;"> <div></div>
+                    <div class="modal-footer-btns"> <button type="button" class="btn-secondary" onclick="closeProductEditModal()">İptal</button> <button type="submit" class="btn-submit" style="margin:0; width:auto; background:#17a2b8; padding: 10px 20px;">Değişiklikleri Kaydet 💾</button> </div>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="modal-overlay" id="sktUrgentModal">
-        <div class="modal-content modal-large">
-            <div class="modal-header" style="background:#fff3cd;">
-                <h3 style="color:#856404;">🚨 Son Kullanma Tarihi Yaklaşan / Dolan Malzemeler (Bugün & 1 Gün Kala)</h3>
-                <button class="modal-close-btn" onclick="closeSktUrgentModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table style="table-layout: auto;">
+    <div class="modal-overlay" id="sktUrgentModal"> <div class="modal-content modal-large"> <div class="modal-header" style="background:#fff3cd;"> <h3 style="color:#856404;">🚨 Son Kullanma Tarihi Yaklaşan / Dolan Malzemeler</h3> <button class="modal-close-btn" onclick="closeSktUrgentModal()">&times;</button> </div>
+            <div class="modal-body"> <div class="table-responsive"> <table>
                         <thead>
                             <tr>
-                                <th>Malzeme Adı</th>
-                                <th>Depo Konumu</th>
-                                <th>Mevcut Miktar</th>
-                                <th>Kalan Süre</th>
-                                <th>S.K.T. Tarihi</th>
-                            </tr>
+                                <th>Malzeme Adı</th> <th>Depo Konumu</th> <th>Mevcut Miktar</th> <th>Kalan Süre</th> <th>S.K.T. Tarihi</th> </tr>
                         </thead>
                         <tbody id="sktUrgentTableBody"></tbody>
                     </table>
                 </div>
             </div>
-            <div class="modal-header" style="border-bottom:none;">
-                <div></div>
-                <button class="btn-secondary" onclick="closeSktUrgentModal()">Kapat</button>
-            </div>
+            <div class="modal-header" style="border-bottom:none;"> <div></div>
+                <button class="btn-secondary" onclick="closeSktUrgentModal()">Kapat</button> </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="reportModal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h3>📋 Sistem İşlem Geçmişi / Log Raporu</h3>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <button class="btn-report-batch" id="batchDeleteReportsBtn" onclick="deleteSelectedReports()">Seçilenleri Sil 🗑️</button>
-                    <button class="modal-close-btn" id="closeReportBtnSpec">&times;</button>
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="modal-filter-zone">
-                    <div class="form-group" style="margin:0;">
-                        <label style="font-size:11px; font-weight:700;">🔍 Malzeme Adı İle Ara:</label>
-                        <input type="text" class="form-control" id="modalReportSearchInput" placeholder="Loglarda malzeme adı ara..." oninput="filterModalReportsUi()">
-                    </div>
-                    <div class="form-group" style="margin:0;">
-                        <label style="font-size:11px; font-weight:700;">📊 İşlem Türü Seç:</label>
-                        <select class="form-control" id="modalReportTypeSelect" onchange="filterModalReportsUi()">
-                            <option value="HEPSİ">HEPSİ</option>
-                            <option value="GİRİŞ">GİRİŞ</option>
-                            <option value="ÇIKIŞ">ÇIKIŞ</option>
-                            <option value="İMHA">İMHA</option>
-                            <option value="YENİ ÜRÜN">YENİ ÜRÜN</option>
-                            <option value="BİLGİ GÜNCELLEME">BİLGİ GÜNCELLEME</option>
-                            <option value="STOK + SKT GİRİŞİ">STOK + SKT GİRİŞİ</option>
-                            <option value="SKT OTOMATİK SİLME">SKT OTOMATİK SİLME</option>
-                            <option value="MALZEME KARTINI SİL">MALZEME KARTINI SİL</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button class="btn-report-del" id="clearAllReportsBtn" onclick="clearAllReports()" style="display:none; margin-bottom:12px; float:right; padding:8px 12px; font-size:12px;">Tüm İşlem Geçmişini Sıfırla 🗑️</button>
-                <div style="clear:both;"></div>
-                <div class="table-responsive">
-                    <table style="table-layout: auto;">
+    <div class="modal-overlay" id="reportModal"> <div class="modal-content modal-large"> <div class="modal-header"> <h3>📋 Sistem İşlem Geçmişi / Log Raporu</h3> <button class="modal-close-btn" id="closeReportBtn">&times;</button> </div>
+            <div class="modal-body"> <button class="btn-report-del" id="clearAllReportsBtn" onclick="clearAllReports()" style="display:none; margin-bottom:12px; float:right; padding:8px 12px; font-size:12px;">Tüm İşlem Geçmişini Sıfırla 🗑️</button> <div style="clear:both;"></div> <div class="table-responsive"> <table>
                         <thead>
                             <tr>
-                                <th style="width: 40px; text-align: center;"><input type="checkbox" id="selectAllReports" onclick="toggleSelectAll('report')"></th>
-                                <th>İşlem Tarihi</th>
-                                <th>Yapan Rol</th>
-                                <th>Malzeme</th>
-                                <th>İşlem Türü</th>
-                                <th>Miktar</th>
-                                <th style="text-align: right; padding-right: 20px;">Aksiyon</th>
-                            </tr>
+                                <th>İşlem Tarihi</th> <th>Yapan Rol</th> <th>Malzeme</th> <th>İşlem Türü</th> <th>Miktar</th> <th>Aksiyon</th> </tr>
                         </thead>
-                        <tbody id="reportTableBody"></tbody>
-                    </table>
+                        <tbody id="reportTableBody"></tbody> </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="ordersListModal">
-        <div class="modal-content modal-large">
-            <div class="modal-header">
-                <h3>🛒 Verilen Malzeme Siparişleri & Talepleri Listesi</h3>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <button class="btn-report-batch" id="batchDeleteOrdersBtn" onclick="deleteSelectedOrders()">Seçilen Siparişleri Sil 🗑️</button>
-                    <button class="modal-close-btn" id="closeOrdersBtnSpec">&times;</button>
-                </div>
-            </div>
-            <div class="modal-body">
-                <button class="btn-report-del" id="clearAllOrdersBtn" onclick="clearAllOrders()" style="display:none; margin-bottom:12px; float:right; padding:8px 12px; font-size:12px;">Tüm Sipariş Listesini Temizle 🗑️</button>
-                <div style="clear:both;"></div>
-                <div class="table-responsive">
-                    <table style="table-layout: auto;">
+    <div class="modal-overlay" id="ordersListModal"> <div class="modal-content modal-large"> <div class="modal-header"> <h3>🛒 Verilen Malzeme Siparişleri & Talepleri Listesi</h3> <button class="modal-close-btn" id="closeOrdersBtn">&times;</button> </div>
+            <div class="modal-body"> <button class="btn-report-del" id="clearAllOrdersBtn" onclick="clearAllOrders()" style="display:none; margin-bottom:12px; float:right; padding:8px 12px; font-size:12px;">Tüm Sipariş Listesini Temizle 🗑️</button> <div style="clear:both;"></div> <div class="table-responsive"> <table>
                         <thead>
                             <tr>
-                                <th style="width: 40px; text-align: center;"><input type="checkbox" id="selectAllOrders" onclick="toggleSelectAll('order')"></th>
-                                <th>Sipariş Tarihi</th>
-                                <th>Talep Eden</th>
-                                <th>Malzeme Adı</th>
-                                <th>İstenen Miktar</th>
-                                <th>Açıklama / Not</th>
-                                <th id="orderActionHeader" style="text-align: right; padding-right: 20px;">İşlem</th>
-                            </tr>
+                                <th>Sipariş Tarihi</th> <th>Talep Eden</th> <th>Malzeme Adı</th> <th>İstenen Miktar</th> <th>Açıklama / Not</th> <th id="orderActionHeader">İşlem</th> </tr>
                         </thead>
-                        <tbody id="ordersTableBody"></tbody>
-                    </table>
+                        <tbody id="ordersTableBody"></tbody> </table>
                 </div>
             </div>
         </div>
@@ -885,752 +662,661 @@
 
     <script>
         if(localStorage.getItem('isLoggedIn') !== 'true') {
-            window.location.replace('login.html');
+            window.location.replace('login.html'); // cite: 387
         }
-        emailjs.init("LzIhLTNYH47AasrBj");
-        const currentRole = (localStorage.getItem('userRole') || 'YÖNETİCİ').toUpperCase();
-        document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`;
+        emailjs.init("LzIhLTNYH47AasrBj"); // cite: 387
+        const currentRole = (localStorage.getItem('userRole') || 'YÖNETİCİ').toUpperCase(); // cite: 387
+        document.getElementById('roleBadge').textContent = `👤 Rol: ${currentRole}`; // cite: 387
         
-        const mainContainer = document.getElementById('mainContainer');
-        const newProductPanel = document.getElementById('newProductCardPanel');
-        const basketPanel = document.getElementById('basketCardPanel');
-        const addProductColumn = document.getElementById('addProductColumn');
+        const mainContainer = document.getElementById('mainContainer'); // cite: 387
+        const addProductColumn = document.getElementById('addProductColumn'); // cite: 387
         
-        if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
-            if (newProductPanel) newProductPanel.style.display = 'none';
-            if (basketPanel) basketPanel.style.display = 'none';
-            if (addProductColumn) addProductColumn.style.display = 'none';
-            mainContainer.classList.remove('two-columns');
+        if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') { // cite: 387
+            if(addProductColumn) {
+                addProductColumn.remove(); // cite: 387
+            }
+            mainContainer.classList.remove('two-columns'); // cite: 387
         } else {
-            mainContainer.classList.add('two-columns');
+            mainContainer.classList.add('two-columns'); // cite: 387
         }
 
         function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            if(!container) return;
-            const toast = document.createElement('div');
-            toast.className = `custom-toast toast-${type}`;
-            let icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : '⚠️');
-            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-            container.appendChild(toast);
+            const container = document.getElementById('toastContainer'); // cite: 388
+            if(!container) return; // cite: 388
+            const toast = document.createElement('div'); // cite: 388
+            toast.className = `custom-toast toast-${type}`; // cite: 389
+            let icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : '⚠️'); // cite: 389
+            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`; // cite: 390
+            container.appendChild(toast); // cite: 390
             setTimeout(() => {
-                toast.style.animation = 'toastOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards';
-                setTimeout(() => { toast.remove(); }, 300);
-            }, 3000);
+                toast.style.animation = 'toastOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards'; // cite: 390
+                setTimeout(() => { toast.remove(); }, 300); // cite: 390
+            }, 3000); // cite: 390
         }
 
         if(localStorage.getItem('theme') === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            document.getElementById('themeToggleBtn').textContent = "☀️ Gündüz Modu";
+            document.documentElement.setAttribute('data-theme', 'dark'); // cite: 391
+            document.getElementById('themeToggleBtn').textContent = "☀️ Gündüz Modu"; // cite: 391
         }
 
         window.toggleThemeMode = function() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const btn = document.getElementById('themeToggleBtn');
+            const currentTheme = document.documentElement.getAttribute('data-theme'); // cite: 392
+            const btn = document.getElementById('themeToggleBtn'); // cite: 392
             if(currentTheme === 'dark') {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-                btn.textContent = "🌙 Gece Modu";
-                showToast("Gündüz moduna geçildi.", "warning");
+                document.documentElement.removeAttribute('data-theme'); // cite: 392
+                localStorage.setItem('theme', 'light'); // cite: 392
+                btn.textContent = "🌙 Gece Modu"; // cite: 393
+                showToast("Gündüz moduna geçildi.", "warning"); // cite: 393
             } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                btn.textContent = "☀️ Gündüz Modu";
-                showToast("Gece moduna geçildi.", "success");
+                document.documentElement.setAttribute('data-theme', 'dark'); // cite: 393
+                localStorage.setItem('theme', 'dark'); // cite: 393
+                btn.textContent = "☀️ Gündüz Modu"; // cite: 394
+                showToast("Gece moduna geçildi.", "success"); // cite: 394
             }
         };
 
         window.toggleRowDropdown = function(event, id) {
-            event.stopPropagation();
+            event.stopPropagation(); // cite: 394
             document.querySelectorAll('.actions-dropdown').forEach(el => {
-                if(el.id !== 'drop_' + id) el.style.display = 'none';
+                if(el.id !== 'drop_' + id) el.style.display = 'none'; // cite: 395
             });
-            const targetDrop = document.getElementById('drop_' + id);
-            if(!targetDrop) return;
-            targetDrop.style.display = targetDrop.style.display === 'block' ? 'none' : 'block';
+            const targetDrop = document.getElementById('drop_' + id); // cite: 395
+            if(!targetDrop) return; // cite: 395
+            targetDrop.style.display = targetDrop.style.display === 'block' ? 'none' : 'block'; // cite: 396
         };
 
         document.addEventListener('click', (event) => {
-            document.querySelectorAll('.actions-dropdown').forEach(el => el.style.display = 'none');
-            const selectContainer = document.getElementById('selectContainerBlock');
+            document.querySelectorAll('.actions-dropdown').forEach(el => el.style.display = 'none'); // cite: 397
+            const selectContainer = document.getElementById('selectContainerBlock'); // cite: 397
             if (selectContainer && !selectContainer.contains(event.target)) {
-                document.getElementById('customSelectOptionsPanel').style.display = 'none';
+                document.getElementById('customSelectOptionsPanel').style.display = 'none'; // cite: 397
             }
         });
 
         window.openSelectDropdown = function(event) {
-            if(event) event.stopPropagation();
-            document.getElementById('customSelectOptionsPanel').style.display = 'block';
-            filterSelectOptions();
+            if(event) event.stopPropagation(); // cite: 398
+            document.getElementById('customSelectOptionsPanel').style.display = 'block'; // cite: 398
+            filterSelectOptions(); // cite: 398
         };
 
         window.filterSelectOptions = function() {
-            const searchInputEl = document.getElementById('customSelectSearch');
-            const txt = searchInputEl ? searchInputEl.value.toUpperCase() : '';
-            const panel = document.getElementById('customSelectOptionsPanel');
-            if(!panel) return;
-            panel.innerHTML = "";
+            const txt = document.getElementById('customSelectSearch').value.toUpperCase(); // cite: 398
+            const panel = document.getElementById('customSelectOptionsPanel'); // cite: 399
+            if(!panel) return; // cite: 399
+            panel.innerHTML = ""; // cite: 399
             
-            let sortedInv = [...inventory].sort((a,b) => a.name.localeCompare(b.name, 'tr'));
-            let matchedCount = 0;
+            let sortedInv = [...inventory].sort((a,b) => a.name.localeCompare(b.name, 'tr')); // cite: 399
+            let matchedCount = 0; // cite: 399
             sortedInv.forEach(item => {
-                let labelText = item.name;
-                if(item.lot) labelText += ` [LOT: ${item.lot}]`;
+                let labelText = item.name; // cite: 400
+                if(item.lot) labelText += ` [LOT: ${item.lot}]`; // cite: 400
                 if(item.skt && !item.skt.includes('undefined')) {
-                    labelText += ` (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})`;
+                    labelText += ` (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})`; // cite: 400
                 }
                 if(labelText.toUpperCase().indexOf(txt) > -1) {
-                    matchedCount++;
-                    const div = document.createElement('div');
-                    div.className = "select-option-item";
-                    div.innerHTML = `<span>📦 ${labelText}</span> <span class="qty-badge">${item.quantity} ${item.unit}</span>`;
+                    matchedCount++; // cite: 400
+                    const div = document.createElement('div'); // cite: 400
+                    div.className = "select-option-item"; // cite: 400
+                    div.innerHTML = `<span>📦 ${labelText}</span> <span class="qty-badge">${item.quantity} ${item.unit}</span>`; // cite: 400
                     div.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        document.getElementById('customSelectSearch').value = labelText;
-                        document.getElementById('orderProductSelect').value = item.dbKey || item.name;
-                        panel.style.display = 'none';
+                        e.stopPropagation(); // cite: 400
+                        document.getElementById('customSelectSearch').value = labelText; // cite: 400
+                        document.getElementById('orderProductSelect').value = item.dbKey || item.name; // cite: 400
+                        panel.style.display = 'none'; // cite: 400
                     });
-                    panel.appendChild(div);
+                    panel.appendChild(div); // cite: 400
                 }
             });
             if(matchedCount === 0) {
-                panel.innerHTML = `<div style="padding:12px; font-size:12px; color:#aaa; text-align:center;">Uyuşan malzeme bulunamadı.</div>`;
+                panel.innerHTML = `<div style="padding:12px; font-size:12px; color:#aaa; text-align:center;">Uyuşan malzeme bulunamadı.</div>`; // cite: 401
             }
         };
 
         window.toggleAccordion = function(element) {
-            const content = document.getElementById('advancedFormFields');
-            const arrow = element.querySelector('span:last-child');
+            const content = document.getElementById('advancedFormFields'); // cite: 402
+            const arrow = element.querySelector('span:last-child'); // cite: 402
             if (content.style.maxHeight && content.style.maxHeight !== "0px") {
-                content.style.maxHeight = "0px";
-                arrow.textContent = "⚙️ ▼";
+                content.style.maxHeight = "0px"; // cite: 403
+                arrow.textContent = "⚙️ ▼"; // cite: 403
             } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-                arrow.textContent = "⚙️ ▲";
+                content.style.maxHeight = content.scrollHeight + "px"; // cite: 404
+                arrow.textContent = "⚙️ ▲"; // cite: 404
             }
         };
 
         function startLiveClock() {
-            const clockElement = document.getElementById('liveClockDisplay');
+            const clockElement = document.getElementById('liveClockDisplay'); // cite: 405
             setInterval(() => {
                 const now = new Date();
-                const dateStr = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                clockElement.textContent = `📅 ${dateStr} | 🕒 ${timeStr}`;
+                const dateStr = now.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' }); // cite: 405
+                const timeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); // cite: 405
+                clockElement.textContent = `📅 ${dateStr} | 🕒 ${timeStr}`; // cite: 405
             }, 1000);
         }
-        startLiveClock();
+        startLiveClock(); // cite: 406
 
-        const firebaseConfig = { databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        let inventory = [];
-        let activeDepotFilter = 'HEPSİ';
-        let orderBasket = [];
-        let currentModalProduct = null;
-        let currentModalAction = "";
-        let isNewPartyWithSkt = false;
-        let localCachedReports = [];
-        const definedDepots = ['HEPSİ', 'ET +4', 'ET -18', 'PASTANE +4', 'PASTANE -18', 'SEBZE +4', 'SEBZE -18', 'ŞARKÜTERİ', 'KURU GIDA', 'KİMYASAL', 'SARF DEPO'];
+        const firebaseConfig = { databaseURL: "https://depo-stok-f6389-default-rtdb.europe-west1.firebasedatabase.app/" }; // cite: 406
+        firebase.initializeApp(firebaseConfig); // cite: 406
+        const db = firebase.database(); // cite: 406
+        let inventory = []; // cite: 406
+        let activeDepotFilter = 'HEPSİ'; // cite: 407
+        let orderBasket = []; // cite: 407
+        let currentModalProduct = null; // cite: 407
+        let currentModalAction = ""; // cite: 407
+        let isNewPartyWithSkt = false; // cite: 407
+        const definedDepots = ['HEPSİ', 'ET +4', 'ET -18', 'PASTANE +4', 'PASTANE -18', 'SEBZE +4', 'SEBZE -18', 'ŞARKÜTERİ', 'KURU GIDA', 'KİMYASAL', 'SARF DEPO']; // cite: 408
         
         function getTodayDateString() {
-            const now = new Date();
-            const offset = now.getTimezoneOffset();
-            const localNow = new Date(now.getTime() - (offset * 60 * 1000));
-            return localNow.toISOString().split('T')[0];
+            const now = new Date(); // cite: 409
+            const offset = now.getTimezoneOffset(); // cite: 409
+            const localNow = new Date(now.getTime() - (offset * 60 * 1000)); // cite: 410
+            return localNow.toISOString().split('T')[0]; // cite: 410
         }
 
         db.ref('depo_stok').on('value', (snapshot) => {
-            const rawData = snapshot.val();
-            inventory = [];
+            const rawData = snapshot.val(); // cite: 411
+            inventory = []; // cite: 411
             if (rawData) {
                 Object.keys(rawData).forEach(key => {
-                    let item = rawData[key];
+                    let item = rawData[key]; // cite: 411
                     if(!item.dbKey || item.dbKey.includes('undefined')) {
-                        item.dbKey = key;
+                        item.dbKey = key; // cite: 411
                     }
-                    inventory.push(item);
+                    inventory.push(item); // cite: 411
                 });
             }
-            checkExpiredProducts(rawData);
-            updateOrderProductDropdown();
-            updateSktAlertBtnState();
-            calculateLiveDashboardMetrics();
-            renderDepotFilterButtons();
-            renderUi();
+            checkExpiredProducts(rawData); // cite: 411
+            updateOrderProductDropdown(); // cite: 411
+            updateSktAlertBtnState(); // cite: 411
+            calculateLiveDashboardMetrics(); // cite: 411
+            renderDepotFilterButtons(); // cite: 411
+            renderUi(); // cite: 411
         });
 
         function calculateLiveDashboardMetrics() {
-            document.getElementById('dashTotalItems').textContent = inventory.length;
+            document.getElementById('dashTotalItems').textContent = inventory.length; // cite: 412
             let criticalCount = inventory.filter(item => {
-                let limit = item.criticalLimit !== undefined ? item.criticalLimit : 0;
-                return (item.quantity <= limit);
+                let limit = item.criticalLimit !== undefined ? item.criticalLimit : 0; // cite: 412
+                return (item.quantity <= limit); // cite: 412
             }).length;
-            document.getElementById('dashCriticalItems').textContent = criticalCount;
-            const todayStr = getTodayDateString();
-            let sktUrgentCount = 0;
+            document.getElementById('dashCriticalItems').textContent = criticalCount; // cite: 413
+            const todayStr = getTodayDateString(); // cite: 413
+            let sktUrgentCount = 0; // cite: 413
             inventory.forEach(item => {
                 if(item.skt && !item.skt.includes('undefined')) {
-                    let todayTime = new Date(todayStr).getTime();
-                    let sktTime = new Date(item.skt).getTime();
-                    let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
+                    let todayTime = new Date(todayStr).getTime(); // cite: 414
+                    let sktTime = new Date(item.skt).getTime(); // cite: 414
+                    let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24)); // cite: 414
                     if(diffDays >= 0 && diffDays <= 1) {
-                        sktUrgentCount++;
+                        sktUrgentCount++; // cite: 414
                     }
                 }
             });
-            document.getElementById('dashSktItems').textContent = sktUrgentCount;
+            document.getElementById('dashSktItems').textContent = sktUrgentCount; // cite: 415
         }
 
         function renderDepotFilterButtons() {
-            const bar = document.getElementById('depotButtonsBar');
-            if(!bar) return;
-            bar.innerHTML = "";
+            const bar = document.getElementById('depotButtonsBar'); // cite: 415
+            if(!bar) return; // cite: 415
+            bar.innerHTML = ""; // cite: 415
             definedDepots.forEach(dep => {
-                let count = dep === 'HEPSİ' ? inventory.length : inventory.filter(i => i.depot === dep).length;
-                const btn = document.createElement('button');
-                btn.className = `btn-depot-filter ${activeDepotFilter === dep ? 'active' : ''}`;
-                btn.setAttribute('onclick', `filterByDepot('${dep}')`);
-                btn.textContent = dep === 'HEPSİ' ? `HEPSİ (${count})` : `${dep} (${count})`;
-                bar.appendChild(btn);
+                let count = dep === 'HEPSİ' ? inventory.length : inventory.filter(i => i.depot === dep).length; // cite: 416
+                const btn = document.createElement('button'); // cite: 416
+                btn.className = `btn-depot-filter ${activeDepotFilter === dep ? 'active' : ''}`; // cite: 416
+                btn.setAttribute('onclick', `filterByDepot('${dep}')`); // cite: 416
+                btn.textContent = dep === 'HEPSİ' ? `HEPSİ (${count})` : `${dep} (${count})`; // cite: 416
+                bar.appendChild(btn); // cite: 416
             });
         }
 
         function checkExpiredProducts(rawData) {
-            if (!rawData) return;
-            const todayStr = getTodayDateString();
+            if (!rawData) return; // cite: 417
+            const todayStr = getTodayDateString(); // cite: 417
             Object.keys(rawData).forEach((key) => {
-                const item = rawData[key];
+                const item = rawData[key]; // cite: 418
                 if (item.skt && item.skt < todayStr) {
-                    const now = new Date();
-                    db.ref('depo_rapor').push({ time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(), user: 'SİSTEM', product: item.name, type: 'SKT OTOMATİK SİLME', qty: `${item.quantity} ${item.unit}`, backupKey: key, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt, backupLot: item.lot || null });
-                    db.ref('depo_stok/' + key).remove();
-                    showToast(`"${item.name}" SKT dolduğu için sistem tarafından otomatik temizlendi.`, "error");
+                    const now = new Date(); // cite: 418
+                    db.ref('depo_rapor').push({ time: now.toLocaleString('tr-TR'), rawTime: now.toISOString(), user: 'SİSTEM', product: item.name, type: 'SKT OTOMATİK SİLME', qty: `${item.quantity} ${item.unit}`, backupKey: key, backupDepot: item.depot || 'KURU GIDA', backupUnit: item.unit || 'Adet', backupLimit: item.criticalLimit || 0, backupSkt: item.skt, backupLot: item.lot || null }); // cite: 418
+                    db.ref('depo_stok/' + key).remove(); // cite: 418
+                    showToast(`"${item.name}" SKT dolduğu için sistem tarafından otomatik temizlendi.`, "error"); // cite: 418
                 }
             });
         }
 
+        // Düzenleme: SKT Kritik butonu artık her zaman ekranda kalıyor, sadece içerisindeki sayı güncelleniyor 
         function updateSktAlertBtnState() {
-            const btn = document.getElementById('sktAlertButton');
+            const btn = document.getElementById('sktAlertButton'); // cite: 419
+            if(!btn) return; // cite: 419
+            const todayStr = getTodayDateString(); // cite: 419
+            let urgentCount = 0; // cite: 419
             const tbody = document.getElementById('sktUrgentTableBody');
-            if(!btn || !tbody) return;
-            
-            const todayStr = getTodayDateString();
-            let urgentCount = 0;
-            tbody.innerHTML = '';
+            if(tbody) tbody.innerHTML = '';
 
             inventory.forEach(item => {
                 if(item.skt && !item.skt.includes('undefined')) {
-                    let todayTime = new Date(todayStr).getTime();
-                    let sktTime = new Date(item.skt).getTime();
-                    let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24));
-                    
+                    let todayTime = new Date(todayStr).getTime(); // cite: 420
+                    let sktTime = new Date(item.skt).getTime(); // cite: 420
+                    let diffDays = Math.ceil((sktTime - todayTime) / (1000 * 60 * 60 * 24)); // cite: 420
                     if(diffDays >= 0 && diffDays <= 1) {
-                        urgentCount++;
-                        const sParts = item.skt.split('-');
-                        tbody.innerHTML += `<tr><td><strong>${item.name}</strong></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><span style="color:#b91c1c; font-weight:bold;">${diffDays === 0 ? 'Bugün Son!' : `1 Gün Kaldı`}</span></td><td>${sParts[2]}.${sParts[1]}.${sParts[0]}</td></tr>`;
+                        urgentCount++; // cite: 420
+                        if(tbody) {
+                            const sParts = item.skt.split('-');
+                            tbody.innerHTML += `<tr><td><strong>${item.name}</strong></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><span style="color:#b91c1c; font-weight:bold;">${diffDays === 0 ? 'Bugün Son!' : '1 Gün Kaldı'}</span></td><td>${sParts[2]}.${sParts[1]}.${sParts[0]}</td></tr>`;
+                        }
                     }
                 }
             });
-
-            btn.style.display = urgentCount > 0 ? "block" : "none";
-            if(urgentCount > 0) btn.textContent = `⚠️ SKT Kritik (${urgentCount} Ürün)`;
+            btn.textContent = `⚠️ SKT Kritik (${urgentCount} Ürün)`; // cite: 421
         }
 
         function openSktUrgentModal() { document.getElementById('sktUrgentModal').style.display = 'flex'; }
-        window.closeSktUrgentModal = function() { document.getElementById('sktUrgentModal').style.display = 'none'; };
+        window.closeSktUrgentModal = function() { document.getElementById('sktUrgentModal').style.display = 'none'; }; // cite: 422
 
-        function updateOrderProductDropdown() { filterSelectOptions(); }
+        function updateOrderProductDropdown() { filterSelectOptions(); } // cite: 422
 
         window.addItemToBasket = function() {
-            const prodKey = document.getElementById('orderProductSelect').value;
-            const qtyInput = document.getElementById('orderQty');
-            const qty = parseFloat(qtyInput.value);
-            if(!prodKey) { showToast("Lütfen listeden bir malzeme seçin!", "warning"); return; }
-            if(isNaN(qty) || qty <= 0) { showToast("Lütfen geçerli bir sipariş miktarı girin!", "warning"); return; }
+            const prodKey = document.getElementById('orderProductSelect').value; // cite: 422
+            const qtyInput = document.getElementById('orderQty'); // cite: 422
+            const qty = parseFloat(qtyInput.value); // cite: 423
+            if(!prodKey) { showToast("Lütfen listeden bir malzeme seçin!", "warning"); return; } // cite: 423
+            if(isNaN(qty) || qty <= 0) { showToast("Lütfen geçerli bir sipariş miktarı girin!", "warning"); return; } // cite: 424
             
-            const item = inventory.find(i => (i.dbKey === prodKey || i.name === prodKey));
-            if(!item) return;
-            let displayName = item.name;
-            if(item.lot) displayName += ` [LOT: ${item.lot}]`;
+            const item = inventory.find(i => (i.dbKey === prodKey || i.name === prodKey)); // cite: 425
+            if(!item) return; // cite: 425
+            let displayName = item.name; // cite: 425
+            if(item.lot) { displayName += ` [LOT: ${item.lot}]`; } // cite: 426
             if(item.skt && !item.skt.includes('undefined')) {
-                displayName += ` (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})`;
+                displayName += ` (SKT: ${item.skt.split('-')[2]}.${item.skt.split('-')[1]}.${item.skt.split('-')[0]})`; // cite: 426
             }
-            const existingIndex = orderBasket.findIndex(b => b.key === (item.dbKey || item.name));
+            const existingIndex = orderBasket.findIndex(b => b.key === (item.dbKey || item.name)); // cite: 427
             if(existingIndex > -1) {
-                orderBasket[existingIndex].qty = parseFloat((orderBasket[existingIndex].qty + qty).toFixed(2));
+                orderBasket[existingIndex].qty = parseFloat((orderBasket[existingIndex].qty + qty).toFixed(2)); // cite: 427
             } else {
-                orderBasket.push({ key: (item.dbKey || item.name), name: displayName, qty: qty, unit: item.unit });
+                orderBasket.push({ key: (item.dbKey || item.name), name: displayName, qty: qty, unit: item.unit }); // cite: 428
             }
-            qtyInput.value = "";
-            document.getElementById('orderProductSelect').value = "";
-            document.getElementById('customSelectSearch').value = "";
-            renderBasketVisual();
-            showToast("Malzeme talep sepetine eklendi.");
+            qtyInput.value = ""; // cite: 428
+            document.getElementById('orderProductSelect').value = ""; // cite: 429
+            document.getElementById('customSelectSearch').value = ""; // cite: 429
+            renderBasketVisual(); // cite: 429
+            showToast("Malzeme talep sepetine eklendi."); // cite: 429
         };
 
         window.removeItemFromBasket = function(index) {
-            orderBasket.splice(index, 1);
-            renderBasketVisual();
-            showToast("Ürün sepetten çıkarıldı.", "warning");
+            orderBasket.splice(index, 1); // cite: 429
+            renderBasketVisual(); // cite: 429
+            showToast("Ürün sepetten çıkarıldı.", "warning"); // cite: 430
         };
 
         function renderBasketVisual() {
-            const ul = document.getElementById('basketListVisual');
-            const emptyBox = document.getElementById('emptyBasketBox');
-            const countSpan = document.getElementById('basketCount');
-            if(!ul || !emptyBox || !countSpan) return;
-            ul.innerHTML = "";
-            countSpan.textContent = `(${orderBasket.length} Ürün)`;
+            const ul = document.getElementById('basketListVisual'); // cite: 430
+            const emptyBox = document.getElementById('emptyBasketBox'); // cite: 430
+            const countSpan = document.getElementById('basketCount'); // cite: 430
+            if(!ul || !emptyBox || !countSpan) return; // cite: 431
+            ul.innerHTML = ""; // cite: 431
+            countSpan.textContent = `(${orderBasket.length} Ürün)`; // cite: 431
             if(orderBasket.length === 0) {
-                emptyBox.style.display = 'block'; ul.style.display = 'none'; return;
+                emptyBox.style.display = 'block'; // cite: 431
+                ul.style.display = 'none'; return; // cite: 432
             }
-            emptyBox.style.display = 'none'; ul.style.display = 'block';
+            emptyBox.style.display = 'none'; // cite: 432
+            ul.style.display = 'block'; // cite: 432
             orderBasket.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.className = "basket-item";
-                li.innerHTML = `<span>📦 <b>${item.name}</b></span><span>${item.qty} ${item.unit} <button type="button" class="btn-remove-basket-item" onclick="removeItemFromBasket(${index})">×</button></span>`;
-                ul.appendChild(li);
+                const li = document.createElement('li'); // cite: 433
+                li.className = "basket-item"; // cite: 433
+                li.innerHTML = `<span>📦 <b>${item.name}</b></span><span>${item.qty} ${item.unit} <button type="button" class="btn-remove-basket-item" onclick="removeItemFromBasket(${index})">×</button></span>`; // cite: 433
+                ul.appendChild(li); // cite: 433
             });
         }
 
         function renderUi() {
-            const tbody = document.getElementById('liveMaterialsBody');
-            const tfoot = document.getElementById('tableTotalFooter');
-            if(!tbody) return;
-            const filterText = document.getElementById('searchInput').value.toLowerCase();
-            const selectedDate = document.getElementById('dateFilterInput').value;
-            tbody.innerHTML = '';
-            if(tfoot) tfoot.innerHTML = '';
-            const todayStr = getTodayDateString();
+            const tbody = document.getElementById('liveMaterialsBody'); // cite: 434
+            const tfoot = document.getElementById('tableTotalFooter'); // cite: 434
+            if(!tbody) return; // cite: 434
+            const filterText = document.getElementById('searchInput').value.toLowerCase(); // cite: 434
+            const selectedDate = document.getElementById('dateFilterInput').value; // cite: 435
+            tbody.innerHTML = ''; // cite: 435
+            if(tfoot) tfoot.innerHTML = ''; // cite: 435
+            const todayStr = getTodayDateString(); // cite: 435
             
             let filteredInventory = inventory.filter(item => {
-                let matchesSearch = item.name.toLowerCase().includes(filterText) || (item.lot && item.lot.toLowerCase().includes(filterText));
-                let matchesDate = selectedDate ? (item.lastUpdatedDate === selectedDate) : true;
-                let matchesDepot = (activeDepotFilter === 'HEPSİ' || item.depot === activeDepotFilter);
-                return matchesSearch && matchesDepot && matchesDate;
+                let matchesSearch = item.name.toLowerCase().includes(filterText) || (item.lot && item.lot.toLowerCase().includes(filterText)); // cite: 436
+                let matchesDate = selectedDate ? (item.lastUpdatedDate === selectedDate) : true; // cite: 436
+                let matchesDepot = (activeDepotFilter === 'HEPSİ' || item.depot === activeDepotFilter); // cite: 436
+                return matchesSearch && matchesDepot && matchesDate; // cite: 436
             });
             if(filteredInventory.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state-container"><div class="empty-state-icon">🔍</div><h4>Aradığınız Malzeme Envanterde Yok</h4></div></td></tr>`;
-                return;
+                tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state-container"><div class="empty-state-icon">🔍</div><h4>Aradığınız Malzeme Envanterde Yok</h4><p>Arama kelimesini değiştirebilir veya filtre çubuğundan farklı bir depo seçerek arama yapabilirsiniz.</p></div></td></tr>`; // cite: 437
+                return; // cite: 437
             }
             let totalsByUnit = {};
             filteredInventory.forEach((item) => {
-                if(item.criticalLimit === undefined) item.criticalLimit = 0;
-                let itemUnit = item.unit || "Adet";
-                let itemQty = parseFloat(item.quantity) || 0;
-                if(!totalsByUnit[itemUnit]) totalsByUnit[itemUnit] = 0;
-                totalsByUnit[itemUnit] += itemQty;
+                if(item.criticalLimit === undefined) item.criticalLimit = 0; // cite: 438
+                let itemUnit = item.unit || "Adet"; // cite: 438
+                let itemQty = parseFloat(item.quantity) || 0; // cite: 438
+                if(!totalsByUnit[itemUnit]) { totalsByUnit[itemUnit] = 0; } // cite: 438
+                totalsByUnit[itemUnit] += itemQty; // cite: 438
                 
-                let isCritical = item.quantity <= item.criticalLimit;
-                let statusHtml = !isCritical ? `<span class="status-badge status-safe">🟢 Güvenli</span>` : `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`;
-                let displayDate = "---";
+                let isCritical = item.quantity <= item.criticalLimit; // cite: 438
+                let statusHtml = !isCritical ? `<span class="status-badge status-safe">🟢 Güvenli</span>` : `<span class="status-badge status-critical">🔴 Kritik Stok!</span>`; // cite: 438
+                let displayDate = "---"; // cite: 438
                 if(item.lastUpdatedDate) {
-                    const parts = item.lastUpdatedDate.split('-');
-                    if(parts.length === 3) displayDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
+                    const parts = item.lastUpdatedDate.split('-'); // cite: 438
+                    if(parts.length === 3) displayDate = `${parts[2]}.${parts[1]}.${parts[0]}`; // cite: 438
                 }
-                let sktHtml = `<span class="skt-badge skt-none">Belirtilmedi</span>`;
+                let sktHtml = `<span class="skt-badge skt-none">Belirtilmedi</span>`; // cite: 438
                 if(item.skt) {
                     if(item.skt.includes('undefined')) {
-                        sktHtml = `<span class="skt-badge skt-expired" style="background:#fff3cd; color:#856404;">⚠️ Hatalı</span>`;
+                        sktHtml = `<span class="skt-badge skt-expired" style="background:#fff3cd; color:#856404;">⚠️ Hatalı</span>`; // cite: 438
                     } else {
-                        const sParts = item.skt.split('-');
-                        sktHtml = (item.skt < todayStr) ? `<span class="skt-badge skt-expired">❌ ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>` : `<span class="skt-badge skt-ok">📅 ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>`;
+                        const sParts = item.skt.split('-'); // cite: 438
+                        sktHtml = (item.skt < todayStr) ? `<span class="skt-badge skt-expired">❌ ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>` : `<span class="skt-badge skt-ok">📅 ${sParts[2]}.${sParts[1]}.${sParts[0]}</span>`; // cite: 439
                     }
                 }
                 
-                let itemUniqueId = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
-                let fastButtonsHtml = '';
-                let dropdownButtonsHtml = '';
+                let itemUniqueId = item.dbKey || item.name.replace(/[.#$\[\]]/g, ""); // cite: 440
+                let fastButtonsHtml = ''; // cite: 440
+                let dropdownButtonsHtml = ''; // cite: 440
                 
                 if (currentRole === 'GARSON' || currentRole === 'ÜRETİM') {
-                    fastButtonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>`;
+                    fastButtonsHtml = `<button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button>`; // cite: 441
                 } else if (currentRole === 'DEPO') {
-                    fastButtonsHtml = `<button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>`;
-                    dropdownButtonsHtml = `<button class="dropdown-item item-edit" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>`;
+                    fastButtonsHtml = ` <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button> `; // cite: 442
+                    dropdownButtonsHtml = `<button class="dropdown-item item-edit" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button>`; // cite: 443
                 } else {
-                    fastButtonsHtml = `<button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button>`;
-                    dropdownButtonsHtml = `<button class="dropdown-item item-edit" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button> <button class="dropdown-item item-delete" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button>`;
+                    fastButtonsHtml = ` <button class="action-btn btn-add-stock" onclick="openStockModal('${itemUniqueId}', 'in')">+ Ekle</button> <button class="action-btn btn-drop-stock" onclick="openStockModal('${itemUniqueId}', 'out')">- Düş</button> <button class="action-btn btn-waste-stock" onclick="openStockModal('${itemUniqueId}', 'waste')">💥 İmha</button> `; // cite: 443
+                    dropdownButtonsHtml = ` <button class="dropdown-item item-edit" onclick="openProductEditModal('${itemUniqueId}')">✏️ Düzenle</button> <button class="dropdown-item item-delete" onclick="deleteProductDirect('${itemUniqueId}')">🗑️ Sil</button> `; // cite: 444
                 }
                 
                 let moreActionTriggerHtml = '';
                 if(dropdownButtonsHtml !== '') {
-                    moreActionTriggerHtml = `<div style="position:relative; display:inline-block;"><button class="btn-more-trigger" type="button" onclick="toggleRowDropdown(event, '${itemUniqueId}')">⋮</button><div class="actions-dropdown" id="drop_${itemUniqueId}">${dropdownButtonsHtml}</div></div>`;
+                    moreActionTriggerHtml = ` <div style="position:relative; display:inline-block;"> <button class="btn-more-trigger" type="button" onclick="toggleRowDropdown(event, '${itemUniqueId}')">⋮</button> <div class="actions-dropdown" id="drop_${itemUniqueId}"> ${dropdownButtonsHtml} </div> </div> `; // cite: 445
                 }
                 
-                const tr = document.createElement('tr');
-                if (isCritical) tr.className = "row-critical-alert";
-                tr.innerHTML = `<td><strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}<span class="date-tag">Gnc: ${displayDate}</span></td><td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td><td><strong>${item.quantity} ${item.unit}</strong></td><td><strong>${item.criticalLimit} ${item.unit}</strong></td><td>${sktHtml}</td><td>${statusHtml}</td><td class="action-btns">${fastButtonsHtml} ${moreActionTriggerHtml}</td>`;
-                tbody.appendChild(tr);
+                const tr = document.createElement('tr'); // cite: 446
+                if (isCritical) { tr.className = "row-critical-alert"; } // cite: 446
+                tr.innerHTML = ` <td><strong>${item.name}</strong> ${item.lot ? `<br><span class="lot-tag">LOT: ${item.lot}</span>` : ''}<span class="date-tag">Gnc: ${displayDate}</span></td> <td><span class="depot-tag">${item.depot || 'KURU GIDA'}</span></td> <td><strong>${item.quantity} ${item.unit}</strong></td> <td><strong>${item.criticalLimit} ${item.unit}</strong></td> <td>${sktHtml}</td> <td>${statusHtml}</td> <td class="action-btns">${fastButtonsHtml} ${moreActionTriggerHtml}</td> `; // cite: 446, 447, 448
+                tbody.appendChild(tr); // cite: 448
             });
             
             let totalStrings = [];
-            for (const [unit, sum] of Object.entries(totalsByUnit)) { totalStrings.push(`${sum.toFixed(2)} ${unit}`); }
+            for (const [unit, sum] of Object.entries(totalsByUnit)) { totalStrings.push(`${sum.toFixed(2)} ${unit}`); } // cite: 449
             if(tfoot) {
-                const footTr = document.createElement('tr');
-                footTr.className = "total-row";
-                footTr.innerHTML = `<td colspan="2" style="text-align: right;">🧮 TOPLAM:</td><td colspan="5">${totalStrings.join(' | ')}</td>`;
-                tfoot.appendChild(footTr);
+                const footTr = document.createElement('tr'); // cite: 449
+                footTr.className = "total-row"; // cite: 449
+                footTr.innerHTML = `<td colspan="2" style="text-align: right;">🧮 FİLTRELENEN TOPLAM:</td><td colspan="5">${totalStrings.join(' | ')}</td>`; // cite: 450
+                tfoot.appendChild(footTr); // cite: 450
             }
         }
 
         window.openStockModal = function(uniqueId, action) {
-            const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId));
-            if(!item) return;
-            currentModalProduct = item;
-            currentModalAction = action;
-            isNewPartyWithSkt = false;
+            const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId)); // cite: 451
+            if(!item) return; // cite: 452
+            currentModalProduct = item; // cite: 452
+            currentModalAction = action; // cite: 452
+            isNewPartyWithSkt = false; // cite: 452
             
-            const modal = document.getElementById('stockActionModal');
-            const title = document.getElementById('actionModalTitle');
-            const qtyLabel = document.getElementById('actionQtyLabel');
-            const sktGroup = document.getElementById('partySktGroup');
+            const modal = document.getElementById('stockActionModal'); // cite: 452
+            const title = document.getElementById('actionModalTitle'); // cite: 452
+            const qtyLabel = document.getElementById('actionQtyLabel'); // cite: 453
+            const sktGroup = document.getElementById('partySktGroup'); // cite: 453
             
-            document.getElementById('stockActionForm').reset();
-            sktGroup.style.display = "none";
+            document.getElementById('stockActionForm').reset(); // cite: 453
+            sktGroup.style.display = "none"; // cite: 453
             
             if(action === 'in') {
-                title.textContent = `📥 ${item.name} - Stok Ekleme`;
-                qtyLabel.textContent = `Giriş Yapılacak Miktar (${item.unit})`;
-                const changeSkt = confirm(`Mevcut Satır: ${item.name}\n\nBu parti için Lot No veya Son Kullanma Tarihi girmek istiyor musunuz?`);
+                title.textContent = `📥 ${item.name} - Stok Ekleme`; // cite: 454
+                qtyLabel.textContent = `Giriş Yapılacak Miktar (${item.unit})`; // cite: 454
+                const changeSkt = confirm(`Mevcut Satır: ${item.name}\n\nBu parti için Lot No veya Son Kullanma Tarihi girmek istiyor musunuz?\n\n(Belirtmek için 'Tamam'a, mevcut satıra sadece miktar eklemek için 'İptal'e basın)`); // cite: 455
                 if(changeSkt) {
-                    isNewPartyWithSkt = true; sktGroup.style.display = "block";
-                    title.textContent = `✨ ${item.name} - Stok Girişi & SKT / LOT Atama`;
+                    isNewPartyWithSkt = true; sktGroup.style.display = "block"; // cite: 456
+                    title.textContent = `✨ ${item.name} - Stok Girişi & SKT / LOT Atama`; // cite: 456
                 }
             } else if(action === 'out') {
-                title.textContent = `📤 ${item.name} - Stok Düşme`;
-                qtyLabel.textContent = `Düşülecek Miktar (${item.unit})`;
+                title.textContent = `📤 ${item.name} - Stok Düşme`; // cite: 457
+                qtyLabel.textContent = `Düşülecek Miktar (${item.unit})`; // cite: 457
             } else if(action === 'waste') {
-                title.textContent = `💥 ${item.name} - İmha / Fire`;
-                qtyLabel.textContent = `İmha Edilecek Miktar (${item.unit})`;
+                title.textContent = `💥 ${item.name} - İmha / Fire`; // cite: 458
+                qtyLabel.textContent = `İmha Edilecek Miktar (${item.unit})`; // cite: 458
             }
-            modal.style.display = "flex";
+            modal.style.display = "flex"; // cite: 459
         };
 
-        window.closeStockActionModal = function() { document.getElementById('stockActionModal').style.display = "none"; currentModalProduct = null; };
+        window.closeStockActionModal = function() { document.getElementById('stockActionModal').style.display = "none"; currentModalProduct = null; }; // cite: 459
 
         document.getElementById('stockActionForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if(!currentModalProduct) return;
-            const item = currentModalProduct;
-            const qty = parseFloat(document.getElementById('actionModalQty').value);
-            let reportLabel = currentModalAction === 'in' ? 'GİRİŞ' : (currentModalAction === 'out' ? 'ÇIKIŞ' : 'İMHA');
-            if(isNaN(qty) || qty <= 0) { showToast("Geçerli bir miktar giriniz!", "warning"); return; }
+            e.preventDefault(); // cite: 460
+            if(!currentModalProduct) return; // cite: 460
+            const item = currentModalProduct; // cite: 460
+            const qty = parseFloat(document.getElementById('actionModalQty').value); // cite: 460
+            let reportLabel = currentModalAction === 'in' ? 'GİRİŞ' : (currentModalAction === 'out' ? 'ÇIKIŞ' : 'İMHA'); // cite: 460
+            if(isNaN(qty) || qty <= 0) { showToast("Geçerli bir miktar giriniz!", "warning"); return; } // cite: 460
             
-            let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
+            let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, ""); // cite: 460
             if (currentModalAction === 'in' && isNewPartyWithSkt) {
-                const newSktVal = document.getElementById('actionModalSkt').value;
-                const newLotVal = document.getElementById('actionModalLot').value.trim().toUpperCase();
-                if(!newSktVal) { showToast("Lütfen geçerli bir Son Kullanma Tarihi seçin!", "warning"); return; }
+                const newSktVal = document.getElementById('actionModalSkt').value; // cite: 460
+                const newLotVal = document.getElementById('actionModalLot').value.trim().toUpperCase(); // cite: 460
+                if(!newSktVal || newSktVal.includes('undefined')) { showToast("Lütfen geçerli bir Son Kullanma Tarihi seçin!", "warning"); return; } // cite: 460
                 
-                let baseCleanName = item.name.replace(/[.#$\[\]]/g, "");
-                let targetKey = baseCleanName + "_" + newSktVal;
-                if(newLotVal) targetKey += "_" + newLotVal;
+                let baseCleanName = item.name.replace(/[.#$\[\]]/g, ""); // cite: 460
+                let targetKey = baseCleanName + "_" + newSktVal; // cite: 460
+                if(newLotVal) { targetKey += "_" + newLotVal; } // cite: 460, 461
                 
-                let matchExisting = inventory.find(i => i.dbKey === targetKey);
-                let finalQty = matchExisting ? parseFloat((matchExisting.quantity + qty).toFixed(2)) : qty;
-                
-                db.ref('depo_stok/' + targetKey).set({ dbKey: targetKey, name: item.name, depot: item.depot, unit: item.unit, quantity: finalQty, criticalLimit: item.criticalLimit, skt: newSktVal, lot: newLotVal || null, lastUpdatedDate: getTodayDateString() });
-                db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'STOK + SKT GİRİŞİ', qty: `${qty} ${item.unit} (LOT: ${newLotVal || 'Yok'})` });
-                showToast(`"${item.name}" yeni SKT partisi kaydedildi.`);
-                closeStockActionModal();
-                return;
+                let matchExisting = inventory.find(i => i.dbKey === targetKey); // cite: 461
+                let finalQty = matchExisting ? parseFloat((matchExisting.quantity + qty).toFixed(2)) : qty; // cite: 461, 462
+                db.ref('depo_stok/' + targetKey).set({ dbKey: targetKey, name: item.name, depot: item.depot, unit: item.unit, quantity: finalQty, criticalLimit: item.criticalLimit, skt: newSktVal, lot: newLotVal || null, lastUpdatedDate: getTodayDateString() }); // cite: 462
+                db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'STOK + SKT GİRİŞİ', qty: `${qty} ${item.unit} (LOT: ${newLotVal || 'Yok'})` }); // cite: 463
+                showToast(`"${item.name}" yeni SKT partisi başarıyla depoya kaydedildi.`); // cite: 464
+                closeStockActionModal(); return; // cite: 464
             }
-            let newQty = currentModalAction === 'in' ? parseFloat((item.quantity + qty).toFixed(2)) : parseFloat((item.quantity - qty).toFixed(2));
-            if(newQty < 0) newQty = 0;
-            
-            db.ref('depo_stok/' + itemUniqueKey + '/quantity').set(newQty);
-            db.ref('depo_stok/' + itemUniqueKey + '/lastUpdatedDate').set(getTodayDateString());
-            db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${item.name}`, type: reportLabel, qty: `${qty} ${item.unit}` });
-            showToast("Stok güncellendi.");
-            closeStockActionModal();
+            let newQty = currentModalAction === 'in' ? parseFloat((item.quantity + qty).toFixed(2)) : parseFloat((item.quantity - qty).toFixed(2)); // cite: 464, 465
+            if(newQty < 0) newQty = 0; // cite: 465
+            db.ref('depo_stok/' + itemUniqueKey + '/quantity').set(newQty); // cite: 465
+            db.ref('depo_stok/' + itemUniqueKey + '/lastUpdatedDate').set(getTodayDateString()); // cite: 466
+            db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${item.name}`, type: reportLabel, qty: `${qty} ${item.unit} ${item.lot ? `[LOT: ${item.lot}]` : ''}` }); // cite: 466
+            showToast("Stok envanter kaydı güncellendi."); // cite: 467
+            closeStockActionModal(); // cite: 467
         });
 
         window.openProductEditModal = function(uniqueId) {
-            const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId));
-            if(!item) return;
-            currentModalProduct = item;
-            document.getElementById('editProdName').value = item.name;
-            document.getElementById('editProdQty').value = item.quantity;
-            document.getElementById('editProdLimit').value = item.criticalLimit || 0;
-            document.getElementById('editProdLot').value = item.lot || "";
-            document.getElementById('editProdSkt').value = item.skt || "";
-            document.getElementById('productEditModal').style.display = "flex";
+            const item = inventory.find(i => (i.dbKey === uniqueId || i.name === uniqueId)); // cite: 467
+            if(!item) return; // cite: 468
+            currentModalProduct = item; // cite: 468
+            document.getElementById('editProdName').value = item.name; // cite: 468
+            document.getElementById('editProdQty').value = item.quantity; // cite: 468
+            document.getElementById('editProdLimit').value = item.criticalLimit || 0; // cite: 468
+            document.getElementById('editProdLot').value = item.lot || ""; // cite: 468, 469
+            document.getElementById('editProdSkt').value = item.skt || ""; // cite: 469
+            document.getElementById('productEditModal').style.display = "flex"; // cite: 469
         };
 
-        window.closeProductEditModal = function() { document.getElementById('productEditModal').style.display = "none"; currentModalProduct = null; };
+        window.closeProductEditModal = function() { document.getElementById('productEditModal').style.display = "none"; currentModalProduct = null; }; // cite: 469
 
         document.getElementById('productEditForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if(!currentModalProduct) return;
-            const item = currentModalProduct;
-            const newQty = parseFloat(document.getElementById('editProdQty').value);
-            const newLimit = parseFloat(document.getElementById('editProdLimit').value);
-            const newLot = document.getElementById('editProdLot').value.trim().toUpperCase() || null;
-            const newSkt = document.getElementById('editProdSkt').value || null;
+            e.preventDefault(); // cite: 470
+            if(!currentModalProduct) return; // cite: 470
+            const item = currentModalProduct; // cite: 470
+            const newQty = parseFloat(document.getElementById('editProdQty').value); // cite: 470
+            const newLimit = parseFloat(document.getElementById('editProdLimit').value); // cite: 470
+            const newLot = document.getElementById('editProdLot').value.trim().toUpperCase() || null; // cite: 470
+            const newSkt = document.getElementById('editProdSkt').value || null; // cite: 470
+            if(isNaN(newQty) || newQty < 0 || isNaN(newLimit) || newLimit < 0) { showToast("Lütfen geçerli sayılar giriniz!", "warning"); return; } // cite: 470
             
-            let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, "");
-            const updates = {};
-            updates['depo_stok/' + itemUniqueKey + '/quantity'] = newQty;
-            updates['depo_stok/' + itemUniqueKey + '/criticalLimit'] = newLimit;
-            updates['depo_stok/' + itemUniqueKey + '/lot'] = newLot;
-            updates['depo_stok/' + itemUniqueKey + '/skt'] = newSkt;
-            updates['depo_stok/' + itemUniqueKey + '/lastUpdatedDate'] = getTodayDateString();
+            let itemUniqueKey = item.dbKey || item.name.replace(/[.#$\[\]]/g, ""); // cite: 470
+            const updates = {}; // cite: 470
+            updates['depo_stok/' + itemUniqueKey + '/quantity'] = newQty; // cite: 470
+            updates['depo_stok/' + itemUniqueKey + '/criticalLimit'] = newLimit; // cite: 470
+            updates['depo_stok/' + itemUniqueKey + '/lot'] = newLot; // cite: 470
+            updates['depo_stok/' + itemUniqueKey + '/skt'] = newSkt; // cite: 470
+            updates['depo_stok/' + itemUniqueKey + '/lastUpdatedDate'] = getTodayDateString(); // cite: 470
             
             db.ref().update(updates).then(() => {
-                db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'BİLGİ GÜNCELLEME', qty: `Stok: ${newQty}` });
-                showToast("Malzeme envanter kartı güncellendi.");
-                closeProductEditModal();
-            });
+                db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: item.name, type: 'BİLGİ GÜNCELLEME', qty: `Stok: ${newQty}, Lim: ${newLimit}, LOT: ${newLot || 'Yok'}, SKT: ${newSkt || 'Yok'}` }); // cite: 471
+                showToast("Malzeme kart bilgileri güncellendi."); // cite: 471
+                closeProductEditModal(); // cite: 471
+            }).catch(err => { showToast("Hata: " + err.message, "error"); }); // cite: 471
         });
 
-        const orderFormEl = document.getElementById('orderForm');
+        const orderFormEl = document.getElementById('orderForm'); // cite: 472
         if(orderFormEl) {
             orderFormEl.addEventListener('submit', function(e) {
-                e.preventDefault();
-                if(orderBasket.length === 0) { showToast("Sepetiniz boş!", "warning"); return; }
-                const targetMail = document.getElementById('orderEmail').value;
-                const notes = document.getElementById('orderNotes').value.trim() || "Yok";
-                if(confirm("Siparişi göndermek istiyor musunuz?")) {
-                    const nowStr = new Date().toLocaleString('tr-TR');
-                    let basketTextFormat = orderBasket.map(b => `• ${b.name} -> ${b.qty} ${b.unit}`).join('\n');
-                    const emailParams = { name: "Bahçelievler Memorial CT", email: targetMail, to_email: targetMail, order_notes: basketTextFormat + `\nNot: ${notes}`, sender_role: currentRole, order_date: nowStr };
+                e.preventDefault(); // cite: 472
+                if(orderBasket.length === 0) { showToast("Sepete en az 1 ürün eklemelisiniz!", "warning"); return; } // cite: 472
+                const targetMail = document.getElementById('orderEmail').value; // cite: 472
+                const notes = document.getElementById('orderNotes').value.trim() || "Yok"; // cite: 472
+                if(confirm(`Listede bulunan ${orderBasket.length} malzemeyi sipariş olarak göndermek istiyor musunuz?`)) { // cite: 472
+                    const nowStr = new Date().toLocaleString('tr-TR'); // cite: 472
+                    const timestampIso = new Date().toISOString(); // cite: 472
+                    let basketTextFormat = orderBasket.map(b => `• ${b.name} -> Miktar: ${b.qty} ${b.unit}`).join('\n'); // cite: 472
+                    let flatProductsNames = orderBasket.map(b => b.name).join(', '); // cite: 472
+                    let flatQuantities = orderBasket.map(b => `${b.qty} ${b.unit}`).join(', '); // cite: 472
+                    const emailParams = { name: "Bahçelievler Memorial CT Canlı Stok Sistemi", email: targetMail, to_email: targetMail, product_name: flatProductsNames, quantity: flatQuantities, order_notes: `--- SİPARİŞ LİSTESİ ---\n${basketTextFormat}\n\nEkstra Talep Notu: ${notes}`, sender_role: currentRole, order_date: nowStr }; // cite: 472, 473
                     
-                    emailjs.send("service_wt1igmj", "template_ydhkoa6", emailParams).then(() => {
-                        showToast("Sipariş iletildi.");
-                    });
+                    emailjs.send("service_wt1igmj", "template_ydhkoa6", emailParams) // cite: 474
+                        .then(() => { showToast(`Sipariş e-posta olarak başarıyla iletildi.`, "success"); }) // cite: 474
+                        .catch((err) => { showToast(`E-Posta Hatası: ${JSON.stringify(err)}`, "error"); }); // cite: 474
                     
                     orderBasket.forEach(bItem => {
-                        db.ref('depo_siparisler').push({ time: nowStr, rawTime: new Date().toISOString(), user: currentRole, product: bItem.name, qty: `${bItem.qty} ${bItem.unit}`, notes: notes });
+                        db.ref('depo_siparisler').push({ time: nowStr, rawTime: timestampIso, user: currentRole, product: bItem.name, qty: `${bItem.qty} ${bItem.unit}`, notes: notes }); // cite: 475
+                        db.ref('depo_rapor').push({ time: nowStr, rawTime: timestampIso, user: currentRole, product: bItem.name, type: 'TALEP GÖNDERİLDİ', qty: `${bItem.qty} ${bItem.unit}` }); // cite: 475
                     });
-                    orderBasket = []; renderBasketVisual(); orderFormEl.reset();
+                    orderBasket = []; renderBasketVisual(); orderFormEl.reset(); // cite: 476
+                    document.getElementById('orderEmail').value = "bahcelievlermemorialct@gmail.com"; // cite: 476
                 }
             });
         }
 
-        window.filterByDepot = function(depotName) { activeDepotFilter = depotName; renderDepotFilterButtons(); renderUi(); };
-        window.clearDateFilter = function() { document.getElementById('dateFilterInput').value = ''; renderUi(); };
-        document.getElementById('dateFilterInput').addEventListener('change', renderUi);
-        document.getElementById('searchInput').addEventListener('input', renderUi);
-
-        const addFormEl = document.getElementById('addForm');
+        window.filterByDepot = function(depotName) { activeDepotFilter = depotName; renderDepotFilterButtons(); renderUi(); }; // cite: 476, 477
+        window.clearDateFilter = function() { document.getElementById('dateFilterInput').value = ''; renderUi(); }; // cite: 477
+        document.getElementById('dateFilterInput').addEventListener('change', renderUi); // cite: 477
+        document.getElementById('searchInput').addEventListener('input', renderUi); // cite: 477
+        
+        const addFormEl = document.getElementById('addForm'); // cite: 477
         if(addFormEl) {
             addFormEl.addEventListener('submit', function(e) {
-                e.preventDefault();
-                let name = document.getElementById('newProdName').value.trim().toUpperCase();
-                const depot = document.getElementById('newProdDepot').value;
-                const unit = document.getElementById('newProdUnit').value;
-                const qty = parseFloat(document.getElementById('newProdQty').value) || 0;
-                const limit = parseFloat(document.getElementById('newProdLimit').value) || 0;
-                const lotVal = document.getElementById('newProdLot').value.trim().toUpperCase();
-                const sktVal = document.getElementById('newProdSkt').value;
+                e.preventDefault(); // cite: 478
+                let name = document.getElementById('newProdName').value.trim().toUpperCase(); // cite: 478
+                const depot = document.getElementById('newProdDepot').value; // cite: 478
+                const unit = document.getElementById('newProdUnit').value; // cite: 478
+                const qty = parseFloat(document.getElementById('newProdQty').value) || 0; // cite: 478
+                const limit = parseFloat(document.getElementById('newProdLimit').value) || 0; // cite: 478
+                const lotVal = document.getElementById('newProdLot').value.trim().toUpperCase(); // cite: 478
+                const sktVal = document.getElementById('newProdSkt').value; // cite: 478
+                let baseClean = name.replace(/[.#$\[\]]/g, ""); // cite: 478
+                let targetKey = baseClean; // cite: 478
+                if(sktVal && !sktVal.includes('undefined')) { targetKey += "_" + sktVal; } // cite: 478
+                if(lotVal) { targetKey += "_" + lotVal; } // cite: 478
+                if(inventory.some(item => (item.dbKey === targetKey))) { showToast("Aynı isim, SKT ve LOT değerlerine sahip bir kayıt envanterde zaten mevcut!", "warning"); return; } // cite: 478
                 
-                let baseClean = name.replace(/[.#$\[\]]/g, "");
-                let targetKey = baseClean;
-                if(sktVal) targetKey += "_" + sktVal;
-                if(lotVal) targetKey += "_" + lotVal;
-                
-                db.ref('depo_stok/' + targetKey).set({ dbKey: targetKey, name: name, depot: depot, unit: unit, quantity: qty, criticalLimit: limit, skt: sktVal || null, lot: lotVal || null, lastUpdatedDate: getTodayDateString() });
-                db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: name, type: 'YENİ ÜRÜN', qty: `${qty} ${unit}` });
-                showToast(`"${name}" envantere eklendi.`);
-                addFormEl.reset();
+                db.ref('depo_stok/' + targetKey).set({ dbKey: targetKey, name: name, depot: depot, unit: unit, quantity: qty, criticalLimit: limit, skt: sktVal || null, lot: lotVal || null, lastUpdatedDate: getTodayDateString() }); // cite: 478, 479
+                db.ref('depo_rapor').push({ time: new Date().toLocaleString('tr-TR'), rawTime: new Date().toISOString(), user: currentRole, product: `${name}`, type: 'YENİ ÜRÜN', qty: `${qty} ${unit} ${lotVal ? `(LOT: ${lotVal})` : ''}` }); // cite: 480
+                showToast(`"${name}" başarıyla envantere eklendi.`); // cite: 481
+                addFormEl.reset(); // cite: 481
+                const advancedFields = document.getElementById('advancedFormFields'); // cite: 481
+                if(advancedFields) advancedFields.style.maxHeight = "0px"; // cite: 481
+                const trigger = document.querySelector('.accordion-trigger span:last-child'); // cite: 481
+                if(trigger) trigger.textContent = "⚙️ ▼"; // cite: 482
             });
         }
 
-        // --- GÜNCELLEME: SİLME AKSİYONUNA RAPOR/LOG ENTEGRASYONU AKTİFLEŞTİRİLDİ ---
+        // Güncelleme: Silinen ürünlerin işlem geçmişinde her zaman listelenmesi için log fonksiyonu buraya da sabitlendi 
         window.deleteProductDirect = function(uniqueId) {
-            if(confirm("Kayıt kalıcı olarak silinsin mi?")) {
-                const item = inventory.find(i => i.dbKey === uniqueId);
-                if(item) {
-                    // Silme işlemi Firebase'den gerçekleşmeden önce rapor geçmişine log düşülüyor
-                    db.ref('depo_rapor').push({
-                        time: new Date().toLocaleString('tr-TR'),
-                        rawTime: new Date().toISOString(),
-                        user: currentRole,
-                        product: item.name,
-                        type: 'MALZEME KARTINI SİL',
-                        qty: `${item.quantity} ${item.unit || 'Birim'}`
-                    });
-                }
-                db.ref('depo_stok/' + uniqueId).remove();
-                showToast("Malzeme kartı envanterden silindi ve rapora işlendi.", "error");
+            const item = inventory.find(i => i.dbKey === uniqueId); // cite: 482
+            if(!item) {
+                if(confirm("Bu kayıt zorunlu olarak silinsin mi?")) { db.ref('depo_stok/' + uniqueId).remove(); } return; // cite: 483
+            }
+            if(confirm(`"${item.name}" ürününü depodan kalıcı olarak silmek istediğinize emin misiniz?`)) {
+                const now = new Date(); // cite: 484
+                db.ref('depo_rapor').push({
+                    time: now.toLocaleString('tr-TR'), // cite: 485
+                    rawTime: now.toISOString(), // cite: 485
+                    user: currentRole, // cite: 485
+                    product: item.name, // cite: 485
+                    type: 'ÜRÜN SİLİNDİ', // cite: 485
+                    qty: `${item.quantity} ${item.unit}`, // cite: 485
+                    backupKey: item.dbKey || uniqueId, // cite: 485
+                    backupDepot: item.depot || 'KURU GIDA', // cite: 485
+                    backupUnit: item.unit || 'Adet', // cite: 485
+                    backupLimit: item.criticalLimit || 0, // cite: 485
+                    backupSkt: item.skt || null, // cite: 485
+                    backupLot: item.lot || null // cite: 485
+                });
+                db.ref('depo_stok/' + uniqueId).remove(); // cite: 486
+                showToast("Malzeme depodan kaldırıldı ve rapora işlendi.", "error"); // cite: 486
             }
         };
 
-        const reportModal = document.getElementById('reportModal');
-        const ordersListModal = document.getElementById('ordersListModal');
+        window.undoDeletedProduct = function(reportFbKey, prodName, bKey, bDepot, bUnit, bQtyStr, bLimit, bSkt, bLot) {
+            if(currentRole !== 'YÖNETİCİ') { showToast("Geri alma yetkisi sadece yöneticilere aittir!", "error"); return; } // cite: 486, 487
+            if(confirm(`"${prodName}" ürününü depoya geri yüklemek istiyor musunuz?`)) { // cite: 487
+                let parsedQty = parseFloat(bQtyStr) || 0; // cite: 487
+                let targetKey = (bKey && bKey !== 'undefined') ? bKey : prodName.replace(/[.#$\[\]]/g, ""); // cite: 488
+                db.ref('depo_stok/' + targetKey).set({ dbKey: targetKey, name: prodName, depot: bDepot || 'KURU GIDA', unit: bUnit || 'Adet', quantity: parsedQty, criticalLimit: parseFloat(bLimit) || 0, skt: (bSkt && bSkt !== 'null' && bSkt !== 'undefined') ? bSkt : null, lot: (bLot && bLot !== 'null' && bLot !== 'undefined') ? bLot : null, lastUpdatedDate: getTodayDateString() }); // cite: 489
+                db.ref('depo_rapor/' + reportFbKey).remove().then(() => { showToast("Ürün başarıyla depoya geri yüklendi!", "success"); document.getElementById('openReportBtn').click(); }); // cite: 490
+            }
+        };
+
+        const reportModal = document.getElementById('reportModal'); // cite: 490
+        const ordersListModal = document.getElementById('ordersListModal'); // cite: 491
         
-        // --- RAPOR GÖSTERİMİ VE GELİŞMİŞ CANLI FİLTRE MODÜLÜ ---
         document.getElementById('openReportBtn').addEventListener('click', () => {
             db.ref('depo_rapor').once('value', (snapshot) => {
-                localCachedReports = snapshot.val() ? Object.entries(snapshot.val()) : [];
-                localCachedReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
+                const tbody = document.getElementById('reportTableBody'); // cite: 491
+                const clearAllBtn = document.getElementById('clearAllReportsBtn'); // cite: 491
+                tbody.innerHTML = ''; // cite: 491
+                if(currentRole === 'YÖNETİCİ') { clearAllBtn.style.display = 'block'; } else { clearAllBtn.style.display = 'none'; } // cite: 491
                 
-                document.getElementById('modalReportSearchInput').value = '';
-                document.getElementById('modalReportTypeSelect').value = 'HEPSİ';
-                
-                filterModalReportsUi();
-                reportModal.style.display = 'flex';
-            });
-        });
-
-        window.filterModalReportsUi = function() {
-            const tbody = document.getElementById('reportTableBody');
-            const clearAllBtn = document.getElementById('clearAllReportsBtn');
-            const batchDelBtn = document.getElementById('batchDeleteReportsBtn');
-            if(!tbody) return;
-            
-            tbody.innerHTML = '';
-            document.getElementById('selectAllReports').checked = false;
-
-            if(currentRole === 'YÖNETİCİ') {
-                clearAllBtn.style.display = 'block';
-                batchDelBtn.style.display = 'block';
-            } else {
-                clearAllBtn.style.display = 'none';
-                batchDelBtn.style.display = 'none';
-            }
-
-            const searchText = document.getElementById('modalReportSearchInput').value.toLowerCase();
-            const selectedType = document.getElementById('modalReportTypeSelect').value;
-
-            let filtered = localCachedReports.filter(([fbKey, rep]) => {
-                let matchesSearch = rep.product && rep.product.toLowerCase().includes(searchText);
-                let matchesType = (selectedType === 'HEPSİ' || rep.type === selectedType);
-                return matchesSearch && matchesType;
-            });
-
-            if(filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">Kriterlere uygun işlem logu bulunamadı.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach(([fbKey, rep]) => {
-                let actionHtml = '---';
-                let cbHtml = '';
-                if(currentRole === 'YÖNETİCİ') {
-                    cbHtml = `<input type="checkbox" class="report-cb" value="${fbKey}">`;
-                    actionHtml = `<button class="btn-report-del" style="margin:0;" onclick="deleteReportRowDirect('${fbKey}')">Kayıt Sil</button>`;
-                }
-                tbody.innerHTML += `<tr><td style="text-align:center;">${cbHtml}</td><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order">${rep.type}</span></td><td><strong>${rep.qty}</strong></td><td style="text-align:right; padding-right:20px;">${actionHtml}</td></tr>`;
-            });
-        };
-
-        window.deleteReportRowDirect = function(fbKey) {
-            if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Bu işlem kaydı kalıcı olarak silinsin mi?")) {
-                db.ref('depo_rapor/' + fbKey).remove().then(() => {
-                    showToast("Kayıt geçmişten silindi.", "success");
-                    localCachedReports = localCachedReports.filter(([key]) => key !== fbKey);
-                    filterModalReportsUi();
-                });
-            }
-        };
-
-        window.deleteSelectedReports = function() {
-            if(currentRole !== 'YÖNETİCİ') return;
-            const checkboxes = document.querySelectorAll('.report-cb:checked');
-            if(checkboxes.length === 0) { showToast("Lütfen silinecek logları seçin!", "warning"); return; }
-            if(confirm(`Seçilen ${checkboxes.length} adet işlem kaydını silmek istediğinize emin misiniz?`)) {
-                const promises = Array.from(checkboxes).map(cb => db.ref('depo_rapor/' + cb.value).remove());
-                Promise.all(promises).then(() => {
-                    showToast("Seçilen kayıtlar başarıyla temizlendi.", "success");
-                    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
-                    localCachedReports = localCachedReports.filter(([key]) => !selectedIds.includes(key));
-                    filterModalReportsUi();
-                });
-            }
-        };
-
-        // --- SİPARİŞ GEÇMİŞİ VE TEKLİ/TOPLU SİLME KATMANLARI ---
-        document.getElementById('openOrdersBtn').addEventListener('click', () => {
-            db.ref('depo_siparisler').once('value', (snapshot) => {
-                const tbody = document.getElementById('ordersTableBody');
-                const clearAllBtn = document.getElementById('clearAllOrdersBtn');
-                const batchDelBtn = document.getElementById('batchDeleteOrdersBtn');
-                tbody.innerHTML = '';
-                document.getElementById('selectAllOrders').checked = false;
-
-                if(currentRole === 'YÖNETİCİ') {
-                    clearAllBtn.style.display = 'block';
-                    batchDelBtn.style.display = 'block';
+                let modalReports = snapshot.val() ? Object.entries(snapshot.val()) : []; // cite: 491
+                if(modalReports.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">Kayıt bulunamadı.</td></tr>`; // cite: 491
                 } else {
-                    clearAllBtn.style.display = 'none';
-                    batchDelBtn.style.display = 'none';
-                }
-
-                let modalOrders = snapshot.val() ? Object.entries(snapshot.val()) : [];
-                if(modalOrders.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888;">Henüz sipariş talebi bulunmamaktadır.</td></tr>`;
-                } else {
-                    modalOrders.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime));
-                    modalOrders.forEach(([fbKey, ord]) => {
-                        let actionHtml = '---';
-                        let cbHtml = '';
-                        if(currentRole === 'YÖNETİCİ') {
-                            cbHtml = `<input type="checkbox" class="order-cb" value="${fbKey}">`;
-                            actionHtml = `<button class="btn-report-del" style="margin:0;" onclick="deleteOrderRowDirect('${fbKey}')">Kayıt Sil</button>`;
+                    modalReports.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime)); // cite: 491
+                    modalReports.forEach(([fbKey, rep]) => {
+                        let actionButtonsHtml = ''; // cite: 491
+                        if((rep.type === 'ÜRÜN SİLİNDİ' || rep.type === 'SKT OTOMATİK SİLME') && rep.backupKey && currentRole === 'YÖNETİCİ') {
+                            actionButtonsHtml += `<button class="btn-undo" onclick="undoDeletedProduct('${fbKey}', '${rep.product}', '${rep.backupKey}', '${rep.backupDepot}', '${rep.backupUnit}', '${rep.qty}', '${rep.backupLimit}', '${rep.backupSkt}', '${rep.backupLot || null}')">↩ Geri Al</button> `; // cite: 491, 492
                         }
-                        tbody.innerHTML += `<tr><td style="text-align:center;">${cbHtml}</td><td>${ord.time || ord.date}</td><td><b>${ord.user}</b></td><td>${ord.product}</td><td><strong>${ord.qty}</strong></td><td><i style="color:#666;">${ord.notes || 'Not Yok'}</i></td><td style="text-align:right; padding-right:20px;">${actionHtml}</td></tr>`;
+                        if(currentRole === 'YÖNETİCİ') {
+                            actionButtonsHtml += `<button class="btn-report-del" onclick="deleteReportRow('${fbKey}')">Kayıt Sil</button>`; // cite: 492
+                        }
+                        tbody.innerHTML += `<tr><td>${rep.time}</td><td><b>${rep.user}</b></td><td>${rep.product}</td><td><span class="badge-order" style="${rep.type.includes('SİLİNDİ') ? 'background:#f8d7da; color:#721c24;' : ''}">${rep.type}</span></td><td><strong>${rep.qty}</strong></td><td>${actionButtonsHtml || '---'}</td></tr>`; // cite: 492, 493
                     });
                 }
-                ordersListModal.style.display = 'flex';
+                reportModal.style.display = 'flex'; // cite: 493
             });
         });
 
-        window.deleteOrderRowDirect = function(fbKey) {
-            if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Bu sipariş kaydı listeden kalıcı olarak silinsin mi?")) {
-                db.ref('depo_siparisler/' + fbKey).remove().then(() => {
-                    showToast("Sipariş kaydı temizlendi.", "success");
-                    document.getElementById('openOrdersBtn').click();
-                });
-            }
-        };
+        window.deleteReportRow = function(fbKey) { if(currentRole !== 'YÖNETİCİ') return; if(confirm("Bu işlem kaydı geçmişten silinsin mi?")) { db.ref('depo_rapor/' + fbKey).remove().then(() => document.getElementById('openReportBtn').click()); } }; // cite: 493
+        window.clearAllReports = function() { if(currentRole !== 'YÖNETİCİ') return; if(confirm("Tüm işlem geçmişini kalıcı olarak silmek istediğinize emin misiniz?")) { db.ref('depo_rapor').remove().then(() => document.getElementById('openReportBtn').click()); } }; // cite: 493
 
-        window.deleteSelectedOrders = function() {
-            if(currentRole !== 'YÖNETİCİ') return;
-            const checkboxes = document.querySelectorAll('.order-cb:checked');
-            if(checkboxes.length === 0) { showToast("Lütfen silinecek siparişleri seçin!", "warning"); return; }
-            if(confirm(`Seçilen ${checkboxes.length} adet talebi silmek istediğinize emin misiniz?`)) {
-                const promises = Array.from(checkboxes).map(cb => db.ref('depo_siparisler/' + cb.value).remove());
-                Promise.all(promises).then(() => {
-                    showToast("Seçilen siparişler toplu olarak silindi.", "success");
-                    document.getElementById('openOrdersBtn').click();
-                });
-            }
-        };
-
-        window.toggleSelectAll = function(type) {
-            const isChecked = document.getElementById(type === 'report' ? 'selectAllReports' : 'selectAllOrders').checked;
-            const checkboxes = document.querySelectorAll(type === 'report' ? '.report-cb' : '.order-cb');
-            checkboxes.forEach(cb => cb.checked = isChecked);
-        };
-
-        window.clearAllReports = function() {
-            if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Tüm işlem geçmişini geri döndürülemeyecek şekilde sıfırlamak istiyor musunuz?")) {
-                db.ref('depo_rapor').remove().then(() => {
-                    localCachedReports = [];
-                    filterModalReportsUi();
-                });
-            }
-        };
-
-        window.clearAllOrders = function() {
-            if(currentRole !== 'YÖNETİCİ') return;
-            if(confirm("Tüm sipariş geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) {
-                db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click());
-            }
-        };
-
-        document.getElementById('closeReportBtnSpec').addEventListener('click', () => reportModal.style.display = 'none');
-        document.getElementById('closeOrdersBtnSpec').addEventListener('click', () => ordersListModal.style.display = 'none');
-        
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('isLoggedIn');
-            window.location.replace('login.html');
+        document.getElementById('openOrdersBtn').addEventListener('click', () => {
+            db.ref('depo_siparisler').once('value', (snapshot) => {
+                const tbody = document.getElementById('ordersTableBody'); // cite: 493
+                const headerAction = document.getElementById('orderActionHeader'); // cite: 493
+                const clearAllBtn = document.getElementById('clearAllOrdersBtn'); // cite: 493
+                tbody.innerHTML = ''; // cite: 493
+                if(currentRole === 'YÖNETİCİ') { headerAction.style.display = 'table-cell'; clearAllBtn.style.display = 'block'; } else { headerAction.style.display = 'none'; clearAllBtn.style.display = 'none'; } // cite: 494
+                
+                let modalOrders = snapshot.val() ? Object.entries(snapshot.val()) : []; // cite: 495
+                if(modalOrders.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="${currentRole === 'YÖNETİCİ' ? 6 : 5}" style="text-align:center; color:#888;">Henüz sipariş bulunmamaktadır.</td></tr>`; // cite: 495
+                } else {
+                    modalOrders.sort((a, b) => new Date(b[1].rawTime) - new Date(a[1].rawTime)); // cite: 496
+                    modalOrders.forEach(([fbKey, ord]) => {
+                        let deleteCellHtml = ''; // cite: 497
+                        if(currentRole === 'YÖNETİCİ') { deleteCellHtml = `<td><button class="btn-report-del" onclick="deleteOrderRow('${fbKey}')">Kayıt Sil</button></td>`; } // cite: 497
+                        tbody.innerHTML += `<tr><td>${ord.time || ord.date}</td><td><b>${ord.user}</b></td><td>${ord.product}</td><td><strong>${ord.qty}</strong></td><td><i style="color:#666;">${ord.notes}</i></td>${deleteCellHtml}</tr>`; // cite: 497
+                    });
+                }
+                ordersListModal.style.display = 'flex'; // cite: 498
+            });
         });
+
+        window.deleteOrderRow = function(fbKey) { if(currentRole !== 'YÖNETİCİ') return; if(confirm("Bu sipariş kaydı listeden silinsin mi?")) { db.ref('depo_siparisler/' + fbKey).remove().then(() => document.getElementById('openOrdersBtn').click()); } }; // cite: 498, 499
+        window.clearAllOrders = function() { if(currentRole !== 'YÖNETİCİ') return; if(confirm("Tüm sipariş geçmiş listesini kalıcı olarak temizlemek istediğinize emin misiniz?")) { db.ref('depo_siparisler').remove().then(() => document.getElementById('openOrdersBtn').click()); } }; // cite: 500
+        
+        document.getElementById('closeReportBtn').addEventListener('click', () => reportModal.style.display = 'none'); // cite: 501
+        document.getElementById('closeOrdersBtn').addEventListener('click', () => ordersListModal.style.display = 'none'); // cite: 501
+        document.getElementById('logoutBtn').addEventListener('click', () => { localStorage.removeItem('isLoggedIn'); window.location.replace('login.html'); }); // cite: 502
     </script>
 </body>
 </html>
